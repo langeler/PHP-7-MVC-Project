@@ -1,3 +1,6 @@
 
 .nova/Configuration.json
 .DS_Store
+*.lock
+vendor/
+node_modules/
