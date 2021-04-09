@@ -1,0 +1,45 @@
+{
+	"name": "langeler/mvc",
+	"type": "project",
+	"description": "A custom project built on PHP 7 with the MVC structure",
+	"keywords": [
+		"php",
+		"application",
+		"mvc",
+		"scratch",
+		"php7",
+		"oop",
+		"model-view-controller",
+		"object-oriented-programming",
+		"mysql",
+		"pdo",
+		"web app"
+	],
+	"homepage": "https://perunio.com",
+	"license": "GNU v3",
+	"authors": [
+		{
+			"name": "Joakim Langeler",
+			"homepage": "https://langeler.se",
+			"role": "Full stack developer"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/langeler/mvc/issues",
+		"source": "https://github.com/langeler/mvc"
+	},
+	"autoload": {
+		"classmap": [
+			"app/"
+		],
+		"files": [
+			"config/credentials.php",
+			"config/constants.php",
+			"config/utility.php"
+		]
+	},
+	"require": {
+		"php": ">=7.0"
+	},
+	"require-dev": {}	 
+}
