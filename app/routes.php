@@ -30,14 +30,14 @@ $router->post("settings", "SettingsController@post");
 $router->get("admin/home", "adminController@home");
 
 // Get admin category routes
-$router->get("admin/categories", "categoryController@readAll");
-$router->get("admin/category/create/", "categoryController@read");
-$router->get("admin/category/update/{id}", "categoryController@readOne");
-$router->get("admin/category/delete/{id}", "categoryController@delete");
+$router->get("admin/categories", "adminController@readAllCategories");
+$router->get("admin/category/create", "adminController@readCategory");
+$router->get("admin/category/update/{id}", "adminController@readOneCategory");
+$router->get("admin/category/delete/{id}", "adminController@deleteCategory");
 
 // Post admin category routes
-$router->post("admin/category/create/", "categoryController@create");
-$router->post("dmin/category/update/{id}", "categoryController@update");
+$router->post("admin/category/create", "adminController@createCategory");
+$router->post("dmin/category/update/{id}", "adminController@updateCategory");
 
 // Get admin user routes
 $router->get("admin/users", "adminController@readAllUsers");

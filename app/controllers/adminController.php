@@ -12,6 +12,7 @@ class adminController extends Controller
 	protected $pageTitle;
 	protected $session;
 	protected $admin;
+	protected $categories;
 
 	/**
 	 * Initialize controller with Session, User, Comment, and List classes.
@@ -124,6 +125,87 @@ class adminController extends Controller
 
 		if (isset($user_id)) {
 			$this->admin->deleteUser($user_id);
+		}
+
+		$this->redirect("admin/home");
+	}
+	
+	
+	function readAllCategories()
+	{
+		$this->pageTitle = "Read All Categories";
+		$this->categories = $this->admin->readAllCategories();
+
+		$this->view("admin/categories", [
+			"pageTitle" => $this->pageTitle,
+			"categories" => $this->categories,
+		]);
+	}
+
+	// Get create user view
+	function readCategory()
+	{
+		$this->pageTitle = "Create Category";
+
+		$this->view("admin/create.category", [
+			"pageTitle" => $this->pageTitle,
+		]);
+	}
+
+	function readOneCategory($category_id = null)
+	{
+		$this->pageTitle = "Update Category";
+		
+		
+		$category_id = $category_id["id"];
+		var_dump($category_id);
+		if (isset($category_id)) {
+			
+			$category = $this->admin->readOneCategory($category_id);
+
+			$this->view("admin/update.category", [
+				"category" => $category,
+				"pageTitle" => $this->pageTitle,
+			]);
+		} else {
+			$this->redirect("admin/users");
+		}
+	}
+
+	// Post create user function
+	function createCategory()
+	{
+		$this->admin->createCategory(
+			$this->post("name"),
+			$this->post("description")
+		);
+
+		$this->redirect("admin/home");
+	}
+
+	// Post update user function
+	function updateCategory($category_id = null)
+	{
+		$category_id = $category_id["id"];
+
+		if (isset($category_id)) {
+			$this->admin->updateCategory(
+				$category_id,
+				$this->post("name"),
+				$this->post("description")
+			);
+		}
+
+		$this->redirect("admin/home");
+	}
+
+	// Post delete user function
+	function deleteCategory($category_id = null)
+	{
+		$category_id = $category_id["id"];
+
+		if (isset($category_id)) {
+			$this->admin->deleteCategory($category_id);
 		}
 
 		$this->redirect("admin/home");

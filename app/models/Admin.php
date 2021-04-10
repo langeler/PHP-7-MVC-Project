@@ -19,6 +19,10 @@ use App\Core\Model as Model;
 
 class Admin extends Model
 {
+	private $category_table = "categories";
+	private $product_table = "products";
+	private $user_table = "users";
+	
 	/**
 	 * Register a new user by inserting all relevant registration
 	 * data into the users table.
@@ -26,7 +30,7 @@ class Admin extends Model
 	 */
 	public function createUser($username, $password, $email, $fullname, $role)
 	{
-		$query = "INSERT INTO users 
+		$query = "INSERT INTO " . $this->user_table . " 
 					  (username, password, email, fullname, role) 
 				  VALUES 
 					  (:username, :password, :email, :fullname, :role)";
@@ -49,7 +53,7 @@ class Admin extends Model
 	 */
 	public function readAllUsers()
 	{
-		$query = "SELECT * FROM users";
+		$query = "SELECT * FROM " . $this->user_table . " ";
 
 		$this->db->query($query);
 
@@ -65,7 +69,7 @@ class Admin extends Model
 	public function readOneUser($user_id)
 	{
 		$query = "SELECT * 
-				  FROM users 
+				  FROM " . $this->user_table . "  
 				  WHERE id = :id 
 				  LIMIT 1";
 
@@ -89,7 +93,7 @@ class Admin extends Model
 		$description,
 		$role
 	) {
-		$query = "UPDATE users 
+		$query = "UPDATE " . $this->user_table . "  
 				  SET username = :username ,
 					  email = :email,
 					  fullname = :fullname, 
@@ -116,7 +120,7 @@ class Admin extends Model
 	 */
 	public function deleteUser($user_id)
 	{
-		$query = "DELETE FROM users
+		$query = "DELETE FROM " . $this->user_table . " 
 				  WHERE id = :id";
 
 		$this->db->query($query);
@@ -139,5 +143,84 @@ class Admin extends Model
 		$this->db->execute();
 
 		return $result;
+	}
+
+	public function createCategory($name, $description)
+	{
+		$query = "INSERT INTO " . $this->category_table . " 
+					  (name, description) 
+				  VALUES 
+					  (:name, :description)";
+
+		$this->db->query($query);
+		$this->db->bind(":name", $name);
+		$this->db->bind(":description", $description);
+
+		$result = $this->db->execute();
+
+		return $result;
+	}
+
+	/**
+	 * Select all user data from all users.
+	 * Return multiple rows.
+	 */
+	public function readAllCategories()
+	{
+		$query = "SELECT * FROM " . $this->category_table . " ";
+
+		$this->db->query($query);
+
+		$users = $this->db->resultset();
+
+		return $users;
+	}
+	
+	public function readOneCategory($category_id)
+	{
+		$query = "SELECT * 
+				  FROM " . $this->category_table . "  
+				  WHERE id = :id 
+				  LIMIT 1";
+
+		$this->db->query($query);
+		$this->db->bind(":id", $category_id);
+
+		$user = $this->db->result();
+
+		return $user;
+	}
+
+	public function updateCategory(
+		$category_id,
+		$name,
+		$description
+	) {
+		$query = "UPDATE " . $this->category_table . "  
+				  SET username = :username ,
+					  name = :name,
+					  description = :description
+				  WHERE id = :id";
+
+		$this->db->query($query);
+		$this->db->bind(":name", $name);
+		$this->db->bind(":description", $description);
+		$this->db->bind(":id", $category_id);
+
+		$result = $this->db->execute();
+
+		return $result;
+	}
+	
+	public function deleteCategory($category_id)
+	{
+		$query = "DELETE FROM " . $this->category_table . " 
+				  WHERE id = :id";
+
+		$this->db->query($query);
+		$this->db->bind(":id", $category_id);
+		
+		return $result;
+
 	}
 }
