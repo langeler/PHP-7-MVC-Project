@@ -1,15 +1,15 @@
 <?php
 
-/** 
+/**
  * User Class
- * 
+ *
  * Interact with users and user data.
- * 
+ *
  * Any call to the database regarding the users table will go through
- * the User class. The User class extends the Model class, which simply 
- * instantiates a Database instance that allows us to connect. 
- * 
- * From here, we can get information on any user by their user ID, 
+ * the User class. The User class extends the Model class, which simply
+ * instantiates a Database instance that allows us to connect.
+ *
+ * From here, we can get information on any user by their user ID,
  * username, or email, or we can get a list of all users. This class
  * also includes calls to the password request table.
  */
@@ -17,8 +17,8 @@ namespace App\Models;
 
 use App\Core\Model as Model;
 
-class Admin extends Model {
-	
+class Admin extends Model
+{
 	/**
 	 * Register a new user by inserting all relevant registration
 	 * data into the users table.
@@ -32,17 +32,17 @@ class Admin extends Model {
 					  (:username, :password, :email, :fullname, :role)";
 
 		$this->db->query($query);
-		$this->db->bind(':username', $username);
-		$this->db->bind(':password', $password);
-		$this->db->bind(':email', $email);
-		$this->db->bind(':fullname', $fullname);
-		$this->db->bind(':role', $role);
+		$this->db->bind(":username", $username);
+		$this->db->bind(":password", $password);
+		$this->db->bind(":email", $email);
+		$this->db->bind(":fullname", $fullname);
+		$this->db->bind(":role", $role);
 
 		$result = $this->db->execute();
 
 		return $result;
 	}
-	
+
 	/**
 	 * Select all user data from all users.
 	 * Return multiple rows.
@@ -57,8 +57,8 @@ class Admin extends Model {
 
 		return $users;
 	}
-	
-		/**
+
+	/**
 	 * Select all data from a single user by user ID.
 	 * Return a single row.
 	 */
@@ -70,19 +70,25 @@ class Admin extends Model {
 				  LIMIT 1";
 
 		$this->db->query($query);
-		$this->db->bind(':id', $user_id);
+		$this->db->bind(":id", $user_id);
 
 		$user = $this->db->result();
 
 		return $user;
 	}
-	
+
 	/**
 	 * Update the settings of a user.
 	 * Return a boolean.
 	 */
-	public function updateUser($user_id, $username, $email, $fullname, $description, $role)
-	{
+	public function updateUser(
+		$user_id,
+		$username,
+		$email,
+		$fullname,
+		$description,
+		$role
+	) {
 		$query = "UPDATE users 
 				  SET username = :username ,
 					  email = :email,
@@ -92,19 +98,19 @@ class Admin extends Model {
 				  WHERE id = :user_id";
 
 		$this->db->query($query);
-		$this->db->bind(':username', $username);
-		$this->db->bind(':email', $email);
-		$this->db->bind(':fullname', $fullname);
-		$this->db->bind(':description', $description);
-		$this->db->bind(':role', $role);
-		$this->db->bind(':user_id', $user_id);
+		$this->db->bind(":username", $username);
+		$this->db->bind(":email", $email);
+		$this->db->bind(":fullname", $fullname);
+		$this->db->bind(":description", $description);
+		$this->db->bind(":role", $role);
+		$this->db->bind(":user_id", $user_id);
 
 		$result = $this->db->execute();
 
 		return $result;
 	}
-	
-		/**
+
+	/**
 	 * Delete a user and all associated list items.
 	 * Return a boolean.
 	 */
@@ -114,7 +120,7 @@ class Admin extends Model {
 				  WHERE id = :id";
 
 		$this->db->query($query);
-		$this->db->bind(':id', $user_id);
+		$this->db->bind(":id", $user_id);
 
 		$result = $this->db->execute();
 
@@ -122,17 +128,16 @@ class Admin extends Model {
 					WHERE user_id = :user_id";
 
 		$this->db->query($query);
-		$this->db->bind(':user_id', $user_id);
+		$this->db->bind(":user_id", $user_id);
 		$this->db->execute();
 
 		$query = "DELETE FROM lists
 					WHERE user_id = :user_id";
 
 		$this->db->query($query);
-		$this->db->bind(':user_id', $user_id);
+		$this->db->bind(":user_id", $user_id);
 		$this->db->execute();
 
 		return $result;
 	}
-
 }

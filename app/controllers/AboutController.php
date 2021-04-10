@@ -6,10 +6,10 @@ use App\Core\Controller as Controller;
 
 class AboutController extends Controller
 {
-    public $pageTitle = 'About';
+	public $pageTitle = "About";
 
-    public function get()
-    {
-        $this->view('about');
-    }
+	public function get()
+	{
+		$this->view("about");
+	}
 }

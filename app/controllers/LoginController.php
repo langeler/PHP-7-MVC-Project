@@ -6,59 +6,61 @@ use App\Core\Controller as Controller;
 
 class LoginController extends Controller
 {
-    public $pageTitle = 'Login';
-    public $user;
-    public $message;
-    public $csrf;
+	public $pageTitle = "Login";
+	public $user;
+	public $message;
+	public $csrf;
 
-    public function post()
-    {
-        $post = filter_post();
-        $this->session->validateCSRF($post['csrf']);
+	public function post()
+	{
+		$post = filter_post();
+		$this->session->validateCSRF($post["csrf"]);
 
-        $username = $post['username'];
-        $password = $post['password'];
+		$username = $post["username"];
+		$password = $post["password"];
 
-        // Retrieve the user account information for the given username
-        $this->user = $this->userControl->getUserByUsername($username);
+		// Retrieve the user account information for the given username
+		$this->user = $this->userControl->getUserByUsername($username);
 
-        // Could not find a user with that username
-        if (!$this->user) {
-            $this->message = USERNAME_NOT_EXISTS;
+		// Could not find a user with that username
+		if (!$this->user) {
+			$this->message = USERNAME_NOT_EXISTS;
 
-            echo $this->message;
-            exit;
-        } else {
+			echo $this->message;
+			exit();
+		} else {
+			// User account found
+			$correctPassword = $this->verifyPassword(
+				$password,
+				$this->user["password"]
+			);
 
-            // User account found
-            $correctPassword = $this->verifyPassword($password, $this->user['password']);
+			if ($correctPassword) {
+				//User login
+				$this->session->login($this->user);
 
-            if ($correctPassword) {
-                //User login
-                $this->session->login($this->user);
-                
-                // TODO: Session flash class
-                // $this->message = 'Proceed';
-                // echo $this->message;
-                
-                $this->redirect('dashboard');
-            } else {
-                $this->message = LOGIN_FAIL;
-                echo $this->message;
-                exit;
-            }
-        }
-    }
+				// TODO: Session flash class
+				// $this->message = 'Proceed';
+				// echo $this->message;
 
-    public function get()
-    {
-        $isLoggedIn = $this->session->isUserLoggedIn();
-        $this->csrf = $this->session->getSessionValue('csrf');
+				$this->redirect("dashboard");
+			} else {
+				$this->message = LOGIN_FAIL;
+				echo $this->message;
+				exit();
+			}
+		}
+	}
 
-        if ($isLoggedIn) {
-            $this->redirect('dashboard');
-        }
+	public function get()
+	{
+		$isLoggedIn = $this->session->isUserLoggedIn();
+		$this->csrf = $this->session->getSessionValue("csrf");
 
-        $this->view('login');
-    }
+		if ($isLoggedIn) {
+			$this->redirect("dashboard");
+		}
+
+		$this->view("login");
+	}
 }

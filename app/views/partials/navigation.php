@@ -33,7 +33,7 @@
                 <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
                   <h6 class="dropdown-header">Account</h6>
                   
-                  <?php if ($this->session->isUserLoggedIn()) : ?> 
+                  <?php if ($this->session->isUserLoggedIn()): ?> 
                   <a class="dropdown-item" href="/dashboard">
                     <i class="fas fa-user"></i>Dashboard
                   </a>
@@ -41,7 +41,9 @@
                     <span class="float-right badge badge-primary">1</span>
                     <i class="fas fa-list"></i>Lists
                   </a>
-                 <a class="dropdown-item" href="/<?= $this->user['username']; ?>">
+                 <a class="dropdown-item" href="/<?= $this->user[
+                 	"username"
+                 ] ?>">
                     <i class="fas fa-user"></i>Profile
                   </a>
              
@@ -52,7 +54,7 @@
                   <a class="dropdown-item" href="/logout">
                     <i class="fas fa-sign-out-alt"></i>Sign out
                   </a>
-                  <?php else : ?>
+                  <?php else: ?>
                   
                   <a class="dropdown-item" href="/login">
                     <i class="fas fa-sign-in-alt"></i>Sign in
@@ -75,7 +77,9 @@
       <div class="container px-lg-0">
         <!-- Logo -->
         <a class="navbar-brand mx-3" href="/">
-          <img alt="Image placeholder" src="<?= $this->getImage('text.png'); ?>" id="navbar-logo" style="height: 50px;">
+          <img alt="Image placeholder" src="<?= $this->getImage(
+          	"text.png"
+          ) ?>" id="navbar-logo" style="height: 50px;">
         </a>
         <!-- Navbar collapse trigger -->
         <button class="navbar-toggler pr-0" type="button" data-toggle="collapse" data-target="#navbar-main-collapse" aria-controls="navbar-main-collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,7 +97,7 @@
               <a class="nav-link" href="/about">About</a>
             </li>
             
-            <?php if ($this->session->isUserLoggedIn()) : ?> 
+            <?php if ($this->session->isUserLoggedIn()): ?> 
             <li class="nav-item">
               <a class="nav-link" href="/lists">Lists</a>
             </li>

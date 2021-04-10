@@ -1,10 +1,10 @@
 <?php
-/** 
+/**
  * Database Class
- * 
+ *
  * Initiates connection to the database and simplify PDO functions.
- * 
- * The Database class will be initialized with the credentials 
+ *
+ * The Database class will be initialized with the credentials
  * of the SQL database, and will create a new PDO instance. The
  * rest of the model classes will access it by extending the Model class,
  * as $this->db.
@@ -31,10 +31,10 @@ class Database
 	 */
 	public function __construct()
 	{
-		$dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;
+		$dsn = "mysql:host=" . $this->host . ";dbname=" . $this->dbname;
 		$options = [
 			PDO::ATTR_PERSISTENT => true,
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 		];
 
 		try {

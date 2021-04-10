@@ -2,9 +2,9 @@
 
 /**
  * Model Class
- * 
+ *
  * Create a new instance of the Database class.
- * 
+ *
  * The Model class is an abstract class that creates
  * a new instance of the Database class, allowing us
  * to interact with the database without having to create
@@ -12,11 +12,12 @@
  */
 namespace App\Core;
 
-abstract class Model {
-	
+abstract class Model
+{
 	protected $db;
 
-	public function __construct() {
+	public function __construct()
+	{
 		$this->db = new Database();
 	}
 }

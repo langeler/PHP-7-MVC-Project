@@ -1,20 +1,20 @@
 <?php
 
-/** 
+/**
  * List Class
- * 
+ *
  * Interact with lists and list items.
- * 
- * Lists, similar to to-dos or notes, are created in the `lists` table, 
+ *
+ * Lists, similar to to-dos or notes, are created in the `lists` table,
  * and each entry is inserted into the `list_items` table. List items are
- * associated to a list by the `list_id` column. 
+ * associated to a list by the `list_id` column.
  */
 namespace App\Models;
 
 use App\Core\Model as Model;
 
-class ListClass extends Model {
-
+class ListClass extends Model
+{
 	private $table = "lists";
 	private $table2 = "list_items";
 
@@ -23,19 +23,22 @@ class ListClass extends Model {
 	 * the entire user as a parameter, using the `id` column.
 	 * Returns multiple results.
 	 */
-	public function getListsByUser($user) {
-		
-		$query = "SELECT 
+	public function getListsByUser($user)
+	{
+		$query =
+			"SELECT 
 					* 
 				FROM 
-					" . $this->table . "
+					" .
+			$this->table .
+			"
 				WHERE 
 					user_id = :user_id
 				ORDER BY 
 					created DESC";
 
 		$this->db->query($query);
-		$this->db->bind(':user_id', $user['id']);
+		$this->db->bind(":user_id", $user["id"]);
 
 		$lists = $this->db->resultset();
 
@@ -43,41 +46,47 @@ class ListClass extends Model {
 	}
 
 	/**
-	 * Retrieve a single list associated with a user. 
+	 * Retrieve a single list associated with a user.
 	 * Returns one result.
 	 */
-	public function getListByListId($listId) {
-		
-		$query = "SELECT 
+	public function getListByListId($listId)
+	{
+		$query =
+			"SELECT 
 					* 
 				FROM 
-					" . $this->table . "
+					" .
+			$this->table .
+			"
 				WHERE 
 					id = :list_id";
 
 		$this->db->query($query);
-		$this->db->bind(':list_id', $listId);
+		$this->db->bind(":list_id", $listId);
 
 		$list = $this->db->result();
 
 		return $list;
 	}
 
-	/** 
+	/**
 	 * Retrieve all lists by `list_id`.
 	 * Return multiple results.
 	 */
-	public function getListItemsByListId($listId) {
-		
-		$query = "SELECT 
+	public function getListItemsByListId($listId)
+	{
+		$query =
+			"SELECT 
 					* 
 				FROM 
-					" . $this->table2 . " 
+					" .
+			$this->table2 .
+			" 
 				WHERE 
 					list_id = :list_id";
 
 		$this->db->query($query);
-		$this->db->bind(':list_id', $listId);
+		$this->db->bind(":list_id", $listId);
 
 		$lists = $this->db->resultset();
 
@@ -88,16 +97,16 @@ class ListClass extends Model {
 	 * Create a new list and add all associated list items.
 	 * Returns boolean result of original list creation.
 	 */
-	public function createList($user, $title, $post) {
-		
-		if (empty($title) || empty($post['list_item_0'])) {
+	public function createList($user, $title, $post)
+	{
+		if (empty($title) || empty($post["list_item_0"])) {
 			return false;
-		}
-		
-		else {
-			
-			$query = "INSERT INTO 
-						" . $this->table . "
+		} else {
+			$query =
+				"INSERT INTO 
+						" .
+				$this->table .
+				"
 						(
 							user_id, 
 							title, 
@@ -110,9 +119,9 @@ class ListClass extends Model {
 					)";
 
 			$this->db->query($query);
-			$this->db->bind(':user_id', $user['id']);
-			$this->db->bind(':title', $title);
-			$this->db->bind(':created', date("Y-m-d H:i:s"));
+			$this->db->bind(":user_id", $user["id"]);
+			$this->db->bind(":title", $title);
+			$this->db->bind(":created", date("Y-m-d H:i:s"));
 
 			$result = $this->db->execute();
 
@@ -121,11 +130,12 @@ class ListClass extends Model {
 
 			// Create list_items entries
 			foreach ($post as $key => $value) {
-				
-				if ($key !== 'title' && $key !== 'csrf' && $value !== '') {
-					
-					$query = "INSERT INTO 
-								" . $this->table2 . " 
+				if ($key !== "title" && $key !== "csrf" && $value !== "") {
+					$query =
+						"INSERT INTO 
+								" .
+						$this->table2 .
+						" 
 							(
 								user_id, 
 								list_id, 
@@ -140,10 +150,10 @@ class ListClass extends Model {
 							)";
 
 					$this->db->query($query);
-					$this->db->bind(':user_id', $user['id']);
-					$this->db->bind(':list_id', $listId);
-					$this->db->bind(':name', $value);
-					$this->db->bind(':created', date("Y-m-d H:i:s"));
+					$this->db->bind(":user_id", $user["id"]);
+					$this->db->bind(":list_id", $listId);
+					$this->db->bind(":name", $value);
+					$this->db->bind(":created", date("Y-m-d H:i:s"));
 
 					$this->db->execute();
 				}
@@ -157,27 +167,31 @@ class ListClass extends Model {
 	 * Edit an existing list.
 	 * Return number
 	 */
-	public function editList($post, $listId) {
-		
-		$query = "UPDATE 
-					" . $this->table . " 
+	public function editList($post, $listId)
+	{
+		$query =
+			"UPDATE 
+					" .
+			$this->table .
+			" 
 				SET 
 					title = :title
 				WHERE 
 					id = :list_id";
 
 		$this->db->query($query);
-		$this->db->bind(':title', $post['title']);
-		$this->db->bind(':list_id', $listId);
-		
+		$this->db->bind(":title", $post["title"]);
+		$this->db->bind(":list_id", $listId);
+
 		$this->db->execute();
 
 		foreach ($post as $key => $value) {
-			
-			if ($value !== '' && $key !== 'csrf') {
-				
-				$query = "UPDATE 
-							" . $this->table2 . "  
+			if ($value !== "" && $key !== "csrf") {
+				$query =
+					"UPDATE 
+							" .
+					$this->table2 .
+					"  
 						SET 
 							name = :name
 						WHERE 
@@ -186,9 +200,9 @@ class ListClass extends Model {
 							list_id = :list_id";
 
 				$this->db->query($query);
-				$this->db->bind(':name', $value);
-				$this->db->bind(':id', $key);
-				$this->db->bind(':list_id', $listId);
+				$this->db->bind(":name", $value);
+				$this->db->bind(":id", $key);
+				$this->db->bind(":list_id", $listId);
 
 				$this->db->execute();
 			}
@@ -201,25 +215,31 @@ class ListClass extends Model {
 	 * Delete a list and all associated list items.
 	 * Return a boolean.
 	 */
-	public function deleteList($listId) {
-		
-		$query = "DELETE FROM 
-					" . $this->table . " 
+	public function deleteList($listId)
+	{
+		$query =
+			"DELETE FROM 
+					" .
+			$this->table .
+			" 
 				WHERE 
 					id = :id";
 
 		$this->db->query($query);
-		$this->db->bind(':id', $listId);
+		$this->db->bind(":id", $listId);
 
 		$result = $this->db->execute();
 
-		$query = "DELETE FROM 
-					" . $this->table2 . " 
+		$query =
+			"DELETE FROM 
+					" .
+			$this->table2 .
+			" 
 				WHERE 
 					list_id = :list_id";
 
 		$this->db->query($query);
-		$this->db->bind(':list_id', $listId);
+		$this->db->bind(":list_id", $listId);
 		$this->db->execute();
 
 		return $result;

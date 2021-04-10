@@ -1,15 +1,15 @@
 <?php
 
-/** 
+/**
  * User Class
- * 
+ *
  * Interact with users and user data.
- * 
+ *
  * Any call to the database regarding the users table will go through
- * the User class. The User class extends the Model class, which simply 
- * instantiates a Database instance that allows us to connect. 
- * 
- * From here, we can get information on any user by their user ID, 
+ * the User class. The User class extends the Model class, which simply
+ * instantiates a Database instance that allows us to connect.
+ *
+ * From here, we can get information on any user by their user ID,
  * username, or email, or we can get a list of all users. This class
  * also includes calls to the password request table.
  */
@@ -17,8 +17,8 @@ namespace App\Models;
 
 use App\Core\Model as Model;
 
-class User extends Model {
-	
+class User extends Model
+{
 	/**
 	 * Select all data from a single user by user ID.
 	 * Return a single row.
@@ -31,7 +31,7 @@ class User extends Model {
 				  LIMIT 1";
 
 		$this->db->query($query);
-		$this->db->bind(':id', $userId);
+		$this->db->bind(":id", $userId);
 
 		$user = $this->db->result();
 
@@ -65,7 +65,7 @@ class User extends Model {
 				  LIMIT 1";
 
 		$this->db->query($query);
-		$this->db->bind(':username', $username);
+		$this->db->bind(":username", $username);
 
 		$user = $this->db->result();
 
@@ -84,7 +84,7 @@ class User extends Model {
 				  LIMIT 1";
 
 		$this->db->query($query);
-		$this->db->bind(':email', $email);
+		$this->db->bind(":email", $email);
 
 		$user = $this->db->result();
 
@@ -104,10 +104,10 @@ class User extends Model {
 					  (:username, :password, :email, :role)";
 
 		$this->db->query($query);
-		$this->db->bind(':username', $username);
-		$this->db->bind(':password', $password);
-		$this->db->bind(':email', $email);
-		$this->db->bind(':role', $role);
+		$this->db->bind(":username", $username);
+		$this->db->bind(":password", $password);
+		$this->db->bind(":email", $email);
+		$this->db->bind(":role", $role);
 
 		$result = $this->db->execute();
 
@@ -128,11 +128,11 @@ class User extends Model {
 				  WHERE LOWER(username) = :username";
 
 		$this->db->query($query);
-		$this->db->bind(':username', $username);
+		$this->db->bind(":username", $username);
 
 		$result = $this->db->result();
 
-		return $result['num'];
+		return $result["num"];
 	}
 
 	/**
@@ -148,11 +148,11 @@ class User extends Model {
 				  WHERE email = :email";
 
 		$this->db->query($query);
-		$this->db->bind(':email', $email);
+		$this->db->bind(":email", $email);
 
 		$result = $this->db->result();
 
-		return $result['num'];
+		return $result["num"];
 	}
 
 	/**
@@ -169,11 +169,11 @@ class User extends Model {
 				  WHERE id = :user_id";
 
 		$this->db->query($query);
-		$this->db->bind(':fullname', $post['fullname']);
-		$this->db->bind(':location', $post['location']);
-		$this->db->bind(':email', $post['email']);
-		$this->db->bind(':description', $post['description']);
-		$this->db->bind(':user_id', $userId);
+		$this->db->bind(":fullname", $post["fullname"]);
+		$this->db->bind(":location", $post["location"]);
+		$this->db->bind(":email", $post["email"]);
+		$this->db->bind(":description", $post["description"]);
+		$this->db->bind(":user_id", $userId);
 
 		$result = $this->db->execute();
 
@@ -190,7 +190,7 @@ class User extends Model {
 				  WHERE id = :id";
 
 		$this->db->query($query);
-		$this->db->bind(':id', $userId);
+		$this->db->bind(":id", $userId);
 
 		$result = $this->db->execute();
 
@@ -198,14 +198,14 @@ class User extends Model {
 					WHERE user_id = :user_id";
 
 		$this->db->query($query);
-		$this->db->bind(':user_id', $userId);
+		$this->db->bind(":user_id", $userId);
 		$this->db->execute();
 
 		$query = "DELETE FROM lists
 					WHERE user_id = :user_id";
 
 		$this->db->query($query);
-		$this->db->bind(':user_id', $userId);
+		$this->db->bind(":user_id", $userId);
 		$this->db->execute();
 
 		return $result;
@@ -224,9 +224,9 @@ class User extends Model {
 					(:user_id, :date_requested, :token)";
 
 		$this->db->query($query);
-		$this->db->bind(':user_id', $userId);
-		$this->db->bind(':date_requested', date('Y-m-d H:i:s'));
-		$this->db->bind(':token', $token);
+		$this->db->bind(":user_id", $userId);
+		$this->db->bind(":date_requested", date("Y-m-d H:i:s"));
+		$this->db->bind(":token", $token);
 
 		$result = $this->db->execute();
 
@@ -234,7 +234,7 @@ class User extends Model {
 	}
 
 	/**
-	 * Before allowing a user to change their password, verify 
+	 * Before allowing a user to change their password, verify
 	 * the password request has taken place on the same session
 	 * based on the GET variables passed through.
 	 * Return the matching result.
@@ -249,9 +249,9 @@ class User extends Model {
 					  id = :id";
 
 		$this->db->query($query);
-		$this->db->bind(':user_id', $userId);
-		$this->db->bind(':id', $passwordRequestId);
-		$this->db->bind(':token', $token);
+		$this->db->bind(":user_id", $userId);
+		$this->db->bind(":id", $passwordRequestId);
+		$this->db->bind(":token", $token);
 
 		$requestInfo = $this->db->result();
 
@@ -270,8 +270,8 @@ class User extends Model {
 				  WHERE id = :id";
 
 		$this->db->query($query);
-		$this->db->bind(':password', $passwordHash);
-		$this->db->bind(':id', $userId);
+		$this->db->bind(":password", $passwordHash);
+		$this->db->bind(":id", $userId);
 
 		$result = $this->db->execute();
 

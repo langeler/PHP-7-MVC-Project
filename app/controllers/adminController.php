@@ -8,34 +8,34 @@ use App\Models\Session;
 use App\Models\User;
 
 class adminController extends Controller
-{	
+{
 	protected $pageTitle;
 	protected $session;
 	protected $admin;
-	
-    /**
-     * Initialize controller with Session, User, Comment, and List classes.
-     */
-    public function __construct()
-    {
-        $this->admin = new Admin();
-        $this->session = new Session();
-        $this->userControl = new User();
-        
-        $isLoggedIn = $this->session->isUserLoggedIn();
-        
-        // TODO add role field to DB & set session value
-        $this->role = $this->session->getSessionValue('role');
-       
-        if (!$this->role == "admin") {
-	    	$this->redirect('login');
-	    }
-    }
+
+	/**
+	 * Initialize controller with Session, User, Comment, and List classes.
+	 */
+	public function __construct()
+	{
+		$this->admin = new Admin();
+		$this->session = new Session();
+		$this->userControl = new User();
+
+		$isLoggedIn = $this->session->isUserLoggedIn();
+
+		// TODO add role field to DB & set session value
+		$this->role = $this->session->getSessionValue("role");
+
+		if (!$this->role == "admin") {
+			$this->redirect("login");
+		}
+	}
 
 	function home()
-	{	          
+	{
 		$this->pageTitle = "Admin Dashboard";
-		  	
+
 		$this->view("admin/home", [
 			"pageTitle" => $this->pageTitle,
 		]);
@@ -44,20 +44,19 @@ class adminController extends Controller
 	function readAllUsers()
 	{
 		$this->pageTitle = "Read All User";
-	    $this->users = $this->admin->readAllUsers();
-	            	
+		$this->users = $this->admin->readAllUsers();
+
 		$this->view("admin/users", [
 			"pageTitle" => $this->pageTitle,
-			'users' => $this->users,
+			"users" => $this->users,
 		]);
 	}
-	
+
 	// Get create user view
 	function readUser()
 	{
-	    
-	    $this->pageTitle = "Create User";
-	    
+		$this->pageTitle = "Create User";
+
 		$this->view("admin/create.user", [
 			"pageTitle" => $this->pageTitle,
 			"roles" => ["user", "admin"],
@@ -67,30 +66,27 @@ class adminController extends Controller
 	function readOneUser($user_id = null)
 	{
 		$this->pageTitle = "Update User";
-		
+
 		// var_dump($user_id);
-		$user_id = $user_id['id'];
-		
+		$user_id = $user_id["id"];
+
 		if (isset($user_id)) {
-			
 			$account = $this->admin->readOneUser($user_id);
 			// var_dump($user_id['id']);
-			
+
 			$this->view("admin/update.user", [
 				"account" => $account,
 				"pageTitle" => $this->pageTitle,
 				"roles" => ["user", "admin"],
 			]);
-		}
-		
-		else {
-			$this->redirect('admin/users');
+		} else {
+			$this->redirect("admin/users");
 		}
 	}
-	
+
 	// Post create user function
-	function createUser() {
-	
+	function createUser()
+	{
 		$this->admin->createUser(
 			$this->post("username"),
 			$this->post("password"),
@@ -98,17 +94,16 @@ class adminController extends Controller
 			$this->post("fullname"),
 			$this->post("role")
 		);
-				
+
 		$this->redirect("admin/home");
 	}
-	
+
 	// Post update user function
-	function updateUser($user_id = null) {
-	
-		$user_id = $user_id['id'];
-		
+	function updateUser($user_id = null)
+	{
+		$user_id = $user_id["id"];
+
 		if (isset($user_id)) {
-	
 			$this->admin->updateUser(
 				$user_id,
 				$this->post("username"),
@@ -118,20 +113,19 @@ class adminController extends Controller
 				$this->post("role")
 			);
 		}
-				
+
 		$this->redirect("admin/home");
 	}
-	
+
 	// Post delete user function
-	function deleteUser($user_id = null) {
-	
-		$user_id = $user_id['id'];
-		
+	function deleteUser($user_id = null)
+	{
+		$user_id = $user_id["id"];
+
 		if (isset($user_id)) {
-			
 			$this->admin->deleteUser($user_id);
 		}
-		
+
 		$this->redirect("admin/home");
 	}
 }

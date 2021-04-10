@@ -72,8 +72,10 @@
             </div>
           </footer>
 
-<script src="<?php echo $this->getScript('purpose.core'); ?>"></script>
-<script src="<?php echo $this->getLibScript('swiper/dist/js/swiper.min'); ?>"></script>
-<script src="<?php echo $this->getScript('purpose'); ?>"></script>
+<script src="<?php echo $this->getScript("purpose.core"); ?>"></script>
+<script src="<?php echo $this->getLibScript(
+	"swiper/dist/js/swiper.min"
+); ?>"></script>
+<script src="<?php echo $this->getScript("purpose"); ?>"></script>
 </body>
 </html>

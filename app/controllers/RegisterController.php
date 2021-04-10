@@ -6,95 +6,97 @@ use App\Core\Controller as Controller;
 
 class RegisterController extends Controller
 {
-    public $pageTitle = 'Register';
-    public $message;
-    public $user;
-    public $errorList = '';
-    public $errors = [];
-    public $csrf;
+	public $pageTitle = "Register";
+	public $message;
+	public $user;
+	public $errorList = "";
+	public $errors = [];
+	public $csrf;
 
-    /**
-     * Make sure password passes proper testing, username does not
-     * contain special characters, and email is valid.
-     */
-    public function validateNewUser($username, $password, $email)
-    {
-        $this->validatePassword($password);
-        $this->validateUsername($username);
-        $this->validateEmail($email);
+	/**
+	 * Make sure password passes proper testing, username does not
+	 * contain special characters, and email is valid.
+	 */
+	public function validateNewUser($username, $password, $email)
+	{
+		$this->validatePassword($password);
+		$this->validateUsername($username);
+		$this->validateEmail($email);
 
-        $usernameSearchResults = $this->userControl->isUsernameAvailable($username);
-        $emailSearchResults = $this->userControl->isEmailAvailable($email);
-        $isApprovedUsername = $this->isApprovedUsername($username);
+		$usernameSearchResults = $this->userControl->isUsernameAvailable(
+			$username
+		);
+		$emailSearchResults = $this->userControl->isEmailAvailable($email);
+		$isApprovedUsername = $this->isApprovedUsername($username);
 
-        // Username already exists in the database
-        if ($usernameSearchResults > 0) {
-            $this->errors[] = USERNAME_EXISTS;
-        }
-        // Email already exists in the database
-        elseif ($emailSearchResults > 0) {
-            $this->errors[] = EMAIL_EXISTS;
-        }
-        // Username does matches with a disallowed username
-        elseif (!$isApprovedUsername) {
-            $this->errors[] = USERNAME_NOT_APPROVED;
-        }
-    }
+		// Username already exists in the database
+		if ($usernameSearchResults > 0) {
+			$this->errors[] = USERNAME_EXISTS;
+		}
+		// Email already exists in the database
+		elseif ($emailSearchResults > 0) {
+			$this->errors[] = EMAIL_EXISTS;
+		}
+		// Username does matches with a disallowed username
+		elseif (!$isApprovedUsername) {
+			$this->errors[] = USERNAME_NOT_APPROVED;
+		}
+	}
 
-    public function post()
-    {
-        $post = filter_post();
-        $this->session->validateCSRF($post['csrf']);
+	public function post()
+	{
+		$post = filter_post();
+		$this->session->validateCSRF($post["csrf"]);
 
-        $username = $post['username'];
-        $password = $post['password'];
-        $email = $post['email'];
+		$username = $post["username"];
+		$password = $post["password"];
+		$email = $post["email"];
 
-        // Validate username, password, and email
-        $this->validateNewUser($username, $password, $email);
+		// Validate username, password, and email
+		$this->validateNewUser($username, $password, $email);
 
-        // Show errors if any tests failed
-        if (!empty($this->errors)) {
-           
-            $this->errorList = $this->getErrors($this->errors);
-            $this->message = $this->errorList;
+		// Show errors if any tests failed
+		if (!empty($this->errors)) {
+			$this->errorList = $this->getErrors($this->errors);
+			$this->message = $this->errorList;
 
-            echo $this->message;
-            exit;
-        }
-        
-        else {
-            
-            // Hash the password
-            $passwordHash = $this->encryptPassword($password);
-            $result = $this->userControl->registerNewUser($username, $passwordHash, $email, 'user');
+			echo $this->message;
+			exit();
+		} else {
+			// Hash the password
+			$passwordHash = $this->encryptPassword($password);
+			$result = $this->userControl->registerNewUser(
+				$username,
+				$passwordHash,
+				$email,
+				"user"
+			);
 
-            // User registration successful
-            if ($result) {
-                
-                $this->user = $this->userControl->getUserByUsername($username);
-                $this->session->login($this->user);
-                
-                // TODO: SESSION Flash class
-                // $this->message = 'Proceed';
+			// User registration successful
+			if ($result) {
+				$this->user = $this->userControl->getUserByUsername($username);
+				$this->session->login($this->user);
+
+				// TODO: SESSION Flash class
+				// $this->message = 'Proceed';
 				// echo $this->message;
-				                
-				$this->redirect('dashboard');
-            }
-        }
 
-        $this->view('register');
-    }
+				$this->redirect("dashboard");
+			}
+		}
 
-    public function get()
-    {
-        $isLoggedIn = $this->session->isUserLoggedIn();
-        $this->csrf = $this->session->getSessionValue('csrf');
+		$this->view("register");
+	}
 
-        if ($isLoggedIn) {
-            $this->redirect('dashboard');
-        }
+	public function get()
+	{
+		$isLoggedIn = $this->session->isUserLoggedIn();
+		$this->csrf = $this->session->getSessionValue("csrf");
 
-        $this->view('register');
-    }
+		if ($isLoggedIn) {
+			$this->redirect("dashboard");
+		}
+
+		$this->view("register");
+	}
 }

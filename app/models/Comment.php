@@ -1,8 +1,8 @@
 <?php
 
-/** 
+/**
  * Comment Class
- * 
+ *
  * Interact with comments.
  */
 namespace App\Models;
@@ -56,9 +56,9 @@ class Comment extends Model
 					  (:username, :comment, :created)";
 
 		$this->db->query($query);
-		$this->db->bind(':username', $username);
-		$this->db->bind(':comment', $comment);
-		$this->db->bind(':created', date("Y-m-d H:i:s"));
+		$this->db->bind(":username", $username);
+		$this->db->bind(":comment", $comment);
+		$this->db->bind(":created", date("Y-m-d H:i:s"));
 
 		$result = $this->db->execute();
 

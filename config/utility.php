@@ -6,11 +6,11 @@
  */
 function filter_post()
 {
-    $post = filter_input_array(INPUT_POST);
-    $post = array_map('trim', $post);
-    $post = array_map('htmlspecialchars', $post);
+	$post = filter_input_array(INPUT_POST);
+	$post = array_map("trim", $post);
+	$post = array_map("htmlspecialchars", $post);
 
-    return $post;
+	return $post;
 }
 
 /**
@@ -19,11 +19,11 @@ function filter_post()
  */
 function filter_get()
 {
-    $get = filter_input_array(INPUT_GET);
-    $get = array_map('trim', $get);
-    $get = array_map('htmlspecialchars', $get);
+	$get = filter_input_array(INPUT_GET);
+	$get = array_map("trim", $get);
+	$get = array_map("htmlspecialchars", $get);
 
-    return $get;
+	return $get;
 }
 
 /**
@@ -32,9 +32,9 @@ function filter_get()
  */
 function getUri()
 {
-    $uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), DS);
+	$uri = trim(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH), DS);
 
-    return $uri;
+	return $uri;
 }
 
 /** Get request method.
@@ -42,7 +42,7 @@ function getUri()
  */
 function getMethod()
 {
-    $method = $_SERVER['REQUEST_METHOD'];
+	$method = $_SERVER["REQUEST_METHOD"];
 
-    return $method;
+	return $method;
 }

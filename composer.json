@@ -41,5 +41,5 @@
 	"require": {
 		"php": ">=7.0"
 	},
-	"require-dev": {}	 
+	"require-dev": {}
 }

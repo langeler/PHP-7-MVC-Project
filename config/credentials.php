@@ -16,7 +16,7 @@ define("DB_USER", "root");
 define("DB_PASS", "root");
 
 // Database name
-define("DB_NAME", "ums");
+define("DB_NAME", "mvc");
 
 // Database table prefix
 define("DB_PREFIX", "mvc_");
