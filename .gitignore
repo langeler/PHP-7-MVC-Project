@@ -1,5 +1,6 @@
 
 .nova/Configuration.json
+.nova/
 .DS_Store
 *.lock
 vendor/
