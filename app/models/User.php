@@ -96,19 +96,25 @@ class User extends Model
 	 * data into the users table.
 	 * Returns true if successful.
 	 */
-	public function registerNewUser($username, $password, $email, $role)
+	public function registerNewUser($forename, $surname, $phone, $username, $password, $email, $role)
 	{
+		$this->setTimeStamp();
+		
 		$query = "INSERT INTO users 
-					  (username, password, email, role) 
+					  (forename, surname, phone, username, password, email, role, status, created) 
 				  VALUES 
-					  (:username, :password, :email, :role)";
+					  (:forename, :surname, :phone, :username, :password, :email, :role, :status, :created)";
 
 		$this->db->query($query);
+		$this->db->bind(":forename", $forename);
+		$this->db->bind(":surname", $surname);
+		$this->db->bind(":phone", $phone);
 		$this->db->bind(":username", $username);
 		$this->db->bind(":password", $password);
 		$this->db->bind(":email", $email);
 		$this->db->bind(":role", $role);
-
+		$this->db->bind(":status", 1);	
+		$this->db->bind(":created", $this->timestamp);
 		$result = $this->db->execute();
 
 		return $result;
@@ -162,17 +168,17 @@ class User extends Model
 	public function updateUserSettings($post, $userId)
 	{
 		$query = "UPDATE users 
-				  SET fullname = :fullname ,
-					  location = :location,
+				  SET forename = :forename ,
+					  surname = :surname,
 					  email = :email, 
-					  description = :description
+					  phone = :phone
 				  WHERE id = :user_id";
 
 		$this->db->query($query);
-		$this->db->bind(":fullname", $post["fullname"]);
-		$this->db->bind(":location", $post["location"]);
+		$this->db->bind(":forename", $post["forename"]);
+		$this->db->bind(":surname", $post["surname"]);
 		$this->db->bind(":email", $post["email"]);
-		$this->db->bind(":description", $post["description"]);
+		$this->db->bind(":phone", $post["phone"]);
 		$this->db->bind(":user_id", $userId);
 
 		$result = $this->db->execute();
@@ -193,20 +199,6 @@ class User extends Model
 		$this->db->bind(":id", $userId);
 
 		$result = $this->db->execute();
-
-		$query = "DELETE FROM list_items
-					WHERE user_id = :user_id";
-
-		$this->db->query($query);
-		$this->db->bind(":user_id", $userId);
-		$this->db->execute();
-
-		$query = "DELETE FROM lists
-					WHERE user_id = :user_id";
-
-		$this->db->query($query);
-		$this->db->bind(":user_id", $userId);
-		$this->db->execute();
 
 		return $result;
 	}

@@ -37,13 +37,7 @@
                   <a class="dropdown-item" href="/dashboard">
                     <i class="fas fa-user"></i>Dashboard
                   </a>
-                  <a class="dropdown-item" href="/lists">
-                    <span class="float-right badge badge-primary">1</span>
-                    <i class="fas fa-list"></i>Lists
-                  </a>
-                 <a class="dropdown-item" href="/<?= $this->user[
-                 	"username"
-                 ] ?>">
+                 <a class="dropdown-item" href="/profile">
                     <i class="fas fa-user"></i>Profile
                   </a>
              
@@ -98,10 +92,11 @@
             </li>
             
             <?php if ($this->session->isUserLoggedIn()): ?> 
+
             <li class="nav-item">
-              <a class="nav-link" href="/lists">Lists</a>
-            </li>
-            
+              <a class="nav-link" href="/profile">Profile</a>
+            </li>            
+
             <li class="nav-item">
               <a class="nav-link" href="/settings">Settings</a>
             </li>

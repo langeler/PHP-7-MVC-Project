@@ -32,17 +32,17 @@
                         <input type="text" name="email" id="email" value="<?= $this
                         	->user["email"] ?>">
 
-                        <label for="fullname">Name</label>
-                        <input type="text" name="fullname" id="fullname" value="<?= $this
-                        	->user["fullname"] ?>">
+                        <label for="forename">Forename</label>
+                        <input type="text" name="forename" id="forename" value="<?= $this
+                        	->user["forename"] ?>">
 
-                        <label for="location">Location</label>
-                        <input type="text" name="location" id="location" value="<?= $this
-                        	->user["location"] ?>">
+                        <label for="surname">Surname</label>
+                        <input type="text" name="surname" id="surname" value="<?= $this
+                        	->user["surname"] ?>">
 
-                        <label for="description">About</label>
-                        <textarea name="description" id="description" cols="30" rows="5"><?= $this
-                        	->user["description"] ?></textarea>
+                        <label for="phone">Phone</label>
+                        <input type="text" name="phone" id="phone" value="<?= $this
+                        	->user["phone"] ?>">
 
                         <input type="submit" value="Update">
                     </form>

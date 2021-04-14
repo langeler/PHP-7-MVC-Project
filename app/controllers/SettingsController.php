@@ -15,7 +15,7 @@ class SettingsController extends Controller
 
 	public function post()
 	{
-		$post = filter_post();
+		$post = $this->filter_post();
 
 		// Get user by session value
 		$userId = $this->session->getSessionValue("user_id");

@@ -12,6 +12,7 @@ class adminController extends Controller
 	protected $pageTitle;
 	protected $session;
 	protected $admin;
+	protected $role;
 	protected $categories;
 
 	/**
@@ -129,8 +130,7 @@ class adminController extends Controller
 
 		$this->redirect("admin/home");
 	}
-	
-	
+
 	function readAllCategories()
 	{
 		$this->pageTitle = "Read All Categories";
@@ -155,12 +155,10 @@ class adminController extends Controller
 	function readOneCategory($category_id = null)
 	{
 		$this->pageTitle = "Update Category";
-		
-		
+
 		$category_id = $category_id["id"];
 		var_dump($category_id);
 		if (isset($category_id)) {
-			
 			$category = $this->admin->readOneCategory($category_id);
 
 			$this->view("admin/update.category", [
@@ -206,6 +204,84 @@ class adminController extends Controller
 
 		if (isset($category_id)) {
 			$this->admin->deleteCategory($category_id);
+		}
+
+		$this->redirect("admin/home");
+	}
+
+	function readAllCategories()
+	{
+		$this->pageTitle = "Read All Categories";
+		$this->categories = $this->admin->readAllCategories();
+
+		$this->view("admin/categories", [
+			"pageTitle" => $this->pageTitle,
+			"categories" => $this->categories,
+		]);
+	}
+
+	// Get create user view
+	function readCategory()
+	{
+		$this->pageTitle = "Create Category";
+
+		$this->view("admin/create.category", [
+			"pageTitle" => $this->pageTitle,
+		]);
+	}
+
+	function readOneCategory($category_id = null)
+	{
+		$this->pageTitle = "Update Category";
+
+		$category_id = $category_id["id"];
+		var_dump($category_id);
+		if (isset($category_id)) {
+			$category = $this->admin->readOneCategory($category_id);
+
+			$this->view("admin/update.category", [
+				"category" => $category,
+				"pageTitle" => $this->pageTitle,
+			]);
+		} else {
+			$this->redirect("admin/users");
+		}
+	}
+
+	// Post create user function
+	function createCategory()
+	{
+		$this->admin->createCategory(
+			$this->post("name"),
+			$this->post("description")
+		);
+
+		$this->redirect("admin/home");
+	}
+
+	// Post update user function
+	function updateProduct($product_id = null)
+	{
+		$product_id = $product_id["id"];
+
+		if (isset($category_id)) {
+			$this->admin->updateProduct(
+				$product_id,
+				$this->post("name"),
+				$this->post("description")
+			);
+		}
+
+		$this->redirect("admin/home");
+	}
+
+	// Post delete user function
+	function deleteProduct($product_id = null)
+	{
+		$product_id = $product_id["id"];
+
+		if (isset($product_id)) {
+			$this->admin->deleteProduct($product_id);
 		}
 
 		$this->redirect("admin/home");

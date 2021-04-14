@@ -24,6 +24,16 @@
                 <p>This website is a demo. You're not signing up for any product, just testing out the front end of Laconia. Your password is securely encrypted, and you can fully delete all your information at any time.</p>
 
                 <input name="csrf" type="hidden" value="<?= $this->csrf ?>">
+
+                <label for="forename">Forename</label>
+                <input type="text" id="forename" name="forename">
+
+                <label for="surname">Surname</label>
+                <input type="text" id="surname" name="surname">
+
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" name="phone">
+
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username">
 

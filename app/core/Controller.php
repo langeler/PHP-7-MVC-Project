@@ -7,103 +7,86 @@
  */
 namespace App\Core;
 
+use App\Models\Article;
 use App\Models\Admin;
-use App\Models\Comment;
-use App\Models\ListClass;
+use App\Models\CartItem;
+use App\Models\Category;
+use App\Models\Contact;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\ProductImage;
+use App\Models\ProductType;
 use App\Models\Session;
+use App\Models\Subject;
 use App\Models\User;
 
 abstract class Controller
 {
-	protected $pageTitle;
-	protected $message;
-	protected $session;
-	protected $userControl;
-	protected $list;
+	protected $article;
 	protected $admin;
+	protected $cart_item;
+	protected $category;
+	protected $contact;
+	protected $order_item;
+	protected $order;
+	protected $product;
+	protected $product_image;
+	protected $product_type;
+	protected $session;
+	protected $subject;
+	protected $user;
+	protected $pageTitle;
 
 	/**
 	 * Initialize controller with Session, User, Comment, and List classes.
 	 */
 	public function __construct()
 	{
+		$this->article = new Article();
 		$this->admin = new Admin();
+		$this->cart_item = new CartItem();
+		$this->category = new Category();
+		$this->contact = new Contact();
+		$this->order_item = new OrderItem();
+		$this->order = new Order();
+		$this->product = new Product();
+		$this->product_image = new ProductImage();
+		$this->product_type = new ProductType();
 		$this->session = new Session();
+		$this->subject = new Subject();
 		$this->userControl = new User();
-		$this->list = new ListClass();
-		$this->comment = new Comment();
 	}
 
 	public function escape($html)
 	{
 		return htmlspecialchars($html, ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8");
 	}
-
+	
 	/**
-	 * Shortcut to retrieve JavaScript file from the /js/ directory.
-	 * Returns a URL.
-	 */
-	protected function getScript($filename)
+	* Get filtered $_POST values.
+	* Return an array.
+	*/
+	protected function filter_post()
 	{
-		$file = strtolower($filename);
+		$post = filter_input_array(INPUT_POST);
+		$post = array_map("trim", $post);
+		$post = array_map("htmlspecialchars", $post);
 
-		return PROTOCOL . $_SERVER["HTTP_HOST"] . "/assets/js/" . $file . ".js";
+		return $post;
 	}
 
 	/**
-	 * Shortcut to retrieve Library script file from the /libs/ directory.
-	 * Returns a URL.
-	 */
-	protected function getLibScript($filename)
+	* Get filtered $_GET values.
+	* Return an array.
+	*/
+	protected function filter_get()
 	{
-		$file = strtolower($filename);
+		$get = filter_input_array(INPUT_GET);
+		$get = array_map("trim", $get);
+		$get = array_map("htmlspecialchars", $get);
 
-		return PROTOCOL .
-			$_SERVER["HTTP_HOST"] .
-			"/assets/libs/" .
-			$file .
-			".js";
-	}
-
-	/**
-	 * Shortcut to retrieve Library style file from the /libs/ directory.
-	 * Returns a URL.
-	 */
-	protected function getLibStyle($filename)
-	{
-		$file = strtolower($filename);
-
-		return PROTOCOL .
-			$_SERVER["HTTP_HOST"] .
-			"/assets/libs/" .
-			$file .
-			".css";
-	}
-
-	/**
-	 * Shortcut to retrieve stylesheet file from the /css/ directory.
-	 * Returns a URL.
-	 */
-	protected function getStylesheet($filename)
-	{
-		$file = strtolower($filename);
-
-		return PROTOCOL .
-			$_SERVER["HTTP_HOST"] .
-			"/assets/css/" .
-			$file .
-			".css";
-	}
-
-	/**
-	 * Shortcut to retrieve image file from the /images/ directory.
-	 * Returns a URL.
-	 */
-	protected function getImage($filename)
-	{
-		$file = strtolower($filename);
-
-		return PROTOCOL . $_SERVER["HTTP_HOST"] . "/assets/img/" . $file;
+		return $get;
 	}
 
 	protected function post()
@@ -169,6 +152,16 @@ abstract class Controller
 		$redirect = ltrim($_SERVER["REDIRECT_URL"], DS);
 
 		return $redirect === $view;
+	}
+	
+	// function to generate a random token
+	public function random() {
+
+		// generate random token
+		$token = bin2hex(random_bytes(32));
+
+		// return the token
+		return $token;
 	}
 
 	/**
@@ -295,5 +288,72 @@ abstract class Controller
 			$this->errorList .= $error . "\n";
 		}
 		return $this->errorList;
+	}
+	
+	/**
+	 * Shortcut to retrieve JavaScript file from the /js/ directory.
+	 * Returns a URL.
+	 */
+	protected function getScript($filename)
+	{
+		$file = strtolower($filename);
+
+		return PROTOCOL . $_SERVER["HTTP_HOST"] . "/assets/js/" . $file . ".js";
+	}
+
+	/**
+	 * Shortcut to retrieve Library script file from the /libs/ directory.
+	 * Returns a URL.
+	 */
+	protected function getLibScript($filename)
+	{
+		$file = strtolower($filename);
+
+		return PROTOCOL .
+			$_SERVER["HTTP_HOST"] .
+			"/assets/libs/" .
+			$file .
+			".js";
+	}
+
+	/**
+	 * Shortcut to retrieve Library style file from the /libs/ directory.
+	 * Returns a URL.
+	 */
+	protected function getLibStyle($filename)
+	{
+		$file = strtolower($filename);
+
+		return PROTOCOL .
+			$_SERVER["HTTP_HOST"] .
+			"/assets/libs/" .
+			$file .
+			".css";
+	}
+
+	/**
+	 * Shortcut to retrieve stylesheet file from the /css/ directory.
+	 * Returns a URL.
+	 */
+	protected function getStylesheet($filename)
+	{
+		$file = strtolower($filename);
+
+		return PROTOCOL .
+			$_SERVER["HTTP_HOST"] .
+			"/assets/css/" .
+			$file .
+			".css";
+	}
+
+	/**
+	 * Shortcut to retrieve image file from the /images/ directory.
+	 * Returns a URL.
+	 */
+	protected function getImage($filename)
+	{
+		$file = strtolower($filename);
+
+		return PROTOCOL . $_SERVER["HTTP_HOST"] . "/assets/img/" . $file;
 	}
 }

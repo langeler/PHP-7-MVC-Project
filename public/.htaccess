@@ -1,14 +1,8 @@
-RewriteEngine On
-RewriteBase /
-RewriteCond %{REQUEST_FILENAME}%  !-d
-RewriteCond %{REQUEST_FILENAME}%  !-f
+Options -Indexes
 
-# Do not route static files in the public directory
-RewriteRule \.(js|css|svg|gif|jpg|jpeg|png)$ -                 [L]
-
-# Route /edit/$ to /edit?list_id=$ 
-RewriteRule ^/?edit/(.*?)/?$                 /edit?list_id=$1  [L]
-
-# Route everything else to index.php in the public directory
-# Note: username-router get variable used for public user profiles
-RewriteRule ^(.*)$                index.php?username-router=$1 [QSA,L]
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php?REWRITE_ENABLED=1 [QSA,L]
+</IfModule>

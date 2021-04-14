@@ -15,7 +15,7 @@ $router->get("register", "RegisterController@get");
 // Get logged in routes
 $router->get("dashboard", "DashboardController@get");
 $router->get("logout", "LogoutController@get");
-$router->get("profile", "UserProfileController@get");
+$router->get("profile", "ProfileController@get");
 $router->get("settings", "SettingsController@get");
 
 // Post logged out routes
@@ -31,6 +31,7 @@ $router->get("admin/home", "adminController@home");
 
 // Get admin category routes
 $router->get("admin/categories", "adminController@readAllCategories");
+$router->get("admin/categories/{page}", "adminController@readAllCategories");
 $router->get("admin/category/create", "adminController@readCategory");
 $router->get("admin/category/update/{id}", "adminController@readOneCategory");
 $router->get("admin/category/delete/{id}", "adminController@deleteCategory");
@@ -41,6 +42,7 @@ $router->post("dmin/category/update/{id}", "adminController@updateCategory");
 
 // Get admin user routes
 $router->get("admin/users", "adminController@readAllUsers");
+$router->get("admin/users/{page}", "adminController@readAllUsers");
 $router->get("admin/user/create", "adminController@readUser");
 $router->get("admin/user/update/{id}", "adminController@readOneUser");
 $router->get("admin/user/delete/{id}", "adminController@deleteUser");

@@ -17,8 +17,23 @@ class RegisterController extends Controller
 	 * Make sure password passes proper testing, username does not
 	 * contain special characters, and email is valid.
 	 */
-	public function validateNewUser($username, $password, $email)
+	public function validateNewUser($forename, $surname, $phone, $username, $password, $email)
 	{
+		// Validate forename
+		if (empty($forename)) {
+			$this->errors[] = "Your first name is required";
+		}
+		
+		// Validate surname
+		if (empty($surname)) {
+			$this->errors[] = "Your last name is required";
+		}
+		
+		// Validate phone
+		if (empty($phone)) {
+			$this->errors[] = "Your phone number is required";
+		}
+		
 		$this->validatePassword($password);
 		$this->validateUsername($username);
 		$this->validateEmail($email);
@@ -45,15 +60,18 @@ class RegisterController extends Controller
 
 	public function post()
 	{
-		$post = filter_post();
+		$post = $this->filter_post();
 		$this->session->validateCSRF($post["csrf"]);
-
+		
+		$forename = $post["forename"];
+		$surname = $post["surname"];
+		$phone = $post["phone"];		
 		$username = $post["username"];
 		$password = $post["password"];
 		$email = $post["email"];
 
 		// Validate username, password, and email
-		$this->validateNewUser($username, $password, $email);
+		$this->validateNewUser($forename, $surname, $phone, $username, $password, $email);
 
 		// Show errors if any tests failed
 		if (!empty($this->errors)) {
@@ -66,6 +84,9 @@ class RegisterController extends Controller
 			// Hash the password
 			$passwordHash = $this->encryptPassword($password);
 			$result = $this->userControl->registerNewUser(
+				$forename,
+				$surname,
+				$phone,
 				$username,
 				$passwordHash,
 				$email,

@@ -13,7 +13,7 @@ class LoginController extends Controller
 
 	public function post()
 	{
-		$post = filter_post();
+		$post = $this->filter_post();
 		$this->session->validateCSRF($post["csrf"]);
 
 		$username = $post["username"];

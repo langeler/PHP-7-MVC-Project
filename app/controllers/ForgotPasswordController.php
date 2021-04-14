@@ -15,7 +15,7 @@ class ForgotPasswordController extends Controller
 
 	public function post()
 	{
-		$post = filter_post();
+		$post = $this->filter_post();
 		$this->session->validateCSRF($post["csrf"]);
 
 		$email = filter_var($post["email"], FILTER_VALIDATE_EMAIL);
