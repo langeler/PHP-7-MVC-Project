@@ -8,21 +8,23 @@
 	            <?= $this->pageTitle ?>
             </h6>
             <h1 class="text-white mb-4">
-	        	<?= $this->user["username"] ?>
+	        	<?= $this->account["username"] ?>
             </h1>
 		
-        <?php if (!empty($this->user["description"])): ?>
-            <p> <?= $this->user["description"] ?> </p>
+		<p>
+        <?php if (!empty($this->account["forename"])): ?>
+        	<?= $this->account["forename"] ?>
         <?php endif; ?>
         
-
-        <?php if (empty($this->user["description"])): ?>
-           <p><div> Welcome to the <?= $this->user[
-           	"username"
-           ] ?>'s public Laconia page! <?= $this->user[
-	"username"
-] ?> has not written a description yet. Please check back later.</div></p>
+        <?php if (!empty($this->account["surname"])): ?>
+       		<?= $this->account["surname"] ?>
         <?php endif; ?>
+        </p>
+        
+        <?php if (!empty($this->account["email"])): ?>
+       		<?= $this->account["email"] ?>
+        <?php endif; ?>
+        </p>
     </div>
  </div>
  </div>

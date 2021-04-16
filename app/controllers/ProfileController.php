@@ -7,17 +7,16 @@ use App\Models\ListClass;
 
 class ProfileController extends Controller
 {
-	public $pageTitle;
-	public $user;
+	protected $pageTitle = "Profile";
+	protected $account;
 
 	public function get()
 	{
-		$userId = $this->session->getSessionValue("user_id");
-		$this->session->authenticate($userId);
-		$this->csrf = $this->session->getSessionValue("csrf");
+		$this->userModel->id = $this->session->getSessionValue("user_id");
+		$this->session->authenticate($this->userModel->id);
 
 		// Get user by session value
-		$this->user = $this->userControl->getUser($userId);
+		$this->account = $this->userModel->getUser();
 
 		$this->view("profile");
 	}

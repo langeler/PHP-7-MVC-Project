@@ -6,107 +6,55 @@ use App\Core\Controller as Controller;
 
 class RegisterController extends Controller
 {
-	public $pageTitle = "Register";
-	public $message;
-	public $user;
-	public $errorList = "";
-	public $errors = [];
-	public $csrf;
-
-	/**
-	 * Make sure password passes proper testing, username does not
-	 * contain special characters, and email is valid.
-	 */
-	public function validateNewUser($forename, $surname, $phone, $username, $password, $email)
-	{
-		// Validate forename
-		if (empty($forename)) {
-			$this->errors[] = "Your first name is required";
-		}
-		
-		// Validate surname
-		if (empty($surname)) {
-			$this->errors[] = "Your last name is required";
-		}
-		
-		// Validate phone
-		if (empty($phone)) {
-			$this->errors[] = "Your phone number is required";
-		}
-		
-		$this->validatePassword($password);
-		$this->validateUsername($username);
-		$this->validateEmail($email);
-
-		$usernameSearchResults = $this->userControl->isUsernameAvailable(
-			$username
-		);
-		$emailSearchResults = $this->userControl->isEmailAvailable($email);
-		$isApprovedUsername = $this->isApprovedUsername($username);
-
-		// Username already exists in the database
-		if ($usernameSearchResults > 0) {
-			$this->errors[] = USERNAME_EXISTS;
-		}
-		// Email already exists in the database
-		elseif ($emailSearchResults > 0) {
-			$this->errors[] = EMAIL_EXISTS;
-		}
-		// Username does matches with a disallowed username
-		elseif (!$isApprovedUsername) {
-			$this->errors[] = USERNAME_NOT_APPROVED;
-		}
-	}
+	protected $pageTitle = "Register";
+	protected $message;
+	protected $account;
+	protected $csrf;
 
 	public function post()
 	{
 		$post = $this->filter_post();
-		$this->session->validateCSRF($post["csrf"]);
+		$this->session->csrf = $post["csrf"];
+		$this->session->validateCSRF();
 		
-		$forename = $post["forename"];
-		$surname = $post["surname"];
-		$phone = $post["phone"];		
-		$username = $post["username"];
-		$password = $post["password"];
-		$email = $post["email"];
+		if ($this->session->validateCSRF()) {
+			
+			$this->userModel->forename = $post["forename"];
+			$this->userModel->surname = $surname = $post["surname"];
+			$this->userModel->phone = $post["phone"];		
+			$this->userModel->username = $post["username"];
+			$this->userModel->password = $post["password"];
+			$this->userModel->email = $post["email"];
 
-		// Validate username, password, and email
-		$this->validateNewUser($forename, $surname, $phone, $username, $password, $email);
+			// Validate username, password, and email
+			$this->userModel->validateNewUser();
 
-		// Show errors if any tests failed
-		if (!empty($this->errors)) {
-			$this->errorList = $this->getErrors($this->errors);
-			$this->message = $this->errorList;
+			// Show errors if any tests failed
+			if (!empty($this->userModel->errors)) {
+		
+				$this->message = $this->userModel->getErrors($this->errors);
 
-			echo $this->message;
-			exit();
-		} else {
-			// Hash the password
-			$passwordHash = $this->encryptPassword($password);
-			$result = $this->userControl->registerNewUser(
-				$forename,
-				$surname,
-				$phone,
-				$username,
-				$passwordHash,
-				$email,
-				"user"
-			);
+				echo $this->message;
+				exit();
+			}
+		
+			else {
+			
+				// Hash the password
+				$this->userModel->hashPassword();
+			
+				$result = $this->userModel->registerNewUser();
 
-			// User registration successful
-			if ($result) {
-				$this->user = $this->userControl->getUserByUsername($username);
-				$this->session->login($this->user);
-
-				// TODO: SESSION Flash class
-				// $this->message = 'Proceed';
-				// echo $this->message;
-
-				$this->redirect("dashboard");
+				// User registration successful
+				if ($result) {
+				
+					$this->account = $this->userModel->getUserByUsername();
+					$this->session->login($this->account);
+				
+					$this->redirect("dashboard");
+				}
 			}
 		}
-
-		$this->view("register");
 	}
 
 	public function get()

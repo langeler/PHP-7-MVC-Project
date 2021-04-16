@@ -18,7 +18,7 @@
     		
     	<div class="container">
 		  <?php include __DIR__ . "/partials/message.php"; ?>
-			<form method="post">
+			<form method="post" action="">
                 <input name="csrf" type="hidden" value="<?= $this->csrf ?>">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username">

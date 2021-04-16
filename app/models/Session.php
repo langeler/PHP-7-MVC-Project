@@ -14,6 +14,8 @@ namespace App\Models;
 
 class Session
 {
+	public $csrf;
+	
 	/**
 	 * Initialize the session with class instantiation.
 	 *
@@ -93,11 +95,14 @@ class Session
 	/**
 	 * Validate CSRF
 	 */
-	public function validateCSRF($csrf)
+	public function validateCSRF()
 	{
-		if (!hash_equals($_SESSION["csrf"], $csrf)) {
-			header("Location: /login");
-			exit();
+		if (!hash_equals($_SESSION["csrf"], $this->csrf)) {
+			return false;
+		}
+		
+		else {
+			return true;
 		}
 	}
 

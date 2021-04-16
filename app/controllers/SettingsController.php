@@ -7,57 +7,59 @@ use App\Models\ListClass;
 
 class SettingsController extends Controller
 {
-	public $pageTitle = "Settings";
-	public $message;
-	public $errors = [];
-	public $user;
-	public $csrf;
+	protected $pageTitle = "Settings";
+	protected $message;
+	protected $account;
+	protected $csrf;
 
 	public function post()
 	{
 		$post = $this->filter_post();
 
 		// Get user by session value
-		$userId = $this->session->getSessionValue("user_id");
-		$this->session->authenticate($userId);
-		$this->session->validateCSRF($post["csrf"]);
+		$this->userModel->id = $this->session->getSessionValue("user_id");
+		$this->session->authenticate($this->userModel->id);
+		$this->session->csrf = $post["csrf"];
+		$this->session->validateCSRF();
+		
+		if ($this->session->validateCSRF()) {
+			
+			if (isset($post["delete_user"])) {
+			
+				$this->userModel->deleteUser();
+			
+				$this->session->logout();
 
-		if (isset($post["delete_user"])) {
-			$this->userControl->deleteUser($userId);
-			$this->session->logout();
-
-			$this->message = USER_DELETED;
-
-			echo $this->message;
-			exit();
-		} elseif (isset($post["email"])) {
-			$this->user = $this->userControl->getUser($userId);
-
-			if ($post["email"] !== $this->user["email"]) {
-				$emailSearchResults = $this->userControl->isEmailAvailable(
-					$post["email"]
-				);
-
-				if ($emailSearchResults > 0) {
-					$this->errors[] = EMAIL_EXISTS;
-				}
-			}
-
-			if (!empty($this->errors)) {
-				$this->errorList = $this->getErrors($this->errors);
-				$this->message = $this->errorList;
+				$this->message = USER_DELETED;
 
 				echo $this->message;
 				exit();
-			} else {
+			}
+		
+			$this->userModel->forename = $post['forename'];
+			$this->userModel->surname = $post['surname'];
+			$this->userModel->phone = $post['phone'];
+			$this->userModel->email = $post['email'];
+				
+			$this->userModel->validateUserSettings();
+		
+			// Show errors if any tests failed
+			if (!empty($this->userModel->errors)) {
+			
+				$this->message = $this->userModel->getErrors($this->errors);
+
+				echo $this->message;
+				exit();
+			}
+			
+			else {
+				
 				// Update settings
-				$this->userControl->updateUserSettings($post, $userId);
-				$this->user = $this->userControl->getUser($userId);
-
-				// TODO: Session flash class
-				// $this->message = SETTINGS_UPDATE_SUCCESS;
-				// echo $this->message;
-
+				$this->userModel->updateUserSettings();
+				
+				// Get new user data
+				$this->account = $this->userModel->getUser();
+			
 				$this->redirect("dashboard");
 			}
 		}
@@ -65,12 +67,12 @@ class SettingsController extends Controller
 
 	public function get()
 	{
-		$userId = $this->session->getSessionValue("user_id");
-		$this->session->authenticate($userId);
+		$this->userModel->id = $this->session->getSessionValue("user_id");
+		$this->session->authenticate($this->userModel->id);
 		$this->csrf = $this->session->getSessionValue("csrf");
 
 		// Get user by session value
-		$this->user = $this->userControl->getUser($userId);
+		$this->account = $this->userModel->getUser();
 
 		$this->view("settings");
 	}

@@ -8,7 +8,7 @@
 	            <?= $this->pageTitle ?>
             </h6>
             <h1 class="text-white mb-4">
-	        	Welcome, <?= $this->user["username"] ?>
+	        	Welcome, <?= $this->account["username"] ?>
             </h1>
             <p class="lead text-muted lh-180 mb-0">This is the place where you can find the custom built shortcodes especially for this theme based on the components, already, described in the Documentation.</p>
           </div>
@@ -19,28 +19,22 @@
 <section class="content-section">
     <div class="container">
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <div class="card text-center">
                     <h3>My profile</h3>
                     <p>View your public profile.</p>
                     <a class="button" href="/<?= strtolower(
-                    	$this->user["username"]
+                    	$this->account["username"]
                     ) ?>">View Profile</a>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <div class="card text-center">
                     <h3>My settings</h3>
                     <p>Update your settings.</p>
                     <a class="button" href="/settings">Update Settings</a>
                 </div>
             </div>
-            <div class="col-sm-4">
-                <div class="card text-center">
-                    <h3>My lists</h3>
-                    <p>View, create, edit, delete lists.</p>
-                    <a class="button" href="/lists">Go to Lists</a>
-                </div>
             </div>
         </div>
     </div>

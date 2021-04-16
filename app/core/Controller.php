@@ -55,7 +55,7 @@ abstract class Controller
 		$this->product_type = new ProductType();
 		$this->session = new Session();
 		$this->subject = new Subject();
-		$this->userControl = new User();
+		$this->userModel = new User();
 	}
 
 	public function escape($html)
@@ -154,6 +154,18 @@ abstract class Controller
 		return $redirect === $view;
 	}
 	
+	/**
+     * Redirects to the specified page.
+     */
+    protected function redirect($view)
+    {
+        $view = strtolower($view);
+
+        header('Location: /' . $view);
+        exit;
+    }
+
+	
 	// function to generate a random token
 	public function random() {
 
@@ -162,132 +174,6 @@ abstract class Controller
 
 		// return the token
 		return $token;
-	}
-
-	/**
-	 * Redirects to the specified page.
-	 */
-	protected function redirect($view)
-	{
-		$view = strtolower($view);
-
-		header("Location:" . DS . $view);
-		exit();
-	}
-
-	/**
-	 * Securely hash a password.
-	 * Returns hashed password.
-	 */
-	protected function encryptPassword($password)
-	{
-		$passwordHash = password_hash($password, PASSWORD_BCRYPT, [
-			"cost" => 12,
-		]);
-
-		return $passwordHash;
-	}
-
-	/**
-	 * Vertify a submitted password against existing password.
-	 * Return a Boolean.
-	 */
-	protected function verifyPassword($submittedPassword, $password)
-	{
-		$validPassword = password_verify($submittedPassword, $password);
-
-		return $validPassword;
-	}
-
-	/**
-	 * Check if a username is in the list of disallowed usernames.
-	 * Return a Boolean.
-	 */
-	protected function isApprovedUsername($username)
-	{
-		$approved = in_array($username, DISALLOWED_USERNAMES) ? false : true;
-
-		return $approved;
-	}
-
-	/**
-	 * Check if username is empty, and make sure it only contains
-	 * alphanumeric characters, numbers, dashes, and underscores.
-	 * Return an error or null.
-	 */
-	protected function validateUsername($username)
-	{
-		if (!empty($username)) {
-			if (strlen($username) < "3") {
-				$this->errors[] = USERNAME_TOO_SHORT;
-			}
-			if (strlen($username) > "50") {
-				$this->errors[] = USERNAME_TOO_LONG;
-			}
-			// Match a-z, A-Z, 1-9, -, _.
-			if (!preg_match("/^[a-zA-Z\d\-_]+$/i", $username)) {
-				$this->errors[] = USERNAME_CONTAINS_DISALLOWED;
-			}
-		} else {
-			$this->errors[] = USERNAME_MISSING;
-		}
-	}
-
-	/**
-	 * Check if password is empty, and make sure it conforms
-	 * to password security standards.
-	 * Return an error or null.
-	 */
-	protected function validatePassword($password)
-	{
-		if (!empty($password)) {
-			if (strlen($password) < "8") {
-				$this->errors[] = PASSWORD_TOO_SHORT;
-			}
-			if (!preg_match("#[0-9]+#", $password)) {
-				$this->errors[] = PASSWORD_NEEDS_NUMBER;
-			}
-			if (!preg_match("#[A-Z]+#", $password)) {
-				$this->errors[] = PASSWORD_NEEDS_UPPERCASE;
-			}
-			if (!preg_match("#[a-z]+#", $password)) {
-				$this->errors[] = PASSWORD_NEEDS_LOWERCASE;
-			}
-		} else {
-			$this->errors[] = PASSWORD_MISSING;
-		}
-	}
-
-	/**
-	 * Check if email is empty, and test it against PHP built in
-	 * email validation.
-	 * Return an error or null.
-	 */
-	protected function validateEmail($email)
-	{
-		if (!empty($email)) {
-			// Remove all illegal characters from email
-			$email = filter_var($email, FILTER_SANITIZE_EMAIL);
-
-			// Validate e-mail
-			if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-				$this->errors[] = EMAIL_NOT_VALID;
-			}
-		} else {
-			$this->errors[] = EMAIL_MISSING;
-		}
-	}
-
-	/**
-	 * Get list of errors from validation.
-	 * Return a string.
-	 */
-	protected function getErrors($errors)
-	{
-		foreach ($errors as $error) {
-			$this->errorList .= $error . "\n";
-		}
-		return $this->errorList;
 	}
 	
 	/**

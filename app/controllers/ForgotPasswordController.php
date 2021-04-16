@@ -7,47 +7,51 @@ use Laconia\Database;
 
 class ForgotPasswordController extends Controller
 {
-	public $pageTitle = "Forgot Password";
-	public $message;
-	public $user;
-	public $success = false;
-	public $csrf;
+	protected $pageTitle = "Forgot Password";
+	protected $message;
+	protected $account;
+	protected $success = false;
 
 	public function post()
 	{
 		$post = $this->filter_post();
-		$this->session->validateCSRF($post["csrf"]);
+		$this->session->csrf = $post["csrf"];
+		
+		if ($this->session->validateCSRF()) {
 
-		$email = filter_var($post["email"], FILTER_VALIDATE_EMAIL);
-		$email = filter_var($email, FILTER_SANITIZE_EMAIL);
-		$db = new Database();
+			$this->userModel->email = filter_var($post["email"], FILTER_VALIDATE_EMAIL);
+			$this->userModel->email = filter_var($this->userModel->email, FILTER_SANITIZE_EMAIL);
 
-		$this->user = $this->userControl->getUserByEmail($email);
+			$this->account = $this->userModel->getUserByEmail();
 
-		// Email doesn't exist
-		if (empty($this->user)) {
-			$this->message = EMAIL_NOT_EXISTS;
+			// Email doesn't exist
+			if (empty($this->account)) {
+				
+				$this->message = EMAIL_NOT_EXISTS;
 
-			echo $this->message;
-			exit();
-		}
-		// Email exists, proceed
-		else {
-			$this->success = true;
+				echo $this->message;
+				exit();
+			}
+		
+			// Email exists, proceed
+			else {
+			
+				$this->success = true;
 
-			// Create a secure token for this forgot password request.
-			$token = openssl_random_pseudo_bytes(16);
-			$token = bin2hex($token);
+				// Create a secure token for this forgot password request.
+				$token = openssl_random_pseudo_bytes(16);
+				$token = bin2hex($token);
 
-			$request = $this->userControl->createPasswordRequest(
-				$this->user["id"],
-				$token
-			);
-			$passwordRequestId = $db->lastInsertId();
+				$request = $this->userModel->createPasswordRequest(
+					$this->account["id"],
+					$token
+				);
+			
+				$passwordRequestId = $db->lastInsertId();
 
-			// Create URL for password script
-			$url = PROTOCOL + "{$_SERVER["HTTP_HOST"]}/reset-password";
-			$passwordResetLink = "{$url}?uid={$this->user["id"]}&id={$passwordRequestId}&t={$token}";
+				// Create URL for password script
+				$url = PROTOCOL + "{$_SERVER["HTTP_HOST"]}/reset-password";
+				$passwordResetLink = "{$url}?uid={$this->account["id"]}&id={$passwordRequestId}&t={$token}";
 
 			// @mail(
 			//     $email,
@@ -59,9 +63,10 @@ class ForgotPasswordController extends Controller
 			//     null
 			// );
 
-			$this->message = PASSWORD_EMAIL_SENT;
+				$this->message = PASSWORD_EMAIL_SENT;
 
-			echo $this->message;
+				echo $this->message;
+			}
 		}
 	}
 

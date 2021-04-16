@@ -9,7 +9,8 @@ class ResetPasswordController extends Controller
 	public function get()
 	{
 		$get = filter_get();
-		$requestInfo = $this->userControl->verifyPasswordRequest(
+		
+		$requestInfo = $this->userModel->verifyPasswordRequest(
 			$get["uid"],
 			$get["id"],
 			$get["t"]
@@ -18,7 +19,10 @@ class ResetPasswordController extends Controller
 		// Check if valid request
 		if (empty($requestInfo)) {
 			$this->redirect("forgot-password");
-		} else {
+		}
+		
+		else {
+			
 			// Set session variable
 			$this->session->setPasswordRequestId($get["uid"]);
 

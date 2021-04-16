@@ -19,11 +19,219 @@ use App\Core\Model as Model;
 
 class User extends Model
 {
+	public $id;
+	public $email;
+	public $username;
+	public $password;
+	public $passwordHash;
+	public $forename;
+	public $surname;
+	public $phone;
+	public $role = "user";
+	public $status = 1;
+	
+	/**
+	 * Securely hash a password.
+	 * Returns hashed password.
+	 */
+	public function hashPassword()
+	{
+		$this->passwordHash = password_hash($this->password, PASSWORD_BCRYPT, [
+			"cost" => 12,
+		]);
+	}
+	
+	/**
+	 * Vertify a submitted password against existing password.
+	 * Return a Boolean.
+	 */
+	public function verifyPassword()
+	{
+		if (password_verify($this->password, $this->passwordHash)) {
+			return true;
+		}
+
+		return false;
+	}
+	
+	
+	/**
+	 * Check if a username is in the list of disallowed usernames.
+	 * Return a Boolean.
+	 */
+	public function isApprovedUsername()
+	{
+		$approved = in_array($this->username, DISALLOWED_USERNAMES) ? false : true;
+
+		return $approved;
+	}
+	
+		/**
+	 * Check if username is empty, and make sure it only contains
+	 * alphanumeric characters, numbers, dashes, and underscores.
+	 * Return an error or null.
+	 */
+	public function validateUsername()
+	{
+		if (!empty($this->username)) {
+			
+			if (strlen($this->username) < "3") {
+				$this->errors[] = USERNAME_TOO_SHORT;
+			}
+			
+			if (strlen($this->username) > "50") {
+				$this->errors[] = USERNAME_TOO_LONG;
+			}
+			
+			// Match a-z, A-Z, 1-9, -, _.
+			if (!preg_match("/^[a-zA-Z\d\-_]+$/i", $this->username)) {
+				$this->errors[] = USERNAME_CONTAINS_DISALLOWED;
+			}
+		}
+		
+		else {
+			$this->errors[] = USERNAME_MISSING;
+		}
+	}
+
+	/**
+	 * Check if password is empty, and make sure it conforms
+	 * to password security standards.
+	 * Return an error or null.
+	 */
+	public function validatePassword()
+	{
+		if (!empty($this->password)) {
+			
+			if (strlen($this->password) < "8") {
+				$this->errors[] = PASSWORD_TOO_SHORT;
+			}
+		
+			if (!preg_match("#[0-9]+#", $this->password)) {
+				$this->errors[] = PASSWORD_NEEDS_NUMBER;
+			}
+			
+			if (!preg_match("#[A-Z]+#", $this->password)) {
+				$this->errors[] = PASSWORD_NEEDS_UPPERCASE;
+			}
+			
+			if (!preg_match("#[a-z]+#", $this->password)) {
+				$this->errors[] = PASSWORD_NEEDS_LOWERCASE;
+			}
+		}
+		
+		else {
+			$this->errors[] = PASSWORD_MISSING;
+		}
+	}
+
+	/**
+	 * Check if email is empty, and test it against PHP built in
+	 * email validation.
+	 * Return an error or null.
+	 */
+	public function validateEmail()
+	{
+		if (!empty($this->email)) {
+			
+			// Remove all illegal characters from email
+			$this->email = filter_var($this->email, FILTER_SANITIZE_EMAIL);
+
+			// Validate e-mail
+			if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+				$this->errors[] = EMAIL_NOT_VALID;
+			}
+		}
+		
+		else {
+			$this->errors[] = EMAIL_MISSING;
+		}
+	}
+	
+	public function validateUserSettings() {
+		
+		// Validate forename
+		if (empty($this->forename)) {
+			$this->errors[] = "Your first name is required";
+		}
+		
+		// Validate surname
+		if (empty($this->surname)) {
+			$this->errors[] = "Your last name is required";
+		}
+		
+		// Validate surname
+		if (empty($this->phone)) {
+			$this->errors[] = "Your phone number is required";
+		}
+		
+		if (isset($this->email)) {
+			
+			$this->account = $this->getUser();
+			
+			if ($this->email  !== $this->account["email"]) {
+				
+				$this->email = $this->account["email"];
+				
+				$emailSearchResults = $this->isEmailAvailable();
+
+				if ($emailSearchResults > 0) {
+					$this->errors[] = EMAIL_EXISTS;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Make sure password passes proper testing, username does not
+	 * contain special characters, and email is valid.
+	 */
+	public function validateNewUser()
+	{
+		// Validate forename
+		if (empty($this->forename)) {
+			$this->errors[] = "Your first name is required";
+		}
+		
+		// Validate surname
+		if (empty($this->surname)) {
+			$this->errors[] = "Your last name is required";
+		}
+		
+		// Validate phone
+		if (empty($this->phone)) {
+			$this->errors[] = "Your phone number is required";
+		}
+		
+		$this->validatePassword();
+		$this->validateUsername();
+		$this->validateEmail();
+
+		$usernameSearchResults = $this->isUsernameAvailable();
+		$emailSearchResults = $this->isEmailAvailable();
+		$isApprovedUsername = $this->isApprovedUsername();
+
+		// Username already exists in the database
+		if ($usernameSearchResults > 0) {
+			$this->errors[] = USERNAME_EXISTS;
+		}
+		
+		// Email already exists in the database
+		elseif ($emailSearchResults > 0) {
+			$this->errors[] = EMAIL_EXISTS;
+		}
+		
+		// Username does matches with a disallowed username
+		elseif (!$isApprovedUsername) {
+			$this->errors[] = USERNAME_NOT_APPROVED;
+		}
+	}
+	
 	/**
 	 * Select all data from a single user by user ID.
 	 * Return a single row.
 	 */
-	public function getUser($userId)
+	public function getUser()
 	{
 		$query = "SELECT * 
 				  FROM users 
@@ -31,7 +239,7 @@ class User extends Model
 				  LIMIT 1";
 
 		$this->db->query($query);
-		$this->db->bind(":id", $userId);
+		$this->db->bind(":id", $this->id);
 
 		$user = $this->db->result();
 
@@ -57,7 +265,7 @@ class User extends Model
 	 * Select all data from a single user by username.
 	 * Return a single row.
 	 */
-	public function getUserByUsername($username)
+	public function getUserByUsername()
 	{
 		$query = "SELECT * 
 				  FROM users 
@@ -65,7 +273,7 @@ class User extends Model
 				  LIMIT 1";
 
 		$this->db->query($query);
-		$this->db->bind(":username", $username);
+		$this->db->bind(":username", $this->username);
 
 		$user = $this->db->result();
 
@@ -76,7 +284,7 @@ class User extends Model
 	 * Select all data from a single user by email address.
 	 * Return a single row.
 	 */
-	public function getUserByEmail($email)
+	public function getUserByEmail()
 	{
 		$query = "SELECT * 
 				  FROM users 
@@ -84,7 +292,7 @@ class User extends Model
 				  LIMIT 1";
 
 		$this->db->query($query);
-		$this->db->bind(":email", $email);
+		$this->db->bind(":email", $this->email);
 
 		$user = $this->db->result();
 
@@ -96,7 +304,7 @@ class User extends Model
 	 * data into the users table.
 	 * Returns true if successful.
 	 */
-	public function registerNewUser($forename, $surname, $phone, $username, $password, $email, $role)
+	public function registerNewUser()
 	{
 		$this->setTimeStamp();
 		
@@ -106,14 +314,14 @@ class User extends Model
 					  (:forename, :surname, :phone, :username, :password, :email, :role, :status, :created)";
 
 		$this->db->query($query);
-		$this->db->bind(":forename", $forename);
-		$this->db->bind(":surname", $surname);
-		$this->db->bind(":phone", $phone);
-		$this->db->bind(":username", $username);
-		$this->db->bind(":password", $password);
-		$this->db->bind(":email", $email);
-		$this->db->bind(":role", $role);
-		$this->db->bind(":status", 1);	
+		$this->db->bind(":forename", $this->forename);
+		$this->db->bind(":surname", $this->surname);
+		$this->db->bind(":phone", $this->phone);
+		$this->db->bind(":username", $this->username);
+		$this->db->bind(":password", $this->passwordHash);
+		$this->db->bind(":email", $this->email);
+		$this->db->bind(":role", $this->role);
+		$this->db->bind(":status", $this->status);	
 		$this->db->bind(":created", $this->timestamp);
 		$result = $this->db->execute();
 
@@ -125,16 +333,17 @@ class User extends Model
 	 * user registration does not override an existing user.
 	 * Return a boolean.
 	 */
-	public function isUsernameAvailable($username)
+	public function isUsernameAvailable()
 	{
-		$username = strtolower($username);
+		$this->username = strtolower($this->username);
+		
 		$query = "SELECT COUNT(username) 
 				  AS num 
 				  FROM users 
 				  WHERE LOWER(username) = :username";
 
 		$this->db->query($query);
-		$this->db->bind(":username", $username);
+		$this->db->bind(":username", $this->username);
 
 		$result = $this->db->result();
 
@@ -146,15 +355,17 @@ class User extends Model
 	 * user registration does not override an existing user.
 	 * Return a boolean.
 	 */
-	public function isEmailAvailable($email)
+	public function isEmailAvailable()
 	{
+		$this->email = strtolower($this->email);
+
 		$query = "SELECT COUNT(email) 
 				  AS num 
 				  FROM users 
 				  WHERE email = :email";
 
 		$this->db->query($query);
-		$this->db->bind(":email", $email);
+		$this->db->bind(":email", $this->email);
 
 		$result = $this->db->result();
 
@@ -165,7 +376,7 @@ class User extends Model
 	 * Update the settings of a user.
 	 * Return a boolean.
 	 */
-	public function updateUserSettings($post, $userId)
+	public function updateUserSettings()
 	{
 		$query = "UPDATE users 
 				  SET forename = :forename ,
@@ -175,11 +386,11 @@ class User extends Model
 				  WHERE id = :user_id";
 
 		$this->db->query($query);
-		$this->db->bind(":forename", $post["forename"]);
-		$this->db->bind(":surname", $post["surname"]);
-		$this->db->bind(":email", $post["email"]);
-		$this->db->bind(":phone", $post["phone"]);
-		$this->db->bind(":user_id", $userId);
+		$this->db->bind(":forename", $this->forename);
+		$this->db->bind(":surname", $this->surname);
+		$this->db->bind(":email", $this->email);
+		$this->db->bind(":phone", $this->phone);
+		$this->db->bind(":user_id", $this->id);
 
 		$result = $this->db->execute();
 
@@ -190,13 +401,13 @@ class User extends Model
 	 * Delete a user and all associated list items.
 	 * Return a boolean.
 	 */
-	public function deleteUser($userId)
+	public function deleteUser()
 	{
 		$query = "DELETE FROM users
 				  WHERE id = :id";
 
 		$this->db->query($query);
-		$this->db->bind(":id", $userId);
+		$this->db->bind(":id", $this->id);
 
 		$result = $this->db->execute();
 
