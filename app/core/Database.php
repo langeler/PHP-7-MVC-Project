@@ -19,6 +19,8 @@ class Database
 	private $user = DB_USER;
 	private $pass = DB_PASS;
 	private $dbname = DB_NAME;
+	private $options;
+	private $dsn;
 
 	private $handler;
 	private $error;
@@ -31,15 +33,30 @@ class Database
 	 */
 	public function __construct()
 	{
-		$dsn = "mysql:host=" . $this->host . ";dbname=" . $this->dbname;
-		$options = [
+		
+		// Check if database params are set
+		if(!defined('DB_HOST')
+		|| !defined('DB_NAME')
+		|| !defined('DB_USERNAME')
+		|| !defined('DB_PASSWORD')) {
+			$this->error = 'Database configuration is missing.';
+		}
+		
+		$this->dsn = "mysql:host=" . $this->host . ";dbname=" . $this->dbname;
+		
+		// Set database options
+		$this->options = [
 			PDO::ATTR_PERSISTENT => true,
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 		];
 
+		// Try establishing a connection
 		try {
-			$this->handler = new PDO($dsn, $this->user, $this->pass, $options);
-		} catch (PDOException $e) {
+			$this->handler = new PDO($this->dsn, $this->user, $this->pass, $this->options);
+		}
+		
+		// Throw error if unable to establish a connection
+		catch (PDOException $e) {
 			$this->error = $e->getMessage();
 		}
 	}
@@ -47,7 +64,7 @@ class Database
 	/**
 	 * Prepare a statement.
 	 */
-	public function query($query)
+	public function prepare($query)
 	{
 		$this->statement = $this->handler->prepare($query);
 	}
@@ -73,6 +90,7 @@ class Database
 					$type = PDO::PARAM_STR;
 			}
 		}
+		
 		$this->statement->bindValue($param, $value, $type);
 	}
 
@@ -83,7 +101,9 @@ class Database
 	{
 		try {
 			return $this->statement->execute();
-		} catch (PDOException $e) {
+		}
+		
+		catch (PDOException $e) {
 			$this->error = $e->getMessage();
 		}
 	}
@@ -91,7 +111,7 @@ class Database
 	/**
 	 * Fetch a single row as a result of a query.
 	 */
-	public function result()
+	public function fetch()
 	{
 		$this->execute();
 
@@ -101,7 +121,7 @@ class Database
 	/**
 	 * Fetch a set of rows as a result of a query.
 	 */
-	public function resultset()
+	public function fetchAll()
 	{
 		$this->execute();
 

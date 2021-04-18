@@ -13,46 +13,39 @@ class RegisterController extends Controller
 
 	public function post()
 	{
+		// Filter post fields
 		$post = $this->filter_post();
-		$this->session->csrf = $post["csrf"];
-		$this->session->validateCSRF();
 		
+		// Set CSRF token to be verified
+		$this->session->csrf = $post["csrf"];
+
+		// Verify CSRF token
 		if ($this->session->validateCSRF()) {
 			
-			$this->userModel->forename = $post["forename"];
-			$this->userModel->surname = $surname = $post["surname"];
-			$this->userModel->phone = $post["phone"];		
-			$this->userModel->username = $post["username"];
-			$this->userModel->password = $post["password"];
-			$this->userModel->email = $post["email"];
+			$this->userModel->forename = $this->clean($post["forename"]);
+			$this->userModel->surname = $this->clean($surname = $post["surname"]);
+			$this->userModel->phone = $this->clean($post["phone"]);		
+			$this->userModel->email = $this->clean($post["email"]);
+			$this->userModel->username = $this->clean($post["username"]);
+			$this->userModel->password = $this->clean($post["password"]);
+			$this->userModel->cpassword = $this->clean($post["cpassword"]);
 
 			// Validate username, password, and email
-			$this->userModel->validateNewUser();
-
-			// Show errors if any tests failed
-			if (!empty($this->userModel->errors)) {
-		
-				$this->message = $this->userModel->getErrors($this->errors);
+			if ($this->userModel->validateCreate()) {
+				
+				// Register new user
+				$this->userModel->create();
+			
+				// Redirect to profile
+				$this->redirect('login');
+			}
+			
+			else {
+				// Set error message
+				$this->message = $this->userModel->errors;
 
 				echo $this->message;
-				exit();
-			}
-		
-			else {
-			
-				// Hash the password
-				$this->userModel->hashPassword();
-			
-				$result = $this->userModel->registerNewUser();
-
-				// User registration successful
-				if ($result) {
-				
-					$this->account = $this->userModel->getUserByUsername();
-					$this->session->login($this->account);
-				
-					$this->redirect("dashboard");
-				}
+				exit();	
 			}
 		}
 	}

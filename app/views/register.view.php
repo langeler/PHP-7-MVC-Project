@@ -40,6 +40,9 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password">
 
+                <label for="cpassword">Confirm Password</label>
+                <input type="password" id="cpassword" name="cpassword">
+
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email">
                 <small>You can register with a fake email.</small>

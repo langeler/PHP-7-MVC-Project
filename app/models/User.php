@@ -19,16 +19,22 @@ use App\Core\Model as Model;
 
 class User extends Model
 {
+	private $user_table = "users";
+	
 	public $id;
 	public $email;
 	public $username;
 	public $password;
+	public $cpassword;
 	public $passwordHash;
 	public $forename;
 	public $surname;
 	public $phone;
+	public $access_code;
 	public $role = "user";
 	public $status = 1;
+	public $created;
+	public $modified;
 	
 	/**
 	 * Securely hash a password.
@@ -54,249 +60,133 @@ class User extends Model
 		return false;
 	}
 	
-	
 	/**
 	 * Check if a username is in the list of disallowed usernames.
 	 * Return a Boolean.
 	 */
 	public function isApprovedUsername()
 	{
-		$approved = in_array($this->username, DISALLOWED_USERNAMES) ? false : true;
-
-		return $approved;
+		return in_array($this->username, DISALLOWED_USERNAMES) ? false : true;
 	}
 	
-		/**
-	 * Check if username is empty, and make sure it only contains
-	 * alphanumeric characters, numbers, dashes, and underscores.
-	 * Return an error or null.
-	 */
-	public function validateUsername()
+	public function validateCreate ()
 	{
-		if (!empty($this->username)) {
-			
-			if (strlen($this->username) < "3") {
-				$this->errors[] = USERNAME_TOO_SHORT;
-			}
-			
-			if (strlen($this->username) > "50") {
-				$this->errors[] = USERNAME_TOO_LONG;
-			}
-			
-			// Match a-z, A-Z, 1-9, -, _.
-			if (!preg_match("/^[a-zA-Z\d\-_]+$/i", $this->username)) {
-				$this->errors[] = USERNAME_CONTAINS_DISALLOWED;
-			}
-		}
-		
-		else {
-			$this->errors[] = USERNAME_MISSING;
-		}
-	}
 
-	/**
-	 * Check if password is empty, and make sure it conforms
-	 * to password security standards.
-	 * Return an error or null.
-	 */
-	public function validatePassword()
-	{
-		if (!empty($this->password)) {
-			
-			if (strlen($this->password) < "8") {
-				$this->errors[] = PASSWORD_TOO_SHORT;
-			}
+		// Validate fields
+		$this->validate->name('forename')->value($this->forename)->pattern('words')->required();
+		$this->validate->name('surname')->value($this->surname)->pattern('words')->required();
+		$this->validate->name('phone')->value($this->phone)->pattern('tel')->required();
+		$this->validate->name('email')->value($this->email)->required()->is_email($this->email);
+		$this->validate->name('username')->value($this->username)->pattern('alpha')->required();
+		$this->validate->name('password')->value($this->password)->customPattern('[A-Za-z0-9-.;_!#@]{5,15}')->required();
+		$this->validate->name('cpassword')->value($this->cpassword)->customPattern('[A-Za-z0-9-.;_!#@]{5,15}')->required();
 		
-			if (!preg_match("#[0-9]+#", $this->password)) {
-				$this->errors[] = PASSWORD_NEEDS_NUMBER;
-			}
-			
-			if (!preg_match("#[A-Z]+#", $this->password)) {
-				$this->errors[] = PASSWORD_NEEDS_UPPERCASE;
-			}
-			
-			if (!preg_match("#[a-z]+#", $this->password)) {
-				$this->errors[] = PASSWORD_NEEDS_LOWERCASE;
-			}
+		// Check if passwords match
+		if ($this->cpassword != $this->password) {
+			$this->validate->errors[] = 'Password and confirm password do not match!';
 		}
 		
-		else {
-			$this->errors[] = PASSWORD_MISSING;
-		}
-	}
-
-	/**
-	 * Check if email is empty, and test it against PHP built in
-	 * email validation.
-	 * Return an error or null.
-	 */
-	public function validateEmail()
-	{
-		if (!empty($this->email)) {
-			
-			// Remove all illegal characters from email
-			$this->email = filter_var($this->email, FILTER_SANITIZE_EMAIL);
-
-			// Validate e-mail
-			if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-				$this->errors[] = EMAIL_NOT_VALID;
-			}
-		}
-		
-		else {
-			$this->errors[] = EMAIL_MISSING;
-		}
-	}
-	
-	public function validateUserSettings() {
-		
-		// Validate forename
-		if (empty($this->forename)) {
-			$this->errors[] = "Your first name is required";
-		}
-		
-		// Validate surname
-		if (empty($this->surname)) {
-			$this->errors[] = "Your last name is required";
-		}
-		
-		// Validate surname
-		if (empty($this->phone)) {
-			$this->errors[] = "Your phone number is required";
-		}
-		
-		if (isset($this->email)) {
-			
-			$this->account = $this->getUser();
-			
-			if ($this->email  !== $this->account["email"]) {
-				
-				$this->email = $this->account["email"];
-				
-				$emailSearchResults = $this->isEmailAvailable();
-
-				if ($emailSearchResults > 0) {
-					$this->errors[] = EMAIL_EXISTS;
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Make sure password passes proper testing, username does not
-	 * contain special characters, and email is valid.
-	 */
-	public function validateNewUser()
-	{
-		// Validate forename
-		if (empty($this->forename)) {
-			$this->errors[] = "Your first name is required";
-		}
-		
-		// Validate surname
-		if (empty($this->surname)) {
-			$this->errors[] = "Your last name is required";
-		}
-		
-		// Validate phone
-		if (empty($this->phone)) {
-			$this->errors[] = "Your phone number is required";
-		}
-		
-		$this->validatePassword();
-		$this->validateUsername();
-		$this->validateEmail();
-
-		$usernameSearchResults = $this->isUsernameAvailable();
-		$emailSearchResults = $this->isEmailAvailable();
-		$isApprovedUsername = $this->isApprovedUsername();
-
 		// Username already exists in the database
-		if ($usernameSearchResults > 0) {
-			$this->errors[] = USERNAME_EXISTS;
+		if ($this->usernameExists()) {
+			$this->validate->errors[] = USERNAME_EXISTS;
 		}
 		
 		// Email already exists in the database
-		elseif ($emailSearchResults > 0) {
-			$this->errors[] = EMAIL_EXISTS;
+		if ($this->emailExists()) {
+			$this->validate->errors[] = EMAIL_EXISTS;
 		}
 		
 		// Username does matches with a disallowed username
-		elseif (!$isApprovedUsername) {
-			$this->errors[] = USERNAME_NOT_APPROVED;
+		if (!$this->isApprovedUsername()) {
+			$this->validate->errors[] = USERNAME_NOT_APPROVED;
+		}
+		
+		$this->errors = $this->validate->displayErrors();
+		
+		if($this->validate->isSuccess()) {
+			return true;
+		}
+				
+		else {
+			$this->getErrors();
+			return false;
 		}
 	}
 	
-	/**
-	 * Select all data from a single user by user ID.
-	 * Return a single row.
-	 */
-	public function getUser()
-	{
-		$query = "SELECT * 
-				  FROM users 
-				  WHERE id = :id 
-				  LIMIT 1";
-
-		$this->db->query($query);
-		$this->db->bind(":id", $this->id);
-
-		$user = $this->db->result();
-
-		return $user;
+	public function validateLogin () {
+		   
+		$this->validate->name('username')->value($this->username)->pattern('alpha')->required();
+		$this->validate->name('password')->value($this->password)->customPattern('[A-Za-z0-9-.;_!#@]{5,15}')->required();
+		
+		// Username does matches with a disallowed username
+		if (!$this->isApprovedUsername()) {
+			$this->validate->errors[] = USERNAME_NOT_APPROVED;
+		}
+		
+		$this->errors = $this->validate->displayErrors();
+		
+		if($this->validate->isSuccess()) {
+			return true;
+		}
+				
+		else {
+			$this->getErrors();
+			return false;
+		}
 	}
 
-	/**
-	 * Select all user data from all users.
-	 * Return multiple rows.
-	 */
-	public function getAllUsers()
-	{
-		$query = "SELECT * FROM users";
+	public function validateUpdate () {
 
-		$this->db->query($query);
-
-		$users = $this->db->resultset();
-
-		return $users;
+		// Validate fields
+		$this->validate->name('forename')->value($this->forename)->pattern('words')->required();
+		$this->validate->name('surname')->value($this->surname)->pattern('words')->required();
+		$this->validate->name('phone')->value($this->phone)->pattern('tel')->required();
+		$this->validate->name('email')->value($this->email)->required()->is_email($this->email);
+		
+		// Get user data from database
+		$this->account = $this->readOne();
+		
+		// If email doesn't match the email on record
+		if ($this->email  !== $this->account["email"]) {
+			
+			// If new email isn't avaliable
+			if ($this->emailExists()) {
+				$this->validate->errors[] = EMAIL_EXISTS;
+			}			
+		}
+		
+		$this->errors = $this->validate->displayErrors();
+		
+		if($this->validate->isSuccess()) {
+			return true;
+		}
+		
+		else {
+			$this->getErrors();
+			return false;
+		}
 	}
+	
+	public function login() {
+		
+		// Retrieve the user account information for the given username
+		$this->account = $this->readOneByUsername();
 
-	/**
-	 * Select all data from a single user by username.
-	 * Return a single row.
-	 */
-	public function getUserByUsername()
-	{
-		$query = "SELECT * 
-				  FROM users 
-				  WHERE username = :username 
-				  LIMIT 1";
-
-		$this->db->query($query);
-		$this->db->bind(":username", $this->username);
-
-		$user = $this->db->result();
-
-		return $user;
-	}
-
-	/**
-	 * Select all data from a single user by email address.
-	 * Return a single row.
-	 */
-	public function getUserByEmail()
-	{
-		$query = "SELECT * 
-				  FROM users 
-				  WHERE email = :email 
-				  LIMIT 1";
-
-		$this->db->query($query);
-		$this->db->bind(":email", $this->email);
-
-		$user = $this->db->result();
-
-		return $user;
+		$this->passwordHash = $this->account["password"];
+		
+		if ($this->verifyPassword()) {
+			
+			$this->session->user = $this->account;
+			$this->session->login();
+			
+			// Return true
+			return true;
+		}
+		
+		else {
+			
+			return false;
+		}
 	}
 
 	/**
@@ -304,16 +194,32 @@ class User extends Model
 	 * data into the users table.
 	 * Returns true if successful.
 	 */
-	public function registerNewUser()
-	{
+	public function create() {
+		
+		// Set timestamp for the created record
 		$this->setTimeStamp();
 		
-		$query = "INSERT INTO users 
-					  (forename, surname, phone, username, password, email, role, status, created) 
-				  VALUES 
-					  (:forename, :surname, :phone, :username, :password, :email, :role, :status, :created)";
+		// Hash the password
+		$this->hashPassword();
+		
+        // insert query
+        $query = "INSERT INTO
+                    " . $this->user_table . "
+                SET
+					forename = :forename,
+					surname = :surname,
+					phone = :phone,
+					username = :username,
+					email = :email,
+					password = :password,
+					role = :role,
+					status = :status,
+					created = :created";
 
-		$this->db->query($query);
+		// Prepare prepared statement
+		$this->db->prepare($query);
+		
+		// Bind values
 		$this->db->bind(":forename", $this->forename);
 		$this->db->bind(":surname", $this->surname);
 		$this->db->bind(":phone", $this->phone);
@@ -323,161 +229,221 @@ class User extends Model
 		$this->db->bind(":role", $this->role);
 		$this->db->bind(":status", $this->status);	
 		$this->db->bind(":created", $this->timestamp);
+		
 		$result = $this->db->execute();
 
 		return $result;
 	}
 
+	// check if given email exist in the database
+	public function emailExists(){
+
+		// query to check if email exists
+		$query = "SELECT *
+			FROM 
+				" . $this->user_table . "
+			WHERE 
+				email = ?
+			LIMIT 
+				0,1";
+
+		// prepare the query
+		$this->db->prepare($query);
+
+		// bind given email value
+		$this->db->bind(1, $this->email);
+
+		// execute the query
+		$this->db->execute();
+
+		// if email exists, assign values to object properties for easy access and use for php sessions
+		if($this->db->rowCount() > 0) {
+
+			// return true because email exists in the database
+			return true;
+		}
+
+		// return false if email doesn't exist in the database
+		return false;
+	}
+	
 	/**
-	 * Query the database for existing usernames to ensure a new
-	 * user registration does not override an existing user.
-	 * Return a boolean.
+	 * Select all data from a single user by user ID.
+	 * Return a single row.
 	 */
-	public function isUsernameAvailable()
+	public function readOne()
 	{
-		$this->username = strtolower($this->username);
+		// Set prepared query to be preformed
+		$query = "SELECT * 
+			FROM 
+				" . $this->user_table . "
+			WHERE 
+				id = :id 
+			LIMIT 
+				0,1";
 		
-		$query = "SELECT COUNT(username) 
-				  AS num 
-				  FROM users 
-				  WHERE LOWER(username) = :username";
+		// Prepare query statement
+		$this->db->prepare($query);
+		
+		// Bind values
+		$this->db->bind(":id", $this->id);
 
-		$this->db->query($query);
-		$this->db->bind(":username", $this->username);
-
-		$result = $this->db->result();
-
-		return $result["num"];
+		// Execute and fetch row
+		$row = $this->db->fetch();
+		
+		// Return row
+		return $row;
 	}
 
 	/**
-	 * Query the database for existing emails to ensure a new
-	 * user registration does not override an existing user.
-	 * Return a boolean.
+	 * Select all data from a single user by username.
+	 * Return a single row.
 	 */
-	public function isEmailAvailable()
+	public function readOneByUsername()
 	{
-		$this->email = strtolower($this->email);
+		// Set prepared query to be preformed
+		$query = "SELECT * 
+			FROM 
+				" . $this->user_table . "
+			WHERE 
+				username = :username 
+			LIMIT
+				0,1";
+		
+		// Prepare query statement
+		$this->db->prepare($query);
+		
+		// Bind value
+		$this->db->bind(":username", $this->username);
 
-		$query = "SELECT COUNT(email) 
-				  AS num 
-				  FROM users 
-				  WHERE email = :email";
+		// Execute and fetch row
+		$row = $this->db->fetch();
+		
+		// Return row
+		return $row;
+	}
 
-		$this->db->query($query);
+	/**
+	 * Select all data from a single user by email address.
+	 * Return a single row.
+	 */
+	public function readOneByEmail()
+	{
+		// Set prepared query to be preformed
+		$query = "SELECT * 
+			FROM 
+				" . $this->user_table . "
+			WHERE 
+				email = :email 
+			LIMIT 
+				0,1";
+		
+		// Prepare query statement
+		$this->db->prepare($query);
+		
+		// Bind value
 		$this->db->bind(":email", $this->email);
+		
+		// Execute and fetch row
+		$row = $this->db->fetch();
 
-		$result = $this->db->result();
+		// Return row
+		return $row;
+	}
 
-		return $result["num"];
+	// check if given username exist in the database
+	public function usernameExists() {
+
+		// query to check if username exists
+		$query = "SELECT *
+			FROM 
+				" . $this->user_table . "
+			WHERE 
+				username = ?
+			LIMIT 
+				0,1";
+
+		// prepare the query
+		$this->db->prepare($query);
+
+		// bind given username value
+		$this->db->bind(1, $this->username);
+
+		// execute the query
+		$this->db->execute();
+
+		// if username exists, assign values to object properties for easy access and use for php sessions
+		if($this->db->rowCount() > 0) {
+
+			// return true because email exists in the database
+			return true;
+		}
+
+		// return false if username doesn't exist in the database
+		return false;
 	}
 
 	/**
 	 * Update the settings of a user.
 	 * Return a boolean.
 	 */
-	public function updateUserSettings()
-	{
-		$query = "UPDATE users 
-				  SET forename = :forename ,
-					  surname = :surname,
-					  email = :email, 
-					  phone = :phone
-				  WHERE id = :user_id";
+	public function update()
+	{	
+		// Set timestamp for the created record
+		$this->setTimeStamp();
+				
+		// Prepared query statement
+		$query = "UPDATE 
+				" . $this->user_table . " 
+			SET 
+				forename = :forename ,
+				surname = :surname,
+				email = :email, 
+				phone = :phone,
+				modified = :modified
+			WHERE 
+				id = :id";
 
-		$this->db->query($query);
+		// Prepare prepared query statement
+		$this->db->prepare($query);
+		
+		// Bind values
 		$this->db->bind(":forename", $this->forename);
 		$this->db->bind(":surname", $this->surname);
 		$this->db->bind(":email", $this->email);
 		$this->db->bind(":phone", $this->phone);
-		$this->db->bind(":user_id", $this->id);
-
+		$this->db->bind(":modified", $this->timestamp);
+		$this->db->bind(":id", $this->id);
+		
+		// Execute query
 		$result = $this->db->execute();
 
+		// Return result
 		return $result;
 	}
 
-	/**
+	/** 
 	 * Delete a user and all associated list items.
 	 * Return a boolean.
 	 */
-	public function deleteUser()
-	{
-		$query = "DELETE FROM users
-				  WHERE id = :id";
+	public function delete() {
+		
+		// Prepared query statement
+		$query = "DELETE FROM 
+				" . $this->user_table . " 
+			WHERE 
+				id = :id";
 
-		$this->db->query($query);
+		// Prepare prepared query statement
+		$this->db->prepare($query);
+		
+		// Bind value
 		$this->db->bind(":id", $this->id);
-
+		
+		// Execute query
 		$result = $this->db->execute();
 
-		return $result;
-	}
-
-	/**
-	 * Query the database for usernames to ensure a new
-	 * user registration does not override an existing user.
-	 * Return a boolean.
-	 */
-	public function createPasswordRequest($userId, $token)
-	{
-		$query = "INSERT INTO password_reset_request
-					(user_id, date_requested, token)
-				  VALUES
-					(:user_id, :date_requested, :token)";
-
-		$this->db->query($query);
-		$this->db->bind(":user_id", $userId);
-		$this->db->bind(":date_requested", date("Y-m-d H:i:s"));
-		$this->db->bind(":token", $token);
-
-		$result = $this->db->execute();
-
-		return $result;
-	}
-
-	/**
-	 * Before allowing a user to change their password, verify
-	 * the password request has taken place on the same session
-	 * based on the GET variables passed through.
-	 * Return the matching result.
-	 */
-	public function verifyPasswordRequest($userId, $passwordRequestId, $token)
-	{
-		$query = "SELECT id, user_id, date_requested 
-				  FROM password_reset_request
-				  WHERE 
-					  user_id = :user_id AND 
-					  token = :token AND 
-					  id = :id";
-
-		$this->db->query($query);
-		$this->db->bind(":user_id", $userId);
-		$this->db->bind(":id", $passwordRequestId);
-		$this->db->bind(":token", $token);
-
-		$requestInfo = $this->db->result();
-
-		return $requestInfo;
-	}
-
-	/**
-	 * Update the password of the user who requested a password
-	 * change.
-	 * Return a boolean.
-	 */
-	public function resetUserPassword($passwordHash, $userId)
-	{
-		$query = "UPDATE users 
-				  SET password = :password 
-				  WHERE id = :id";
-
-		$this->db->query($query);
-		$this->db->bind(":password", $passwordHash);
-		$this->db->bind(":id", $userId);
-
-		$result = $this->db->execute();
-
+		// Return result
 		return $result;
 	}
 }

@@ -10,11 +10,12 @@
  * state of a user's authentication. Laconia uses the PHP session
  * superglobal to determine if a user is logged in or not.
  */
-namespace App\Models;
+namespace App\Core;
 
 class Session
 {
 	public $csrf;
+	public $user;
 	
 	/**
 	 * Initialize the session with class instantiation.
@@ -43,11 +44,12 @@ class Session
 	 * was authenticated.
 	 *
 	 */
-	public function login($user)
+	public function login()
 	{
-		$_SESSION["user_id"] = $user["id"];
-		$_SESSION["username"] = $user["username"];
-		$_SESSION["role"] = $user["role"];
+		$_SESSION["user_id"] = $this->user["id"];
+		$_SESSION["username"] = $this->user["username"];
+		$_SESSION["email"] = $this->user["email"];
+		$_SESSION["role"] = $this->user["role"];
 		$_SESSION["is_logged_in"] = true;
 		$_SESSION["time_logged_in"] = time();
 	}
@@ -58,6 +60,8 @@ class Session
 	public function logout()
 	{
 		unset($_SESSION["is_logged_in"]);
+		unset($_SESSION["username"]);
+		unset($_SESSION["email"]);
 		unset($_SESSION["role"]);
 		unset($_SESSION["user_id"]);
 		unset($_SESSION["time_logged_in"]);

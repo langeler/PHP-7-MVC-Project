@@ -7,6 +7,8 @@
  */
 namespace App\Core;
 
+use App\Core\Session;
+
 use App\Models\Article;
 use App\Models\Admin;
 use App\Models\CartItem;
@@ -17,7 +19,6 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductType;
-use App\Models\Session;
 use App\Models\Subject;
 use App\Models\User;
 
@@ -57,10 +58,14 @@ abstract class Controller
 		$this->subject = new Subject();
 		$this->userModel = new User();
 	}
-
-	public function escape($html)
-	{
-		return htmlspecialchars($html, ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8");
+	
+	/**
+	* Purifies to prevent XSS attacks
+	* @param string $ string
+	* @return $ string
+	*/ 
+	public function clean($string) {
+		return htmlspecialchars(trim($string), ENT_QUOTES, 'UTF-8');
 	}
 	
 	/**

@@ -19,48 +19,33 @@ class SettingsController extends Controller
 		// Get user by session value
 		$this->userModel->id = $this->session->getSessionValue("user_id");
 		$this->session->authenticate($this->userModel->id);
+		
+		// Set CSRF token to be verified
 		$this->session->csrf = $post["csrf"];
-		$this->session->validateCSRF();
 		
+		// Verify CSRF token
 		if ($this->session->validateCSRF()) {
-			
-			if (isset($post["delete_user"])) {
-			
-				$this->userModel->deleteUser();
-			
-				$this->session->logout();
-
-				$this->message = USER_DELETED;
-
-				echo $this->message;
-				exit();
-			}
 		
-			$this->userModel->forename = $post['forename'];
-			$this->userModel->surname = $post['surname'];
-			$this->userModel->phone = $post['phone'];
-			$this->userModel->email = $post['email'];
+			$this->userModel->forename = $this->clean($post['forename']);
+			$this->userModel->surname = $this->clean($post['surname']);
+			$this->userModel->phone = $this->clean($post['phone']);
+			$this->userModel->email = $this->clean($post['email']);
 				
-			$this->userModel->validateUserSettings();
-		
-			// Show errors if any tests failed
-			if (!empty($this->userModel->errors)) {
-			
-				$this->message = $this->userModel->getErrors($this->errors);
-
-				echo $this->message;
-				exit();
+			if ($this->userModel->validateUpdate()) {
+	
+				// Update settings
+				if ($this->userModel->update()) {
+					// Redirect to profile
+					$this->redirect("profile");	
+				}
 			}
 			
 			else {
-				
-				// Update settings
-				$this->userModel->updateUserSettings();
-				
-				// Get new user data
-				$this->account = $this->userModel->getUser();
-			
-				$this->redirect("dashboard");
+				// Set error message
+				$this->message = $this->userModel->getErrors($this->errors);
+
+				echo $this->message;
+				exit();	
 			}
 		}
 	}
@@ -72,7 +57,7 @@ class SettingsController extends Controller
 		$this->csrf = $this->session->getSessionValue("csrf");
 
 		// Get user by session value
-		$this->account = $this->userModel->getUser();
+		$this->account = $this->userModel->readOne();
 
 		$this->view("settings");
 	}

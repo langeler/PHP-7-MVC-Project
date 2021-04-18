@@ -18,31 +18,14 @@ class LoginController extends Controller
 		$this->session->csrf = $post["csrf"];
 		if ($this->session->validateCSRF()) {
 			
-			$this->userModel->username = $post["username"];
-			$this->userModel->password = $post["password"];
-						
-			// Retrieve the user account information for the given username
-			$this->account = $this->userModel->getUserByUsername();
-
-			// Could not find a user with that username
-			if (!$this->account) {
-		
-				$this->message = USERNAME_NOT_EXISTS;
-
-				echo $this->message;
-				exit();
-			}
-			
-			else {
-							
-				$this->userModel->passwordHash = $this->account["password"];
-				
-				if ($this->userModel->verifyPassword()) {
+			$this->userModel->username = $this->clean($post["username"]);
+			$this->userModel->password = $this->clean($post["password"]);
 					
-					// User login
-					$this->session->login($this->account);
-
-					$this->redirect("dashboard");
+			// Validate username, password, and email
+			if ($this->userModel->validateLogin()) {
+		
+				if ($this->userModel->login()) {
+					$this->redirect('dashboard');
 				}
 				
 				else {
@@ -52,6 +35,14 @@ class LoginController extends Controller
 					echo $this->message;
 					exit();
 				}
+			}
+			
+			else {
+				
+				$this->message = USERNAME_NOT_EXISTS;
+
+				echo $this->message;
+				exit();
 			}
 		}
 	}

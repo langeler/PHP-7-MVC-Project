@@ -16,7 +16,7 @@ class ProfileController extends Controller
 		$this->session->authenticate($this->userModel->id);
 
 		// Get user by session value
-		$this->account = $this->userModel->getUser();
+		$this->account = $this->userModel->readOne();
 
 		$this->view("profile");
 	}
