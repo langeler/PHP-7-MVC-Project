@@ -8,6 +8,9 @@ error_reporting(E_ALL);
 // Change this in production for HTTP Secure
 define("PROTOCOL", "https://");
 
+// Change this in production for HTTP Secure
+define("DOMAIN", PROTOCOL . "mvc/");
+
 // Site
 define("SITE_NAME", "MamaBear");
 

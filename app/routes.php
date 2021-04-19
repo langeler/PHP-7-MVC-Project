@@ -42,7 +42,6 @@ $router->post("dmin/category/update/{id}", "adminController@updateCategory");
 
 // Get admin user routes
 $router->get("admin/users", "adminController@readAllUsers");
-$router->get("admin/users/{page}", "adminController@readAllUsers");
 $router->get("admin/user/create", "adminController@readUser");
 $router->get("admin/user/update/{id}", "adminController@readOneUser");
 $router->get("admin/user/delete/{id}", "adminController@deleteUser");

@@ -135,6 +135,22 @@ class User extends Model
 		}
 	}
 
+	public function validateSearch () {
+
+		// Validate fields
+		$this->validate->name('forename')->value($this->search)->pattern('words')->required();
+		$this->errors = $this->validate->displayErrors();
+		
+		if($this->validate->isSuccess()) {
+			return true;
+		}
+		
+		else {
+			$this->getErrors();
+			return false;
+		}
+	}
+	
 	public function validateUpdate () {
 
 		// Validate fields
@@ -267,6 +283,134 @@ class User extends Model
 		return false;
 	}
 	
+	// search all user rows from the database
+	public function searchWithPaging($search, $records, $perPage) {
+		
+		// query to read all users
+		$query = "SELECT *
+			FROM 
+				" . $this->user_table . "
+			WHERE
+				username LIKE ?
+			OR
+				email LIKE ?
+			ORDER BY 
+				created DESC
+			LIMIT
+				?, ?";
+
+		// prepare query statement
+		$this->db->prepare($query);
+
+		// sanitize
+		$search = "%{$search}%";
+		$search=htmlspecialchars(strip_tags($search));
+
+		// bind variable values
+		$this->db->bind(1, $search);
+		$this->db->bind(2, $search);
+		$this->db->bind(3, (int)$records);
+		$this->db->bind(4, (int)$perPage);
+
+		// execute query
+		$result = $this->db->fetchAll();
+
+		// return values
+		return $result;
+	}
+	
+	// read all user rows from the database
+	public function readAll() {
+
+		// query to read all users
+		$query = "SELECT *
+			FROM 
+				" . $this->user_table . "
+			ORDER BY 
+				created DESC";
+
+		// prepare query statement
+		$this->db->prepare($query);
+
+		// execute query
+		$result = $this->db->fetchAll();
+
+		// return values
+		return $result;
+	}
+	
+	// read all user rows from the database
+	public function readAllWithPaging($records, $perPage) {
+
+		// query to read all users
+		$query = "SELECT *
+			FROM 
+				" . $this->user_table . "
+			ORDER BY 
+				created DESC
+			LIMIT
+				?, ?";
+
+		// prepare query statement
+		$this->db->prepare($query);
+		
+		// bind limit clause variables
+		$this->db->bind(1, (int)$records);
+		$this->db->bind(2, (int)$perPage);
+
+		// execute query
+		$result = $this->db->fetchAll();
+		
+		// return values
+		return $result;
+	}
+	
+	public function countAll() {
+
+		$query = "SELECT 
+			COUNT(*) as count
+			FROM 
+				" . $this->user_table;
+
+		$this->db->prepare($query);
+	
+		// execute the query
+		$this->db->execute();
+
+		$result = $this->db->fetch();
+
+		return (int)$result['count'];
+	}
+	
+	// used for paging products based on search term
+	public function countAllBySearch($search) {
+	
+			$query = "SELECT 
+			COUNT(*) as count
+			FROM 
+				" . $this->user_table ."
+			WHERE
+				username LIKE ?
+			OR
+				email LIKE ?";
+
+		$this->db->prepare($query);
+		
+		$search = "%{$search}%";
+		$search = htmlspecialchars(strip_tags($search));
+		
+		// bind search term
+		$this->db->bind(1, $search);
+		$this->db->bind(2, $search);
+		
+		// execute the query
+		$this->db->execute();
+
+		$result = $this->db->fetch();
+
+		return (int)$result['count'];
+	}
+
 	/**
 	 * Select all data from a single user by user ID.
 	 * Return a single row.

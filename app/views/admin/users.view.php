@@ -13,23 +13,53 @@
         </div>
       </div>
     </section>
-
-	<div class="container">
-		<a href="/admin/user/create/" class="btn btn-primary my-2">
-			Create User
-		</a>
 		
-            <?php foreach ($this->users as $user): ?>
+<div class='container mt-3'>
+	<div class="row">
+		<div class="col-md-6 px-0">
+			<form class="form-inline float-left "  action='<?= $pageUrl ?>' method="get">
+				<input class="form-control mr-sm-2" type="search" placeholder="Type a name..." name="search" id="search" required <?php echo isset($pageData['search']) ? "value='{$pageData['search']}'" : ""; ?> aria-label="Search">
+			    <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i> Search</button>
+			</form>
+		</div>
+		<div class="col-md-6">
+			<a href="/admin/user/create/" class='btn btn-success float-right'>
+				<i class='fas fa-plus'></i> Create Record
+			</a>
+		</div>
+	</div>
+</div>
+
+<div class="container mt-4">
+		<?php if($pageData['accounts']): ?>
+            <?php foreach ($pageData['accounts'] as $account): ?>
                 <div class="listing">
-                    <span><?= $user["id"] ?></span>
+                  <p>  
+                    <span><?= $account["id"] ?></span>
                     <a class="items list-item" href="/admin/user/update/<?= strtolower(
-                    	$user["id"]
+                    	$account["id"]
                     ) ?>">
-                        <?= $user["username"] ?>
+                        <?= $account["username"] ?>
                     </a>
+                    
+                    Full name? <?= $account["forename"] ?> <?= $account["surname"] ?>
+                    
+                    Email? <?= $account["email"] ?>
+                    
+                    Status? (<?= $account["status"] ?>)
+                     
+                    Role? <?= $account["role"] ?>
+				  </p>
                 </div>
             <?php endforeach; ?>
-   </div>
-
+		<?php else:?>
+			<p>
+				No users were found!
+			</p>
+		
+		<?php endif; ?>
+		<?php echo $pageData['pagination'];?>
+</div>
+   
 <?php include __DIR__ . "/partials/footer.php";
 ?>

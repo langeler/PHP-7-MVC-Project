@@ -20,3 +20,28 @@ function getMethod()
 
 	return $method;
 }
+
+function cleanString($value) 
+{					
+	$value = trim($value);
+
+	$value = htmlspecialchars($value, ENT_QUOTES | ENT_HTML5);
+
+	if(!$value) {
+		$value = null;
+	}
+	
+	return $value;
+}
+
+/**
+ * 
+ */
+function dd($value)
+{
+	echo "<pre>";
+
+	die(var_dump($value));
+	
+	echo "</pre>";
+}

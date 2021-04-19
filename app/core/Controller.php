@@ -7,6 +7,7 @@
  */
 namespace App\Core;
 
+use App\Core\Pagination;
 use App\Core\Session;
 
 use App\Models\Article;
@@ -24,6 +25,9 @@ use App\Models\User;
 
 abstract class Controller
 {
+	protected $pagination;
+	protected $session;
+	
 	protected $article;
 	protected $admin;
 	protected $cart_item;
@@ -34,7 +38,6 @@ abstract class Controller
 	protected $product;
 	protected $product_image;
 	protected $product_type;
-	protected $session;
 	protected $subject;
 	protected $user;
 	protected $pageTitle;
@@ -43,7 +46,10 @@ abstract class Controller
 	 * Initialize controller with Session, User, Comment, and List classes.
 	 */
 	public function __construct()
-	{
+	{	
+		$this->pagination = new Pagination();
+		$this->session = new Session();
+		
 		$this->article = new Article();
 		$this->admin = new Admin();
 		$this->cart_item = new CartItem();
@@ -54,7 +60,6 @@ abstract class Controller
 		$this->product = new Product();
 		$this->product_image = new ProductImage();
 		$this->product_type = new ProductType();
-		$this->session = new Session();
 		$this->subject = new Subject();
 		$this->userModel = new User();
 	}
@@ -123,10 +128,16 @@ abstract class Controller
 	protected function view($view, $data = [])
 	{
 		$view = strtolower($view);
-
 		extract($data, EXTR_SKIP);
-
-		require_once VIEW_DIR . DS . $view . ".view.php";
+		
+		// Check for view file
+		if(file_exists(VIEW_DIR . DS . $view . ".view.php")) {
+			require_once VIEW_DIR . DS . $view . ".view.php";
+		}
+		
+		else {
+			die('View does not exist!');
+		}
 	}
 
 	// Custom view templating engine, with cache support

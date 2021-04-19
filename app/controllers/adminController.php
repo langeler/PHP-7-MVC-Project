@@ -2,40 +2,38 @@
 
 namespace App\Controllers;
 
-use App\Core\Controller as Controller;
-use App\Models\Admin;
-use App\Models\Session;
-use App\Models\User;
+use App\Core\Controller;
 
 class adminController extends Controller
 {
 	protected $pageTitle;
-	protected $session;
-	protected $admin;
+	protected $pageUrl;
+	protected $pageData;
 	protected $role;
-	protected $categories;
+	protected $paginate;
 
-	/**
-	 * Initialize controller with Session, User, Comment, and List classes.
-	 */
-	public function __construct()
-	{
-		$this->admin = new Admin();
-		$this->session = new Session();
-		$this->userControl = new User();
-
+	function access() {
+		
 		$isLoggedIn = $this->session->isUserLoggedIn();
-
-		// TODO add role field to DB & set session value
 		$this->role = $this->session->getSessionValue("role");
-
-		if (!$this->role == "admin") {
-			$this->redirect("login");
+		
+		//var_dump($isLoggedIn);
+		//var_dump($this->role);
+		//exit;
+		
+		if ($isLoggedIn && $this->role == "admin") {
+			return true;
+		}
+		
+		else {
+			$this->redirect("");
+			exit;
 		}
 	}
 
 	function home()
 	{
+		$this->access();	
 		$this->pageTitle = "Admin Dashboard";
 
 		$this->view("admin/home", [
@@ -43,20 +41,58 @@ class adminController extends Controller
 		]);
 	}
 
-	function readAllUsers()
+	function readAllUsers($vars)
 	{
+		$this->access();
+		$get = $this->filter_get();
+		
 		$this->pageTitle = "Read All User";
-		$this->users = $this->admin->readAllUsers();
+		$this->pageUrl = DOMAIN . "admin/users/";
+		
+		// Pagination
+		$page = isset($get['page']) ? $get['page'] : 1;
+		$search = isset($get['search']) ? $get['search'] : '';
+		
+		// Pagination settings
+		$perPage = 3;
+		$displayArrows = true;
+		$fromRecords = ($perPage * $page) - $perPage;
+
+		// If a search is made
+		if ($search) {
+			$records = $this->userModel->countAllBySearch($search);
+			$accounts = $this->userModel->searchWithPaging($search, $fromRecords, $perPage);
+		}
+		
+		// If no search is made
+		else {
+			$records = $this->userModel->countAll();
+			$accounts = $this->userModel->readAllWithPaging($fromRecords, $perPage);
+		}
+
+		// Pagination variable
+		$pagination = $this->pagination->paging($records, $this->pageUrl, $page, $perPage, $displayArrows);
+		
+		var_dump($search);
+		
+		$this->pageData = [
+			"search" => $search,
+			"accounts" => $accounts,
+			"pagination" => $pagination,
+		];
 
 		$this->view("admin/users", [
 			"pageTitle" => $this->pageTitle,
-			"users" => $this->users,
+			"pageUrl" => $this->pageUrl,
+			"pageData" => $this->pageData,
+
 		]);
 	}
 
 	// Get create user view
 	function readUser()
 	{
+		$this->access();
 		$this->pageTitle = "Create User";
 
 		$this->view("admin/create.user", [
@@ -67,6 +103,7 @@ class adminController extends Controller
 
 	function readOneUser($user_id = null)
 	{
+		$this->access();
 		$this->pageTitle = "Update User";
 
 		// var_dump($user_id);
@@ -81,7 +118,9 @@ class adminController extends Controller
 				"pageTitle" => $this->pageTitle,
 				"roles" => ["user", "admin"],
 			]);
-		} else {
+		}
+		
+		else {
 			$this->redirect("admin/users");
 		}
 	}
@@ -126,162 +165,6 @@ class adminController extends Controller
 
 		if (isset($user_id)) {
 			$this->admin->deleteUser($user_id);
-		}
-
-		$this->redirect("admin/home");
-	}
-
-	function readAllCategories()
-	{
-		$this->pageTitle = "Read All Categories";
-		$this->categories = $this->admin->readAllCategories();
-
-		$this->view("admin/categories", [
-			"pageTitle" => $this->pageTitle,
-			"categories" => $this->categories,
-		]);
-	}
-
-	// Get create user view
-	function readCategory()
-	{
-		$this->pageTitle = "Create Category";
-
-		$this->view("admin/create.category", [
-			"pageTitle" => $this->pageTitle,
-		]);
-	}
-
-	function readOneCategory($category_id = null)
-	{
-		$this->pageTitle = "Update Category";
-
-		$category_id = $category_id["id"];
-		var_dump($category_id);
-		if (isset($category_id)) {
-			$category = $this->admin->readOneCategory($category_id);
-
-			$this->view("admin/update.category", [
-				"category" => $category,
-				"pageTitle" => $this->pageTitle,
-			]);
-		} else {
-			$this->redirect("admin/users");
-		}
-	}
-
-	// Post create user function
-	function createCategory()
-	{
-		$this->admin->createCategory(
-			$this->post("name"),
-			$this->post("description")
-		);
-
-		$this->redirect("admin/home");
-	}
-
-	// Post update user function
-	function updateCategory($category_id = null)
-	{
-		$category_id = $category_id["id"];
-
-		if (isset($category_id)) {
-			$this->admin->updateCategory(
-				$category_id,
-				$this->post("name"),
-				$this->post("description")
-			);
-		}
-
-		$this->redirect("admin/home");
-	}
-
-	// Post delete user function
-	function deleteCategory($category_id = null)
-	{
-		$category_id = $category_id["id"];
-
-		if (isset($category_id)) {
-			$this->admin->deleteCategory($category_id);
-		}
-
-		$this->redirect("admin/home");
-	}
-
-	function readAllCategories()
-	{
-		$this->pageTitle = "Read All Categories";
-		$this->categories = $this->admin->readAllCategories();
-
-		$this->view("admin/categories", [
-			"pageTitle" => $this->pageTitle,
-			"categories" => $this->categories,
-		]);
-	}
-
-	// Get create user view
-	function readCategory()
-	{
-		$this->pageTitle = "Create Category";
-
-		$this->view("admin/create.category", [
-			"pageTitle" => $this->pageTitle,
-		]);
-	}
-
-	function readOneCategory($category_id = null)
-	{
-		$this->pageTitle = "Update Category";
-
-		$category_id = $category_id["id"];
-		var_dump($category_id);
-		if (isset($category_id)) {
-			$category = $this->admin->readOneCategory($category_id);
-
-			$this->view("admin/update.category", [
-				"category" => $category,
-				"pageTitle" => $this->pageTitle,
-			]);
-		} else {
-			$this->redirect("admin/users");
-		}
-	}
-
-	// Post create user function
-	function createCategory()
-	{
-		$this->admin->createCategory(
-			$this->post("name"),
-			$this->post("description")
-		);
-
-		$this->redirect("admin/home");
-	}
-
-	// Post update user function
-	function updateProduct($product_id = null)
-	{
-		$product_id = $product_id["id"];
-
-		if (isset($category_id)) {
-			$this->admin->updateProduct(
-				$product_id,
-				$this->post("name"),
-				$this->post("description")
-			);
-		}
-
-		$this->redirect("admin/home");
-	}
-
-	// Post delete user function
-	function deleteProduct($product_id = null)
-	{
-		$product_id = $product_id["id"];
-
-		if (isset($product_id)) {
-			$this->admin->deleteProduct($product_id);
 		}
 
 		$this->redirect("admin/home");
