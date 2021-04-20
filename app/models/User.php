@@ -31,7 +31,7 @@ class User extends Model
 	public $surname;
 	public $phone;
 	public $access_code;
-	public $role = "user";
+	public $role;
 	public $status = 1;
 	public $created;
 	public $modified;
@@ -80,6 +80,7 @@ class User extends Model
 		$this->validate->name('username')->value($this->username)->pattern('alpha')->required();
 		$this->validate->name('password')->value($this->password)->customPattern('[A-Za-z0-9-.;_!#@]{5,15}')->required();
 		$this->validate->name('cpassword')->value($this->cpassword)->customPattern('[A-Za-z0-9-.;_!#@]{5,15}')->required();
+		$this->validate->name('role')->value($this->role)->pattern('words')->required();
 		
 		// Check if passwords match
 		if ($this->cpassword != $this->password) {
@@ -138,7 +139,7 @@ class User extends Model
 	public function validateSearch () {
 
 		// Validate fields
-		$this->validate->name('forename')->value($this->search)->pattern('words')->required();
+		$this->validate->name('search')->value($this->search)->pattern('words')->required();
 		$this->errors = $this->validate->displayErrors();
 		
 		if($this->validate->isSuccess()) {
@@ -158,7 +159,8 @@ class User extends Model
 		$this->validate->name('surname')->value($this->surname)->pattern('words')->required();
 		$this->validate->name('phone')->value($this->phone)->pattern('tel')->required();
 		$this->validate->name('email')->value($this->email)->required()->is_email($this->email);
-		
+		$this->validate->name('role')->value($this->role)->pattern('words')->required();
+
 		// Get user data from database
 		$this->account = $this->readOne();
 		
@@ -544,6 +546,7 @@ class User extends Model
 				surname = :surname,
 				email = :email, 
 				phone = :phone,
+				role = :role,
 				modified = :modified
 			WHERE 
 				id = :id";
@@ -556,6 +559,7 @@ class User extends Model
 		$this->db->bind(":surname", $this->surname);
 		$this->db->bind(":email", $this->email);
 		$this->db->bind(":phone", $this->phone);
+		$this->db->bind(":role", $this->role);
 		$this->db->bind(":modified", $this->timestamp);
 		$this->db->bind(":id", $this->id);
 		

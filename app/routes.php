@@ -27,10 +27,11 @@ $router->post("reset-password", "ResetPasswordController@post");
 $router->post("settings", "SettingsController@post");
 
 // Get admin pages
-$router->get("admin/home", "adminController@home");
+$router->get("admin", "adminController@index");
+$router->get("admin/home", "adminController@index");
 
 // Get admin category routes
-$router->get("admin/categories", "adminController@readAllCategories");
+$router->get("admin/categories", "usersController@readAllCategories");
 $router->get("admin/categories/{page}", "adminController@readAllCategories");
 $router->get("admin/category/create", "adminController@readCategory");
 $router->get("admin/category/update/{id}", "adminController@readOneCategory");
@@ -41,11 +42,12 @@ $router->post("admin/category/create", "adminController@createCategory");
 $router->post("dmin/category/update/{id}", "adminController@updateCategory");
 
 // Get admin user routes
-$router->get("admin/users", "adminController@readAllUsers");
-$router->get("admin/user/create", "adminController@readUser");
-$router->get("admin/user/update/{id}", "adminController@readOneUser");
-$router->get("admin/user/delete/{id}", "adminController@deleteUser");
+$router->get("admin/users", "adminUsers@index");
+$router->get("admin/user/create", "adminUsers@create");
+$router->get("admin/user/update/{id}", "adminUsers@update");
+$router->get("admin/user/delete/{id}", "adminUsers@delete");
 
 // Post admin user routes
-$router->post("admin/user/create", "adminController@createUser");
-$router->post("admin/user/update/{id}", "adminController@updateUser");
+$router->post("admin/user/create", "adminUsers@createUser");
+$router->post("admin/user/update/{id}", "adminUsers@updateUser");
+$router->post("admin/user/delete/{id}", "adminUsers@deleteUser");

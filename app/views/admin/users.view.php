@@ -50,6 +50,18 @@
                      
                     Role? <?= $account["role"] ?>
 				  </p>
+				  
+				    <a class="btn btn-sm btn-primary" href="/admin/user/update/<?= strtolower(
+                    	$account["id"]
+                    ) ?>">
+                        Update
+                    </a>
+				  
+				  	<a class="btn btn-sm btn-danger" href="/admin/user/delete/<?= strtolower(
+                    	$account["id"]
+                    ) ?>">
+                        Delete
+                    </a>
                 </div>
             <?php endforeach; ?>
 		<?php else:?>

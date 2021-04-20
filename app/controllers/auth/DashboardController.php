@@ -1,23 +1,22 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Auth;
 
 use App\Core\Controller as Controller;
 use App\Models\ListClass;
 
-class ProfileController extends Controller
+class DashboardController extends Controller
 {
-	protected $pageTitle = "Profile";
+	protected $pageTitle = "Dashboard";
 	protected $account;
+	public $csrf;
 
 	public function get()
 	{
 		$this->userModel->id = $this->session->getSessionValue("user_id");
 		$this->session->authenticate($this->userModel->id);
-
-		// Get user by session value
 		$this->account = $this->userModel->readOne();
 
-		$this->view("profile");
+		$this->view("dashboard");
 	}
 }

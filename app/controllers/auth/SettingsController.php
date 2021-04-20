@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Auth;
 
 use App\Core\Controller as Controller;
 use App\Models\ListClass;
@@ -30,7 +30,8 @@ class SettingsController extends Controller
 			$this->userModel->surname = $this->clean($post['surname']);
 			$this->userModel->phone = $this->clean($post['phone']);
 			$this->userModel->email = $this->clean($post['email']);
-				
+			$this->userModel->role = DEFAULT_ROLE // Default role definied
+			
 			if ($this->userModel->validateUpdate()) {
 	
 				// Update settings

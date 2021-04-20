@@ -14,6 +14,9 @@ define("DOMAIN", PROTOCOL . "mvc/");
 // Site
 define("SITE_NAME", "MamaBear");
 
+// Default user role (user or admin)
+define("DEFAULT_ROLE", "user");
+
 // Email activation variables
 // account activation required?
 define("account_activation", false);

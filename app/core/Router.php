@@ -5,6 +5,7 @@ use Exception;
 
 class Router
 {
+	protected $controller;
 	/*
 	 * This is the routes array. So far it only works for GET and POST but this can be changed.
 	 */
@@ -87,8 +88,19 @@ class Router
 	 */
 	protected function callAction($controller, $action, $vars = [])
 	{
-		$controller = "App\\Controllers\\{$controller}";
-
+		$folders = [
+			"App\\Controllers\\{$controller}",
+			"App\\Controllers\Admin\\{$controller}",
+			"App\\Controllers\Auth\\{$controller}"
+		];
+		
+		foreach ($folders as $folder) {
+			
+			if (class_exists($folder)) {
+				$controller = $folder;
+			}
+		}
+		
 		$controller = new $controller();
 
 		if (!method_exists($controller, $action)) {
