@@ -28,18 +28,39 @@ $router->post("settings", "SettingsController@post");
 
 // Get admin pages
 $router->get("admin", "adminController@index");
-$router->get("admin/home", "adminController@index");
 
 // Get admin category routes
-$router->get("admin/categories", "usersController@readAllCategories");
-$router->get("admin/categories/{page}", "adminController@readAllCategories");
-$router->get("admin/category/create", "adminController@readCategory");
-$router->get("admin/category/update/{id}", "adminController@readOneCategory");
-$router->get("admin/category/delete/{id}", "adminController@deleteCategory");
+$router->get("admin/categories", "adminCategories@index");
+$router->get("admin/category/create", "adminCategories@create");
+$router->get("admin/category/update/{id}", "adminCategories@update");
+$router->get("admin/category/delete/{id}", "adminCategories@delete");
 
 // Post admin category routes
-$router->post("admin/category/create", "adminController@createCategory");
-$router->post("dmin/category/update/{id}", "adminController@updateCategory");
+$router->post("admin/category/create", "adminCategories@createCategory");
+$router->post("admin/category/update/{id}", "adminCategories@updateCategory");
+$router->post("admin/category/delete/{id}", "adminCategories@deleteCategory");
+
+// Get admin product routes
+$router->get("admin/products", "adminProducts@index");
+$router->get("admin/product/create", "adminProducts@create");
+$router->get("admin/product/update/{id}", "adminProducts@update");
+$router->get("admin/product/delete/{id}", "adminProducts@delete");
+
+// Post admin product routes
+$router->post("admin/product/create", "adminProducts@createProduct");
+$router->post("admin/product/update/{id}", "adminProducts@updateProduct");
+$router->post("admin/product/delete/{id}", "adminProducts@deleteProduct");
+
+// Get admin product type routes
+$router->get("admin/product/types/{pid}", "adminTypes@index");
+$router->get("admin/product/type/create/{pid}", "adminTypes@create");
+$router->get("admin/product/type/update/{id}", "adminTypes@update");
+$router->get("admin/product/type/delete/{id}", "adminTypes@delete");
+
+// Post admin product type routes
+$router->post("admin/product/type/create/{pid}", "adminTypes@createType");
+$router->post("admin/product/type/update/{id}", "adminTypes@updateType");
+$router->post("admin/product/type/delete/{id}", "adminTypes@deleteType");
 
 // Get admin user routes
 $router->get("admin/users", "adminUsers@index");

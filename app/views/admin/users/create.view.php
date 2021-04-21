@@ -1,4 +1,4 @@
-<?php include __DIR__ . "/partials/header.php"; ?>
+<?php include VIEW_DIR . DS . "admin/partials/header.php"; ?>
     
   <div class="main-content mt-4">
     <section class="slice slice-lg min-vh-100 d-flex align-items-center bg-section-secondary">
@@ -23,7 +23,9 @@
                     </h6>
                   </div>
                   <span class="clearfix"></span>
-      				<?php include __DIR__ . "/partials/message.php"; ?>
+      				
+      				<?php include VIEW_DIR . DS . "admin/partials/message.php"; ?>
+	  				
 	  				<form method="post" id="form-settings">
                         
                         <input name="csrf" type="hidden" value="<?= $pageData['csrf'] ?>">
@@ -83,4 +85,4 @@
 </div>
 </section>
 
-<?php include __DIR__ . "/partials/footer.php"; ?>
+<?php include VIEW_DIR . DS . "admin/partials/footer.php";

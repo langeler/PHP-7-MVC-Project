@@ -9,8 +9,6 @@ class adminController extends Controller
 	protected $pageTitle;
 	protected $pageUrl;
 	protected $pageData;
-	protected $role;
-	protected $paginate;
 
 	function access() {
 		
@@ -35,9 +33,11 @@ class adminController extends Controller
 	{
 		$this->access();	
 		$this->pageTitle = "Admin Dashboard";
+		$this->pageUrl = DOMAIN . "admin/";
 
-		$this->view("admin/home", [
+		$this->view("admin/index", [
 			"pageTitle" => $this->pageTitle,
+			"pageUrl" => $this->pageUrl,
 		]);
 	}
 }

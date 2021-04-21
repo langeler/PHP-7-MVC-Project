@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 
-class adminUsers extends Controller
+class adminProducts extends Controller
 {
 	protected $pageTitle;
 	protected $pageUrl;
@@ -36,8 +36,8 @@ class adminUsers extends Controller
 		$this->access();
 		$get = $this->filter_get();
 		
-		$this->pageTitle = "Read All User";
-		$this->pageUrl = DOMAIN . "admin/users/";
+		$this->pageTitle = "Read All Products";
+		$this->pageUrl = DOMAIN . "admin/products/";
 		
 		// Pagination
 		$page = isset($get['page']) ? $get['page'] : 1;
@@ -50,14 +50,14 @@ class adminUsers extends Controller
 
 		// If a search is made
 		if ($search) {
-			$records = $this->userModel->countAllBySearch($search);
-			$accounts = $this->userModel->searchWithPaging($search, $fromRecords, $perPage);
+			$records = $this->productModel->countAllBySearch($search);
+			$products = $this->productModel->searchWithPaging($search, $fromRecords, $perPage);
 		}
 		
 		// If no search is made
 		else {
-			$records = $this->userModel->countAll();
-			$accounts = $this->userModel->readAllWithPaging($fromRecords, $perPage);
+			$records = $this->productModel->countAll();
+			$products = $this->productModel->readAllWithPaging($fromRecords, $perPage);
 		}
 
 		// Pagination variable
@@ -65,11 +65,11 @@ class adminUsers extends Controller
 		
 		$this->pageData = [
 			"search" => $search,
-			"accounts" => $accounts,
+			"products" => $products,
 			"pagination" => $pagination,
 		];
 
-		$this->view("admin/users/read", [
+		$this->view("admin/products/read", [
 			"pageTitle" => $this->pageTitle,
 			"pageUrl" => $this->pageUrl,
 			"pageData" => $this->pageData,
@@ -81,15 +81,19 @@ class adminUsers extends Controller
 	function create()
 	{
 		$this->access();
-		$this->pageTitle = "Create User";
-		$this->pageUrl = DOMAIN . "admin/user/create/";
+		$this->pageTitle = "Create Product";
+		$this->pageUrl = DOMAIN . "admin/product/create/";
 		
 		$this->pageData = [
 			"csrf" => $this->session->getSessionValue("csrf"),
-			"roles" => ["user", "admin"]
+			"categories" => $this->categoryModel->readAll(),
+			"status" => [
+				'active' => '1',
+				'inactive' => '0'
+			]
 		];
 
-		$this->view("admin/users/create", [
+		$this->view("admin/products/create", [
 			"pageTitle" => $this->pageTitle,
 			"pageUrl" => $this->pageUrl,
 			"pageData" => $this->pageData,
@@ -97,7 +101,7 @@ class adminUsers extends Controller
 	}
 
 	// Post create user function
-	function createUser()
+	function createProduct()
 	{
 		$this->access();
 		
@@ -110,28 +114,24 @@ class adminUsers extends Controller
 		// Verify CSRF token
 		if ($this->session->validateCSRF()) {
 			
-			$this->userModel->forename = $this->clean($post["forename"]);
-			$this->userModel->surname = $this->clean($surname = $post["surname"]);
-			$this->userModel->phone = $this->clean($post["phone"]);		
-			$this->userModel->email = $this->clean($post["email"]);
-			$this->userModel->username = $this->clean($post["username"]);
-			$this->userModel->password = $this->clean($post["password"]);
-			$this->userModel->cpassword = $this->clean($post["cpassword"]);
-			$this->userModel->role = $this->clean($post["role"]);
-
+			$this->productModel->name = $this->clean($post["name"]);
+			$this->productModel->description = $this->clean($surname = $post["description"]);
+			$this->productModel->cid = $this->clean($post["category"]);
+			$this->productModel->status = $this->clean($post["status"]);
+			
 			// Validate username, password, and email
-			if ($this->userModel->validateCreate()) {
+			if ($this->productModel->validateCreate()) {
 				
 				// Register new user
-				$this->userModel->create();
+				$this->productModel->create();
 			
 				// Redirect to profile
-				$this->redirect('admin/users/');
+				$this->redirect('admin/products/');
 			}
 			
 			else {
 				// Set error message
-				$this->message = $this->userModel->errors;
+				$this->message = $this->productModel->errors;
 
 				echo $this->message;
 				exit();	
@@ -146,18 +146,22 @@ class adminUsers extends Controller
 		
 		if ($vars['id']) {
 
-			$this->userModel->id = $vars['id'];
+			$this->productModel->id = $vars['id'];
 
-			$this->pageTitle = "Update User";
-			$this->pageUrl = DOMAIN . "admin/user/update/" . $this->userModel->id;
+			$this->pageTitle = "Update Product";
+			$this->pageUrl = DOMAIN . "admin/product/update/" . $this->productModel->id;
 			
 			$this->pageData = [
-				"account" => $this->userModel->readOne(),
+				"product" => $this->productModel->readOne(),
 				"csrf" => $this->session->getSessionValue("csrf"),
-				"roles" => ["user", "admin"]
+				"categories" => $this->categoryModel->readAll(),
+				"status" => [
+					'active' => '1',
+					'inactive' => '0'
+				]
 			];
 
-			$this->view("admin/users/update", [
+			$this->view("admin/products/update", [
 				"pageTitle" => $this->pageTitle,
 				"pageUrl" => $this->pageUrl,
 				"pageData" => $this->pageData,
@@ -166,39 +170,37 @@ class adminUsers extends Controller
 	}
 
 	// Post update user function
-	function updateUser($vars = null)
+	function updateProduct($vars = null)
 	{
 		$this->access();
 		$post = $this->filter_post();
 
 		if ($vars['id']) {
 			
-			$this->userModel->id = $vars['id'];
-		
 			// Set CSRF token to be verified
 			$this->session->csrf = $post["csrf"];
 		
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
 		
-				$this->userModel->forename = $this->clean($post['forename']);
-				$this->userModel->surname = $this->clean($post['surname']);
-				$this->userModel->phone = $this->clean($post['phone']);
-				$this->userModel->email = $this->clean($post['email']);
-				$this->userModel->role = $this->clean($post["role"]);
+				$this->productModel->id = $vars['id'];
+				$this->productModel->name = $this->clean($post['name']);
+				$this->productModel->description = $this->clean($post['description']);
+				$this->productModel->cid = $this->clean($post['category']);
+				$this->productModel->status = $this->clean($post['status']);
 								
-				if ($this->userModel->validateUpdate()) {
+				if ($this->productModel->validateUpdate()) {
 	
 					// Update settings
-					if ($this->userModel->update()) {
+					if ($this->productModel->update()) {
 						// Redirect to profile
-						$this->redirect("admin/users/");	
+						$this->redirect("admin/products/");	
 					}
 				}
 			
 				else {
 					// Set error message
-					$this->message = $this->userModel->getErrors($this->errors);
+					$this->message = $this->productModel->getErrors($this->errors);
 
 					echo $this->message;
 					exit();	
@@ -213,17 +215,17 @@ class adminUsers extends Controller
 		
 		if ($vars['id']) {
 
-			$this->userModel->id = $vars['id'];
+			$this->productModel->id = $vars['id'];
 
-			$this->pageTitle = "Delete User";
-			$this->pageUrl = DOMAIN . "admin/user/delete/" . $this->userModel->id;
+			$this->pageTitle = "Delete Product";
+			$this->pageUrl = DOMAIN . "admin/product/delete/" . $this->productModel->id;
 			
 			$this->pageData = [
-				"id" => $this->userModel->id,
+				"id" => $this->productModel->id,
 				"csrf" => $this->session->getSessionValue("csrf"),
 			];
 
-			$this->view("admin/users/delete", [
+			$this->view("admin/products/delete", [
 				"pageTitle" => $this->pageTitle,
 				"pageUrl" => $this->pageUrl,
 				"pageData" => $this->pageData,
@@ -231,7 +233,7 @@ class adminUsers extends Controller
 		}
 	}
 
-	function deleteUser($vars = null) {
+	function deleteProduct($vars = null) {
 		
 		// Check logged in & permission
 		$this->access();
@@ -240,13 +242,13 @@ class adminUsers extends Controller
 		if ($vars['id']) {
 			
 			// Set user id to be deleted
-			$this->userModel->id = $vars['id'];
+			$this->productModel->id = $vars['id'];
 			
 			// Delete user
-			$this->userModel->delete();
+			$this->productModel->delete();
 			
 			// Redirect to admin/users
-			$this->redirect("admin/users/");
+			$this->redirect("admin/products/");
 		}
 	}
 }

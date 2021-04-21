@@ -1,4 +1,4 @@
-<?php include __DIR__ . "/partials/header.php"; ?>
+<?php include VIEW_DIR . DS . "admin/partials/header.php"; ?>
     
   <div class="main-content mt-4">
     <section class="slice slice-lg min-vh-100 d-flex align-items-center bg-section-secondary">
@@ -15,7 +15,7 @@
               <div class="card shadow zindex-100 mb-0">
                 <div class="card-body px-md-5 py-5">
                   <div class="mb-5">
-                    <a href="/admin/users/" class="btn btn-secondary my-2">
+                    <a href="/admin/categories/" class="btn btn-secondary my-2">
 	                    Go back
                     </a>
                     <h6 class="h3">
@@ -23,13 +23,15 @@
                     </h6>
                   </div>
                   <span class="clearfix"></span>
-      				<?php include __DIR__ . "/partials/message.php"; ?>
+      				
+      				<?php include VIEW_DIR . DS . "admin/partials/message.php"; ?>
+	  				
 	  				<form method="post" id="form-settings">
                         
                         <input name="csrf" type="hidden" value="<?= $pageData['csrf'] ?>">
 						
 						 <div class="form-group">
-                        <label for="id">User id</label>
+                        <label for="id">Category id</label>
                         <input readonly class="form-control" type="text" value="<?= $pageData["id"] ?>">
                         <small>Username cannot be changed.</small>
 						</div>
@@ -44,4 +46,4 @@
 </div>
 </section>
 
-<?php include __DIR__ . "/partials/footer.php"; ?>
+<?php include VIEW_DIR . DS . "admin/partials/footer.php";

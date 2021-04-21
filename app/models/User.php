@@ -2,16 +2,7 @@
 
 /**
  * User Class
- *
  * Interact with users and user data.
- *
- * Any call to the database regarding the users table will go through
- * the User class. The User class extends the Model class, which simply
- * instantiates a Database instance that allows us to connect.
- *
- * From here, we can get information on any user by their user ID,
- * username, or email, or we can get a list of all users. This class
- * also includes calls to the password request table.
  */
 namespace App\Models;
 

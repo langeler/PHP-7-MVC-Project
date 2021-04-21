@@ -256,7 +256,7 @@ class Validate {
 	public function displayErrors(){
 			
 		$html = '<ul>';
-			
+		
 		foreach($this->getErrors() as $error){
 			$html .= '<li>' . $error . '</li>';
 		}

@@ -19,8 +19,8 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductImage;
-use App\Models\ProductType;
 use App\Models\Subject;
+use App\Models\Types;
 use App\Models\User;
 
 abstract class Controller
@@ -31,15 +31,15 @@ abstract class Controller
 	protected $article;
 	protected $admin;
 	protected $cart_item;
-	protected $category;
+	protected $categoryModel;
 	protected $contact;
 	protected $order_item;
 	protected $order;
-	protected $product;
+	protected $productModel;
 	protected $product_image;
-	protected $product_type;
 	protected $subject;
-	protected $user;
+	protected $typeModel;
+	protected $userModel;
 	protected $pageTitle;
 
 	/**
@@ -53,14 +53,14 @@ abstract class Controller
 		$this->article = new Article();
 		$this->admin = new Admin();
 		$this->cart_item = new CartItem();
-		$this->category = new Category();
+		$this->categoryModel = new Category();
 		$this->contact = new Contact();
 		$this->order_item = new OrderItem();
 		$this->order = new Order();
-		$this->product = new Product();
+		$this->productModel = new Product();
 		$this->product_image = new ProductImage();
-		$this->product_type = new ProductType();
 		$this->subject = new Subject();
+		$this->typeModel = new Types();
 		$this->userModel = new User();
 	}
 	
