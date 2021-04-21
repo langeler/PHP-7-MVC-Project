@@ -41,6 +41,11 @@ if (!defined("ROOT_DIR")) {
 }
 
 // Application
+if (!defined("UPLOAD_DIR")) {
+	define("UPLOAD_DIR", ROOT_DIR . DS . "upload");
+}
+
+// Application
 if (!defined("APP_DIR")) {
 	define("APP_DIR", ROOT_DIR . DS . "app");
 }

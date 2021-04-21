@@ -3,5 +3,6 @@
 .nova/
 .DS_Store
 *.lock
+upload/
 vendor/
 node_modules/

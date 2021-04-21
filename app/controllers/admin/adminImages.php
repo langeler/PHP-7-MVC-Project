@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 
-class adminTypes extends Controller
+class adminImages extends Controller
 {
 	protected $pageTitle;
 	protected $pageUrl;
@@ -39,10 +39,10 @@ class adminTypes extends Controller
 		if ($vars['pid']) {
 
 			$this->productModel->id = (int)$vars['pid'];
-			$this->typeModel->pid = (int)$vars['pid'];
+			$this->imageModel->pid = (int)$vars['pid'];
 		
-			$this->pageTitle = "Read All Product Types";
-			$this->pageUrl = DOMAIN . "admin/product/types/" . $vars['pid'];
+			$this->pageTitle = "Read All Product Images";
+			$this->pageUrl = DOMAIN . "admin/product/images/" . $vars['pid'];
 
 			// Pagination
 			$page = isset($get['page']) ? $get['page'] : 1;
@@ -53,20 +53,19 @@ class adminTypes extends Controller
 			$fromRecords = ($perPage * $page) - $perPage;
 
 			$product = $this->productModel->readOne();
-			$records = $this->typeModel->countAll();
-			$types = $this->typeModel->readAllWithPaging($fromRecords, $perPage);
+			$records = $this->imageModel->countAll();
+			$images = $this->imageModel->readAllWithPaging($fromRecords, $perPage);
 
 			// Pagination variable
 			$pagination = $this->pagination->paging($records, $this->pageUrl, $page, $perPage, $displayArrows);
 		
 			$this->pageData = [
-				"pid" => $this->typeModel->pid,
-				"types" => $types,
-				"types" => $types,
+				"pid" => $this->imageModel->pid,
+				"images" => $images,
 				"pagination" => $pagination,
 			];
 
-			$this->view("admin/types/read", [
+			$this->view("admin/images/read", [
 				"pageTitle" => $this->pageTitle,
 				"pageUrl" => $this->pageUrl,
 				"pageData" => $this->pageData,
@@ -82,17 +81,17 @@ class adminTypes extends Controller
 		if ($vars['pid']) {
 
 			$this->productModel->id = (int)$vars['pid'];
-			$this->typeModel->pid = (int)$vars['pid'];
+			$this->imageModel->pid = (int)$vars['pid'];
 		
-			$this->pageTitle = "Create Product Type";
-			$this->pageUrl = DOMAIN . "admin/product/type/create/" . $vars['pid'];
+			$this->pageTitle = "Create Image";
+			$this->pageUrl = DOMAIN . "admin/product/image/create/" . $vars['pid'];
 		
 			$this->pageData = [
-				"pid" => $this->typeModel->pid,
+				"pid" => $this->imageModel->pid,
 				"csrf" => $this->session->getSessionValue("csrf")
 			];
 
-			$this->view("admin/types/create", [
+			$this->view("admin/images/create", [
 				"pageTitle" => $this->pageTitle,
 				"pageUrl" => $this->pageUrl,
 				"pageData" => $this->pageData,
@@ -101,14 +100,14 @@ class adminTypes extends Controller
 	}
 
 	// Post create user function
-	function createType($vars = null)
+	function createImage($vars = null)
 	{
 		$this->access();
 		
 		if ($vars['pid']) {
 
 			$this->productModel->id = (int)$vars['pid'];
-			$this->typeModel->pid = (int)$vars['pid'];
+			$this->imageModel->pid = (int)$vars['pid'];
 		
 			// Filter post fields
 			$post = $this->filter_post();
@@ -119,24 +118,17 @@ class adminTypes extends Controller
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
 			
-				$this->typeModel->name = $this->clean($post["name"]);
-				$this->typeModel->description = $this->clean($surname = $post["description"]);
-				$this->typeModel->price = $this->clean($post["price"]);
-				$this->typeModel->stock = $this->clean($post["stock"]);
+				$this->imageModel->description = $this->clean($surname = $post["description"]);
 			
-				// Validate username, password, and email
-				if ($this->typeModel->validateCreate()) {
-				
-					// Register new user
-					$this->typeModel->create();
-			
+				// Register new user
+				if ($this->imageModel->upload()) {
 					// Redirect to profile
 					$this->redirect('admin/products/');
 				}
-			
+				
 				else {
 					// Set error message
-					$this->message = $this->typeModel->errors;
+					$this->message = $this->imageModel->errors;
 
 					echo $this->message;
 					exit();	
@@ -152,17 +144,17 @@ class adminTypes extends Controller
 		
 		if ($vars['id']) {
 
-			$this->typeModel->id = $vars['id'];
+			$this->imageModel->id = $vars['id'];
 
-			$this->pageTitle = "Update Product Type";
-			$this->pageUrl = DOMAIN . "admin/product/type/update/" . $this->typeModel->id;
+			$this->pageTitle = "Update Product Image";
+			$this->pageUrl = DOMAIN . "admin/product/image/update/" . $this->imageModel->id;
 			
 			$this->pageData = [
-				"type" => $this->typeModel->readOne(),
+				"image" => $this->imageModel->readOne(),
 				"csrf" => $this->session->getSessionValue("csrf"),
 			];
 
-			$this->view("admin/types/update", [
+			$this->view("admin/images/update", [
 				"pageTitle" => $this->pageTitle,
 				"pageUrl" => $this->pageUrl,
 				"pageData" => $this->pageData,
@@ -171,7 +163,7 @@ class adminTypes extends Controller
 	}
 
 	// Post update user function
-	function updateType($vars = null)
+	function updateImage($vars = null)
 	{
 		$this->access();
 		$post = $this->filter_post();
@@ -184,16 +176,13 @@ class adminTypes extends Controller
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
 		
-				$this->typeModel->id = $vars['id'];
-				$this->typeModel->name = $this->clean($post['name']);
-				$this->typeModel->description = $this->clean($post['description']);
-				$this->typeModel->price = $this->clean($post['price']);
-				$this->typeModel->stock = $this->clean($post['stock']);
+				$this->imageModel->id = $vars['id'];
+				$this->imageModel->description = $this->clean($post['description']);
 								
-				if ($this->typeModel->validateUpdate()) {
+				if ($this->imageModel->validateUpdate()) {
 	
 					// Update settings
-					if ($this->typeModel->update()) {
+					if ($this->imageModel->update()) {
 						// Redirect to profile
 						$this->redirect("admin/products/");	
 					}
@@ -201,7 +190,7 @@ class adminTypes extends Controller
 			
 				else {
 					// Set error message
-					$this->message = $this->typeModel->errors;
+					$this->message = $this->imageModel->errors;
 
 					echo $this->message;
 					exit();	
@@ -216,17 +205,18 @@ class adminTypes extends Controller
 		
 		if ($vars['id']) {
 
-			$this->typeModel->id = $vars['id'];
-
-			$this->pageTitle = "Delete Product Type";
-			$this->pageUrl = DOMAIN . "admin/product/type/delete/" . $this->productModel->id;
+			$this->imageModel->id = $vars['id'];
+			$image = $this->imageModel->readOne();
+			
+			$this->pageTitle = "Delete Product Image";
+			$this->pageUrl = DOMAIN . "admin/product/image/delete/" . $this->imageModel->id;
 			
 			$this->pageData = [
-				"id" => $this->typeModel->id,
+				"id" => $this->imageModel->id,
 				"csrf" => $this->session->getSessionValue("csrf"),
 			];
 
-			$this->view("admin/types/delete", [
+			$this->view("admin/images/delete", [
 				"pageTitle" => $this->pageTitle,
 				"pageUrl" => $this->pageUrl,
 				"pageData" => $this->pageData,
@@ -234,7 +224,7 @@ class adminTypes extends Controller
 		}
 	}
 
-	function deleteType($vars = null) {
+	function deleteImage($vars = null) {
 		
 		// Check logged in & permission
 		$this->access();
@@ -243,13 +233,20 @@ class adminTypes extends Controller
 		if ($vars['id']) {
 			
 			// Set user id to be deleted
-			$this->typeModel->id = $vars['id'];
+			$this->imageModel->id = $vars['id'];
+			$image = $this->imageModel->readOne();
 			
-			// Delete user
-			$this->typeModel->delete();
-			
-			// Redirect to admin/users
-			$this->redirect("admin/products/");
+			$this->imageModel->pid = $image['product_id'];
+			$this->imageModel->name = $image['name'];
+
+			if ($this->imageModel->remove()) {
+				
+				// Delete user
+				$this->imageModel->delete();
+				
+				// Redirect to admin/users
+				$this->redirect("admin/products/");	
+			}
 		}
 	}
 }

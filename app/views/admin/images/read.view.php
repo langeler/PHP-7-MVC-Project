@@ -17,13 +17,9 @@
 <div class='container mt-3'>
 	<div class="row">
 		<div class="col-md-6 px-0">
-			<form class="form-inline float-left "  action='<?= $pageUrl ?>' method="get">
-				<input class="form-control mr-sm-2" type="search" placeholder="Type a name..." name="search" id="search" <?php echo isset($pageData['search']) ? "value='{$pageData['search']}'" : ""; ?> aria-label="Search">
-			    <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i> Search</button>
-			</form>
 		</div>
 		<div class="col-md-6">
-			<a href="/admin/product/create/" class='btn btn-success float-right'>
+			<a href="/admin/product/image/create/<?= $pageData['pid'] ?>" class='btn btn-success float-right'>
 				<i class='fas fa-plus'></i> Create Record
 			</a>
 		</div>
@@ -33,46 +29,36 @@
 <div class='container mt-3'>
 	<div class='row'>
 		<div class='col-md-12'>
-			<?php if($pageData['products']): ?>
+			<?php if($pageData['images']): ?>
 			<table class='table table-hover table-responsive'>
 				<tr>
 					<th>Name</th>
 					<th>Description</th>
-					<th>cid</th>
-					<th>Status</th>
+					<th>pid</th>
 					<th>Created</th>
 					<th>Actions</th>
 				</tr>
 				
-				<?php foreach ($pageData['products'] as $product): ?>
+				<?php foreach ($pageData['images'] as $image): ?>
 				<tr>
 					<td>
-						<?= $product["name"] ?>
+						<?= $image["name"] ?>
 					</td>
 					<td>
-						<?= $product["description"] ?>
+						<?= $image["description"] ?>
 					</td>
 					<td>
-						<?= $product["category_id"] ?>
+						<?= $image["product_id"] ?>
 					</td>
 					<td>
-						<?= $product["status"] ?>
+						<?= $image["created"] ?>
 					</td>
 					<td>
-						<?= $product["created"] ?>
-					</td>
-					<td>
-				    	<a class="btn btn-sm btn-info" href="/admin/product/images/<?= strtolower($product["id"]) ?>">
-							Images
-						</a>
-				    	<a class="btn btn-sm btn-secondary" href="/admin/product/types/<?= strtolower($product["id"]) ?>">
-							Types
-						</a>
-				    	<a class="btn btn-sm btn-primary" href="/admin/product/update/<?= strtolower($product["id"]) ?>">
+				    	<a class="btn btn-sm btn-primary" href="/admin/product/image/update/<?= strtolower($image["id"]) ?>">
 							Update
 						</a>
 						
-						<a class="btn btn-sm btn-danger" href="/admin/product/delete/<?= strtolower($product["id"]) ?>">
+						<a class="btn btn-sm btn-danger" href="/admin/product/image/delete/<?= strtolower($image["id"]) ?>">
 							Delete
 						</a>
 					</td>
@@ -81,7 +67,7 @@
 			</table>
 			<?php else:?>
 			<p>
-				No products were found!
+				No images were found!
 			</p>
 			<?php endif; ?>
 			

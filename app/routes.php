@@ -52,6 +52,17 @@ $router->post("admin/product/update/{id}", "adminProducts@updateProduct");
 $router->post("admin/product/delete/{id}", "adminProducts@deleteProduct");
 
 // Get admin product type routes
+$router->get("admin/product/images/{pid}", "adminImages@index");
+$router->get("admin/product/image/create/{pid}", "adminImages@create");
+$router->get("admin/product/image/update/{id}", "adminImages@update");
+$router->get("admin/product/image/delete/{id}", "adminImages@delete");
+
+// Post admin product type routes
+$router->post("admin/product/image/create/{pid}", "adminImages@createImage");
+$router->post("admin/product/image/update/{id}", "adminImages@updateImage");
+$router->post("admin/product/image/delete/{id}", "adminImages@deleteImage");
+
+// Get admin product type routes
 $router->get("admin/product/types/{pid}", "adminTypes@index");
 $router->get("admin/product/type/create/{pid}", "adminTypes@create");
 $router->get("admin/product/type/update/{id}", "adminTypes@update");

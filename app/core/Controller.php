@@ -36,7 +36,7 @@ abstract class Controller
 	protected $order_item;
 	protected $order;
 	protected $productModel;
-	protected $product_image;
+	protected $pImageModel;
 	protected $subject;
 	protected $typeModel;
 	protected $userModel;
@@ -58,7 +58,7 @@ abstract class Controller
 		$this->order_item = new OrderItem();
 		$this->order = new Order();
 		$this->productModel = new Product();
-		$this->product_image = new ProductImage();
+		$this->imageModel = new ProductImage();
 		$this->subject = new Subject();
 		$this->typeModel = new Types();
 		$this->userModel = new User();
