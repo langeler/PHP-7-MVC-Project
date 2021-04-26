@@ -11,7 +11,6 @@ use App\Core\Pagination;
 use App\Core\Session;
 
 use App\Models\Article;
-use App\Models\Admin;
 use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Contact;
@@ -27,10 +26,9 @@ abstract class Controller
 {
 	protected $pagination;
 	protected $session;
-	
+
 	protected $article;
-	protected $admin;
-	protected $cart_item;
+	protected $cartItemModel;
 	protected $categoryModel;
 	protected $contact;
 	protected $order_item;
@@ -46,13 +44,12 @@ abstract class Controller
 	 * Initialize controller with Session, User, Comment, and List classes.
 	 */
 	public function __construct()
-	{	
+	{
 		$this->pagination = new Pagination();
 		$this->session = new Session();
-		
+
 		$this->article = new Article();
-		$this->admin = new Admin();
-		$this->cart_item = new CartItem();
+		$this->cartItemModel = new CartItem();
 		$this->categoryModel = new Category();
 		$this->contact = new Contact();
 		$this->order_item = new OrderItem();
@@ -63,62 +60,29 @@ abstract class Controller
 		$this->typeModel = new Types();
 		$this->userModel = new User();
 	}
-	
+
 	/**
-	* Purifies to prevent XSS attacks
-	* @param string $ string
-	* @return $ string
-	*/ 
-	public function clean($string) {
-		return htmlspecialchars(trim($string), ENT_QUOTES, 'UTF-8');
-	}
-	
-	/**
-	* Get filtered $_POST values.
-	* Return an array.
-	*/
+	 * Get filtered $_POST values.
+	 * Return an array.
+	 */
 	protected function filter_post()
 	{
 		$post = filter_input_array(INPUT_POST);
-		$post = array_map("trim", $post);
-		$post = array_map("htmlspecialchars", $post);
+		$post = array_map("clean", $post);
 
 		return $post;
 	}
 
 	/**
-	* Get filtered $_GET values.
-	* Return an array.
-	*/
+	 * Get filtered $_GET values.
+	 * Return an array.
+	 */
 	protected function filter_get()
 	{
 		$get = filter_input_array(INPUT_GET);
-		$get = array_map("trim", $get);
-		$get = array_map("htmlspecialchars", $get);
+		$get = array_map("clean", $get);
 
 		return $get;
-	}
-
-	protected function post()
-	{
-		$args = func_get_args();
-
-		if (count($args) == 1) {
-			return isset($_POST[$args[0]]) ? $_POST[$args[0]] : null;
-		}
-
-		return $_POST;
-	}
-
-	protected function get()
-	{
-		$args = func_get_args();
-
-		if (count($args) == 1) {
-			return isset($_GET[$args[0]]) ? $_GET[$args[0]] : null;
-		}
-
-		return $_GET;
 	}
 
 	/**
@@ -129,14 +93,12 @@ abstract class Controller
 	{
 		$view = strtolower($view);
 		extract($data, EXTR_SKIP);
-		
+
 		// Check for view file
-		if(file_exists(VIEW_DIR . DS . $view . ".view.php")) {
+		if (file_exists(VIEW_DIR . DS . $view . ".view.php")) {
 			require_once VIEW_DIR . DS . $view . ".view.php";
-		}
-		
-		else {
-			die('View does not exist!');
+		} else {
+			die("View does not exist!");
 		}
 	}
 
@@ -169,29 +131,28 @@ abstract class Controller
 
 		return $redirect === $view;
 	}
-	
+
 	/**
-     * Redirects to the specified page.
-     */
-    protected function redirect($view)
-    {
-        $view = strtolower($view);
+	 * Redirects to the specified page.
+	 */
+	protected function redirect($view)
+	{
+		$view = strtolower($view);
 
-        header('Location: /' . $view);
-        exit;
-    }
+		header("Location: /" . $view);
+		exit();
+	}
 
-	
 	// function to generate a random token
-	public function random() {
-
+	public function random()
+	{
 		// generate random token
 		$token = bin2hex(random_bytes(32));
 
 		// return the token
 		return $token;
 	}
-	
+
 	/**
 	 * Shortcut to retrieve JavaScript file from the /js/ directory.
 	 * Returns a URL.

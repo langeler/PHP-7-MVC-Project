@@ -3,7 +3,18 @@
 // Get routes
 $router->get("", "LandingController@get");
 $router->get("about", "AboutController@get");
-$router->get("404", "ExceptionNotFoundController@get");
+$router->get("401", "InternalExceptionController@get");
+$router->get("404", "NotFoundExceptionController@get");
+$router->get("500", "unauthorizedExceptionController@get");
+
+// Get admin product routes
+$router->get("products", "productsController@index");
+$router->get("category/{id}/{name}", "categoryController@index");
+$router->get("product/{id}/{name}", "productController@index");
+
+// Post product routes
+$router->post("product/{id}/{name}", "productController@creat");
+// $router->post("product/{id}/{name}/", "productController@add");
 
 // Get logged out routes
 $router->get("forgot-password", "ForgotPasswordController@get");

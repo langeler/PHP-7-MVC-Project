@@ -22,7 +22,7 @@ abstract class Model
 	protected $session;
 	protected $validate;
 	protected $timestamp;
-	
+
 	public $errors;
 
 	public function __construct()
@@ -31,18 +31,21 @@ abstract class Model
 		$this->session = new Session();
 		$this->validate = new Validate();
 	}
-	
+
 	// used for the 'created' field when creating a product
-	function getTimeStamp() {
+	function getTimeStamp()
+	{
 		return $this->timestamp;
 	}
-	
-	function setTimeStamp() {
-		$this->timestamp = date('Y-m-d H:i:s');
+
+	function setTimeStamp()
+	{
+		$this->timestamp = date("Y-m-d H:i:s");
 	}
 
 	// get all errors for all attributes
-	public function getErrors() {
-		return $this->errors;       
+	public function getErrors()
+	{
+		return $this->errors;
 	}
 }

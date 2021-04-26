@@ -168,14 +168,14 @@ class ProductImage extends Model
 			FROM 
 				" . $this->image_table . "
 			WHERE
-				product_id = ?
+				product_id = :product_id
 			ORDER BY 
 				created DESC";
 
 		// prepare query statement
 		$this->db->prepare($query);
 		
-		$this->db->bind(1, $this->pid);
+		$this->db->bind(':product_id', $this->pid);
 		
 		// execute query
 		$result = $this->db->fetchAll();
@@ -232,6 +232,33 @@ class ProductImage extends Model
 		$result = $this->db->fetch();
 
 		return (int)$result['count'];
+	}
+
+	// read variation details
+	public function readFirst()
+	{
+		// Set prepared query to be preformed
+		$query = "SELECT *
+			FROM 
+				" . $this->image_table . "
+			WHERE 
+				product_id = ?
+			ORDER BY 
+				name DESC 
+			LIMIT 
+				0,1";
+		
+		// Prepare query statement
+		$this->db->prepare($query);
+		
+		// Bind values
+		$this->db->bind(1, $this->pid);
+
+		// Execute and fetch row
+		$row = $this->db->fetch();
+
+		// Return row
+		return $row;
 	}
 	
 	// read variation details

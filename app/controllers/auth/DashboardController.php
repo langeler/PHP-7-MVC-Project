@@ -17,6 +17,6 @@ class DashboardController extends Controller
 		$this->session->authenticate($this->userModel->id);
 		$this->account = $this->userModel->readOne();
 
-		$this->view("dashboard");
+		$this->view("auth/dashboard");
 	}
 }

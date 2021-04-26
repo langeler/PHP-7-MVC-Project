@@ -44,13 +44,24 @@
 					<th>Actions</th>
 				</tr>
 				
-				<?php foreach ($pageData['products'] as $product): ?>
+				<?php foreach ($pageData['products'] as $product): 
+					
+						// shorten the product name, if it's too long
+						$short_desc = substr($product['description'], 0, 37);
+
+						// check if any letters were stripped
+						if ($short_desc != $product['description']) {
+
+							// if letters were stripped, add ...
+							$short_desc = $short_desc . "...";
+						}
+				?>
 				<tr>
 					<td>
 						<?= $product["name"] ?>
 					</td>
 					<td>
-						<?= $product["description"] ?>
+						<?= $short_desc ?>
 					</td>
 					<td>
 						<?= $product["category_id"] ?>

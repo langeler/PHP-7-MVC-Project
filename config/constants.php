@@ -41,8 +41,23 @@ if (!defined("ROOT_DIR")) {
 }
 
 // Application
+if (!defined("PUBLIC_DIR")) {
+	define("PUBLIC_DIR", ROOT_DIR . DS . "public");
+}
+
+// Application
+if (!defined("ASSET_DIR")) {
+	define("ASSET_DIR", PUBLIC_DIR . DS . "assets");
+}
+
+// Application
+if (!defined("IMAGE_DIR")) {
+	define("IMAGE_DIR", ASSET_DIR . DS . "img");
+}
+
+// Application
 if (!defined("UPLOAD_DIR")) {
-	define("UPLOAD_DIR", ROOT_DIR . DS . "upload");
+	define("UPLOAD_DIR", IMAGE_DIR . DS . "upload");
 }
 
 // Application

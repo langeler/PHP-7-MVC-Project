@@ -29,7 +29,7 @@ class RegisterController extends Controller
 			$this->userModel->username = $this->clean($post["username"]);
 			$this->userModel->password = $this->clean($post["password"]);
 			$this->userModel->cpassword = $this->clean($post["cpassword"]);
-			$this->userModel->role = DEFAULT_ROLE // Default role definied
+			$this->userModel->role = DEFAULT_ROLE; // Default role definied
 			
 			// Validate username, password, and email
 			if ($this->userModel->validateCreate()) {
@@ -60,6 +60,6 @@ class RegisterController extends Controller
 			$this->redirect("dashboard");
 		}
 
-		$this->view("register");
+		$this->view("auth/register");
 	}
 }

@@ -8,9 +8,10 @@
 	            <?= $this->pageTitle ?>
             </h6>
             <h1 class="text-white mb-4">
-	        	Page not found.
+	        	Internal server error
             </h1>
-            <p class="lead text-muted lh-180 mb-0">The requested page was not found.</p>
+            <p class="lead text-muted lh-180 mb-0">
+	            An internal server error have unfortunately occurred.</p>
           </div>
         </div>
       </div>

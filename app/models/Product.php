@@ -188,6 +188,45 @@ class Product extends Model
 		return $result;
 	}
 	
+	// search all user rows from the database
+	public function searchByCategoryWithPaging($search, $records, $perPage) {
+		
+		// query to read all users
+		$query = "SELECT *
+			FROM 
+				" . $this->product_table . "
+			WHERE
+				name LIKE ?
+			OR
+				description LIKE ?
+			AND
+				category_id = ?
+			ORDER BY 
+				name DESC
+			LIMIT
+				?, ?";
+
+		// prepare query statement
+		$this->db->prepare($query);
+
+		// sanitize
+		$search = "%{$search}%";
+		$search=htmlspecialchars(strip_tags($search));
+
+		// bind variable values
+		$this->db->bind(1, $search);
+		$this->db->bind(2, $search);
+		$this->db->bind(3, $this->cid);
+		$this->db->bind(4, (int)$records);
+		$this->db->bind(5, (int)$perPage);
+
+		// execute query
+		$result = $this->db->fetchAll();
+
+		// return values
+		return $result;
+	}
+	
 	// read all user rows from the database
 	public function readAll() {
 
@@ -325,6 +364,59 @@ class Product extends Model
 		// bind search term
 		$this->db->bind(1, $search);
 		$this->db->bind(2, $search);
+		
+		// execute the query
+		$this->db->execute();
+
+		$result = $this->db->fetch();
+
+		return (int)$result['count'];
+	}
+	
+	public function countAllByCategory() {
+
+		$query = "SELECT 
+			COUNT(*) as count
+			FROM 
+				" . $this->product_table . "
+			WHERE
+				category_id = ?";
+
+		$this->db->prepare($query);
+	
+		$this->db->bind(1, $this->cid);
+	
+		// execute the query
+		$this->db->execute();
+
+		$result = $this->db->fetch();
+
+		return (int)$result['count'];
+	}
+	
+	// used for paging products based on search term
+	public function countAllByCategorySearch($search) {
+	
+			$query = "SELECT 
+			COUNT(*) as count
+			FROM 
+				" . $this->product_table ."
+			WHERE
+				name LIKE ?
+			OR
+				description LIKE ?
+			AND
+				category_id = ?";
+
+		$this->db->prepare($query);
+		
+		$search = "%{$search}%";
+		$search = htmlspecialchars(strip_tags($search));
+		
+		// bind search term
+		$this->db->bind(1, $search);
+		$this->db->bind(2, $search);
+		$this->db->bind(3, $this->cid);
 		
 		// execute the query
 		$this->db->execute();

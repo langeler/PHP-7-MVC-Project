@@ -30,7 +30,7 @@ class SettingsController extends Controller
 			$this->userModel->surname = $this->clean($post['surname']);
 			$this->userModel->phone = $this->clean($post['phone']);
 			$this->userModel->email = $this->clean($post['email']);
-			$this->userModel->role = DEFAULT_ROLE // Default role definied
+			$this->userModel->role = DEFAULT_ROLE; // Default role definied
 			
 			if ($this->userModel->validateUpdate()) {
 	
@@ -60,6 +60,6 @@ class SettingsController extends Controller
 		// Get user by session value
 		$this->account = $this->userModel->readOne();
 
-		$this->view("settings");
+		$this->view("auth/settings");
 	}
 }

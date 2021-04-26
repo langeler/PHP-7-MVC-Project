@@ -1,6 +1,31 @@
 <?php
 
 /**
+ * Purifies to prevent XSS attacks
+ * @param string $ string
+ * @return $ string
+ */
+function clean($string)
+{
+	return htmlspecialchars(
+		stripslashes(strip_tags(trim($string))),
+		ENT_QUOTES,
+		"UTF-8"
+	);
+}
+
+/**
+ * Redirects to the specified page.
+ */
+function redirect($view)
+{
+	$view = strtolower($view);
+
+	header("Location: /" . $view);
+	exit();
+}
+
+/**
  * Get URI path.
  * Return a string.
  */
@@ -21,27 +46,27 @@ function getMethod()
 	return $method;
 }
 
-function cleanString($value) 
-{					
+function cleanString($value)
+{
 	$value = trim($value);
 
 	$value = htmlspecialchars($value, ENT_QUOTES | ENT_HTML5);
 
-	if(!$value) {
+	if (!$value) {
 		$value = null;
 	}
-	
+
 	return $value;
 }
 
 /**
- * 
+ *
  */
 function dd($value)
 {
 	echo "<pre>";
 
 	die(var_dump($value));
-	
+
 	echo "</pre>";
 }

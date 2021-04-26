@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Core;
-use Exception;
+use App\Core\Exceptions\NotFoundException;
 
 class Router
 {
@@ -81,7 +81,7 @@ class Router
 			}
 		}
 
-		throw new Exception("No route defined for this URI.");
+		throw new NotFoundException("No route defined for this URI.");
 	}
 	/*
 	 * This function calls the controller for an action.
@@ -91,16 +91,16 @@ class Router
 		$folders = [
 			"App\\Controllers\\{$controller}",
 			"App\\Controllers\Admin\\{$controller}",
-			"App\\Controllers\Auth\\{$controller}"
+			"App\\Controllers\Auth\\{$controller}",
+			"App\\Controllers\Exceptions\\{$controller}",
 		];
-		
+
 		foreach ($folders as $folder) {
-			
 			if (class_exists($folder)) {
 				$controller = $folder;
 			}
 		}
-		
+
 		$controller = new $controller();
 
 		if (!method_exists($controller, $action)) {

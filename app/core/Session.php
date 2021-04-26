@@ -15,6 +15,7 @@ namespace App\Core;
 class Session
 {
 	public $csrf;
+	public $cart;
 	public $user;
 	
 	/**
@@ -26,14 +27,24 @@ class Session
 		if (!isset($_SESSION)) {
 			session_start();
 		}
+		
+		if (empty($_SESSION["cart"])) {
+			$_SESSION['cart'] = [];
+		}
+		
 		if (empty($_SESSION["csrf"])) {
+			
 			if (function_exists("random_bytes")) {
 				$_SESSION["csrf"] = bin2hex(random_bytes(32));
-			} elseif (function_exists("mcrypt_create_iv")) {
+			}
+			
+			elseif (function_exists("mcrypt_create_iv")) {
 				$_SESSION["csrf"] = bin2hex(
 					mcrypt_create_iv(32, MCRYPT_DEV_URANDOM)
 				);
-			} else {
+			}
+			
+			else {
 				$_SESSION["csrf"] = bin2hex(openssl_random_pseudo_bytes(32));
 			}
 		}

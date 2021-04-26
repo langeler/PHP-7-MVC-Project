@@ -56,6 +56,6 @@ class LoginController extends Controller
 			$this->redirect("dashboard");
 		}
 
-		$this->view("login");
+		$this->view("auth/login");
 	}
 }

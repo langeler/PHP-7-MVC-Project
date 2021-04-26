@@ -18,6 +18,6 @@ class ProfileController extends Controller
 		// Get user by session value
 		$this->account = $this->userModel->readOne();
 
-		$this->view("profile");
+		$this->view("auth/profile");
 	}
 }
