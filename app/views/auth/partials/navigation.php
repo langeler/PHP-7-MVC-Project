@@ -32,15 +32,15 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
                   <h6 class="dropdown-header">Account</h6>
-                  
-                  <?php if ($this->session->isUserLoggedIn()): ?> 
+
+                  <?php if ($this->session->isUserLoggedIn()): ?>
                   <a class="dropdown-item" href="/dashboard">
                     <i class="fas fa-user"></i>Dashboard
                   </a>
                  <a class="dropdown-item" href="/profile">
                     <i class="fas fa-user"></i>Profile
                   </a>
-             
+
                   <a class="dropdown-item" href="/settings">
                     <i class="fas fa-cog"></i>Settings
                   </a>
@@ -49,7 +49,7 @@
                     <i class="fas fa-sign-out-alt"></i>Sign out
                   </a>
                   <?php else: ?>
-                  
+
                   <a class="dropdown-item" href="/login">
                     <i class="fas fa-sign-in-alt"></i>Sign in
                   </a>
@@ -65,7 +65,7 @@
         </div>
       </div>
     </div><!-- End of top navbar -->
-	
+
 	<!-- Main navbar -->
     <nav class="navbar navbar-main navbar-expand-lg navbar-transparent navbar-dark bg-dark" id="navbar-main">
       <div class="container px-lg-0">
@@ -90,35 +90,35 @@
             <li class="nav-item">
               <a class="nav-link" href="/about">About</a>
             </li>
-            
-            <?php if ($this->session->isUserLoggedIn()): ?> 
+
+            <?php if ($this->session->isUserLoggedIn()): ?>
 
             <li class="nav-item">
               <a class="nav-link" href="/profile">Profile</a>
-            </li>            
+            </li>
 
             <li class="nav-item">
               <a class="nav-link" href="/settings">Settings</a>
             </li>
-            
+
 			<li class="nav-item">
               <a class="nav-link" href="/dashboard">Dashboard</a>
             </li>
             <?php endif; ?>
           </ul>
-          
+
           <ul class="navbar-nav pt-3 align-items-lg-center ml-lg-auto">
 			<li class="nav-item d-lg-none d-xl-block">
               <a class="nav-link" href="../../docs/changelog.html" target="_blank">
 	              Delightful Meal'N'Snacks
 	          </a>
             </li>
-            
+
             <li class="nav-item mr-0">
               <a href="/" target="_blank" class="nav-link d-lg-none">
 	              Order now
 	           </a>
-              
+
               <a href="/" target="_blank" class="btn btn-sm btn-dark btn-icon rounded-pill d-none d-lg-inline-flex" data-toggle="tooltip" data-placement="left" title="Breakfast, Lunch'N'Brunch">
                 <span class="btn-inner--icon">
                 	<i class="fas fa-shopping-cart"></i>

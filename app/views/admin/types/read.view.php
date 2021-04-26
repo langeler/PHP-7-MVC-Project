@@ -13,13 +13,15 @@
         </div>
       </div>
     </section>
-		
+
 <div class='container mt-3'>
 	<div class="row">
 		<div class="col-md-6 px-0">
 		</div>
 		<div class="col-md-6">
-			<a href="/admin/product/type/create/<?= $pageData['pid'] ?>" class='btn btn-success float-right'>
+			<a href="/admin/product/type/create/<?= $pageData[
+   	"pid"
+   ] ?>" class='btn btn-success float-right'>
 				<i class='fas fa-plus'></i> Create Record
 			</a>
 		</div>
@@ -29,7 +31,7 @@
 <div class='container mt-3'>
 	<div class='row'>
 		<div class='col-md-12'>
-			<?php if($pageData['types']): ?>
+			<?php if ($pageData["types"]): ?>
 			<table class='table table-hover table-responsive'>
 				<tr>
 					<th>Name</th>
@@ -40,8 +42,8 @@
 					<th>Created</th>
 					<th>Actions</th>
 				</tr>
-				
-				<?php foreach ($pageData['types'] as $type): ?>
+
+				<?php foreach ($pageData["types"] as $type): ?>
 				<tr>
 					<td>
 						<?= $type["name"] ?>
@@ -62,27 +64,31 @@
 						<?= $type["created"] ?>
 					</td>
 					<td>
-				    	<a class="btn btn-sm btn-primary" href="/admin/product/type/update/<?= strtolower($type["id"]) ?>">
+				    	<a class="btn btn-sm btn-primary" href="/admin/product/type/update/<?= strtolower(
+         	$type["id"]
+         ) ?>">
 							Update
 						</a>
-						
-						<a class="btn btn-sm btn-danger" href="/admin/product/type/delete/<?= strtolower($type["id"]) ?>">
+
+						<a class="btn btn-sm btn-danger" href="/admin/product/type/delete/<?= strtolower(
+      	$type["id"]
+      ) ?>">
 							Delete
 						</a>
 					</td>
 				</tr>
 				<?php endforeach; ?>
 			</table>
-			<?php else:?>
+			<?php else: ?>
 			<p>
 				No types were found!
 			</p>
 			<?php endif; ?>
-			
-			<?php echo $pageData['pagination'];?>
+
+			<?php echo $pageData["pagination"]; ?>
 		</div>
 	</div>
 </div>
-   
+
 <?php include VIEW_DIR . DS . "admin/partials/footer.php";
 ?>

@@ -8,12 +8,11 @@ class OrderItem extends Model
 {
 	private $table = "order_items";
 
-    // object properties
+	// object properties
 	protected $id;
 	protected $transaction_id;
 	protected $product_id;
-    protected $type_id;
+	protected $type_id;
 	protected $price;
 	protected $quantity;
-	
 }

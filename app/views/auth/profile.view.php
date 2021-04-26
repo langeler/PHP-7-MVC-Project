@@ -10,17 +10,17 @@
             <h1 class="text-white mb-4">
 	        	<?= $this->account["username"] ?>
             </h1>
-		
+
 		<p>
         <?php if (!empty($this->account["forename"])): ?>
         	<?= $this->account["forename"] ?>
         <?php endif; ?>
-        
+
         <?php if (!empty($this->account["surname"])): ?>
        		<?= $this->account["surname"] ?>
         <?php endif; ?>
         </p>
-        
+
         <?php if (!empty($this->account["email"])): ?>
        		<?= $this->account["email"] ?>
         <?php endif; ?>
@@ -32,8 +32,9 @@
 
 <section class="content-section">
     <div class="container">
-		
+
     </div>
 </section>
 
-<?php include __DIR__ . "/partials/footer.php"; ?>
+<?php include __DIR__ . "/partials/footer.php";
+?>

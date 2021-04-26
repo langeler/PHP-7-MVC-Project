@@ -20,12 +20,15 @@ class Article extends Model
 	protected $search; // Search query
 	protected $records; // Total number of records
 	protected $page; // Total records per page
-	
-	function create() {
-		
+
+	function create()
+	{
 		// insert product query
-		$query = "INSERT INTO
-				" . $this->table . "
+		$query =
+			"INSERT INTO
+				" .
+			$this->table .
+			"
 			SET
 				title = :title,
 				slug = :slug,
@@ -36,83 +39,95 @@ class Article extends Model
 				status = :status,
 				created = :created";
 	}
-	
-	function readOne() {
 
+	function readOne()
+	{
 		// select all products query
-		$query = "SELECT
-				id, 
-				title, 
-				slug, 
-				content, 
-				description, 
-				user_id, 
-				subject_id, 
+		$query =
+			"SELECT
+				id,
+				title,
+				slug,
+				content,
+				description,
+				user_id,
+				subject_id,
 				status
-			FROM 
-				" . $this->table . "
+			FROM
+				" .
+			$this->table .
+			"
 			WHERE
 				id = :id
-			LIMIT 
+			LIMIT
 				0, 1";
-		
-		$this->search;		
+
+		$this->search;
 	}
-	
-	function readAll() {
-		
+
+	function readAll()
+	{
 		// select all products query
-		$query = "SELECT
-				id, 
-				title, 
-				slug, 
-				content, 
-				description, 
-				user_id, 
-				subject_id, 
+		$query =
+			"SELECT
+				id,
+				title,
+				slug,
+				content,
+				description,
+				user_id,
+				subject_id,
 				status
-			FROM 
-				" . $this->table . "
-			ORDER BY 
+			FROM
+				" .
+			$this->table .
+			"
+			ORDER BY
 				name ASC
-			LIMIT 
+			LIMIT
 				?, ?";
-		
-		$this->search;		
+
+		$this->search;
 		$this->records;
 		$this->page;
 	}
-	
-	function readAllBySubject () {
-		
+
+	function readAllBySubject()
+	{
 		// select all products query
-		$query = "SELECT
-				id, 
-				title, 
-				slug, 
-				content, 
-				description, 
-				user_id, 
-				subject_id, 
+		$query =
+			"SELECT
+				id,
+				title,
+				slug,
+				content,
+				description,
+				user_id,
+				subject_id,
 				status
-			FROM 
-				" . $this->table . "
+			FROM
+				" .
+			$this->table .
+			"
 			WHERE
 				subject_id = :subject_id
-			ORDER BY 
+			ORDER BY
 				name ASC
-			LIMIT 
+			LIMIT
 				?, ?";
-	
+
 		$this->records;
 		$this->page;
 	}
-	
-	function update() {
-		
+
+	function update()
+	{
 		// product update query
-		$query = "UPDATE
-				" . $this->table . "
+		$query =
+			"UPDATE
+				" .
+			$this->table .
+			"
 			SET
 				title = :title,
 				slug = :slug,
@@ -124,49 +139,55 @@ class Article extends Model
 			WHERE
 				id = :id";
 	}
-	
-	function delete() {
-		
+
+	function delete()
+	{
 		// delete product query
-		$query = "DELETE FROM
-			 	" . $this->table . " 
-			 WHERE 
+		$query =
+			"DELETE FROM
+			 	" .
+			$this->table .
+			"
+			 WHERE
 			 	id = ?";
 	}
-	
-	function search() {
-		
+
+	function search()
+	{
 		// select all products query
-		$query = "SELECT
-				id, 
-				title, 
-				slug, 
-				content, 
-				description,  
-				subject_id, 
-				user_id, 
+		$query =
+			"SELECT
+				id,
+				title,
+				slug,
+				content,
+				description,
+				subject_id,
+				user_id,
 				status
-			FROM 
-				" . $this->table . "
+			FROM
+				" .
+			$this->table .
+			"
 			WHERE
 				title LIKE ?
-			ORDER BY 
+			ORDER BY
 				name ASC
-			LIMIT 
+			LIMIT
 				?, ?";
-		
-		$this->search;		
+
+		$this->search;
 		$this->records;
 		$this->page;
 	}
-	
-	function countAll() {
-	
-		// query to count all product records
-		$query = "SELECT 
-				count(*) 
-			FROM 
-				" . $this->table;
 
+	function countAll()
+	{
+		// query to count all product records
+		$query =
+			"SELECT
+				count(*)
+			FROM
+				" . $this->table;
 	}
 }

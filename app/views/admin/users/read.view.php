@@ -13,12 +13,16 @@
         </div>
       </div>
     </section>
-		
+
 <div class='container mt-3'>
 	<div class="row">
 		<div class="col-md-6 px-0">
 			<form class="form-inline float-left "  action='<?= $pageUrl ?>' method="get">
-				<input class="form-control mr-sm-2" type="search" placeholder="Type a name..." name="search" id="search" <?php echo isset($pageData['search']) ? "value='{$pageData['search']}'" : ""; ?> aria-label="Search">
+				<input class="form-control mr-sm-2" type="search" placeholder="Type a name..." name="search" id="search" <?php echo isset(
+    	$pageData["search"]
+    )
+    	? "value='{$pageData["search"]}'"
+    	: ""; ?> aria-label="Search">
 			    <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i> Search</button>
 			</form>
 		</div>
@@ -33,7 +37,7 @@
 <div class='container mt-3'>
 	<div class='row'>
 		<div class='col-md-12'>
-			<?php if($pageData['accounts']): ?>
+			<?php if ($pageData["accounts"]): ?>
 			<table class='table table-hover table-responsive'>
 				<tr>
 					<th>Forename</th>
@@ -44,8 +48,8 @@
 					<th>Role</th>
 					<th>Actions</th>
 				</tr>
-				
-				<?php foreach ($pageData['accounts'] as $account): ?>
+
+				<?php foreach ($pageData["accounts"] as $account): ?>
 				<tr>
 					<td>
 						<?= $account["forename"] ?>
@@ -66,27 +70,31 @@
 						<?= $account["role"] ?>
 					</td>
 					<td>
-				    	<a class="btn btn-sm btn-primary" href="/admin/user/update/<?= strtolower($account["id"]) ?>">
+				    	<a class="btn btn-sm btn-primary" href="/admin/user/update/<?= strtolower(
+         	$account["id"]
+         ) ?>">
 							Update
 						</a>
-						
-						<a class="btn btn-sm btn-danger" href="/admin/user/delete/<?= strtolower($account["id"]) ?>">
+
+						<a class="btn btn-sm btn-danger" href="/admin/user/delete/<?= strtolower(
+      	$account["id"]
+      ) ?>">
 							Delete
 						</a>
 					</td>
 				</tr>
 				<?php endforeach; ?>
 			</table>
-			<?php else:?>
+			<?php else: ?>
 			<p>
 				No users were found!
 			</p>
 			<?php endif; ?>
-			
-			<?php echo $pageData['pagination'];?>
+
+			<?php echo $pageData["pagination"]; ?>
 		</div>
 	</div>
 </div>
-   
+
 <?php include VIEW_DIR . DS . "admin/partials/footer.php";
 ?>

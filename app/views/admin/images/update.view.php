@@ -1,5 +1,5 @@
 <?php include VIEW_DIR . DS . "admin/partials/header.php"; ?>
-    
+
   <div class="main-content mt-4">
     <section class="slice slice-lg min-vh-100 d-flex align-items-center bg-section-secondary">
       <!-- SVG background -->
@@ -15,7 +15,9 @@
               <div class="card shadow zindex-100 mb-0">
                 <div class="card-body px-md-5 py-5">
                   <div class="mb-5">
-                    <a href="/admin/product/images/<?= $pageData["image"]["product_id"] ?>" class="btn btn-secondary my-2">
+                    <a href="/admin/product/images/<?= $pageData["image"][
+                    	"product_id"
+                    ] ?>" class="btn btn-secondary my-2">
 	                    Go back
                     </a>
                     <h6 class="h3">
@@ -23,18 +25,22 @@
                     </h6>
                   </div>
                   <span class="clearfix"></span>
-      				
+
       				<?php include VIEW_DIR . DS . "admin/partials/message.php"; ?>
-	  				
+
 	  				<form method="post" id="form-settings">
-                        
-                        <input name="csrf" type="hidden" value="<?= $pageData['csrf'] ?>">	
-						
+
+                        <input name="csrf" type="hidden" value="<?= $pageData[
+                        	"csrf"
+                        ] ?>">
+
 						<div class="form-group">
                         <label for="description">Description</label>
-                        <input class="form-control" type="text" name="description" id="description" value="<?= $pageData["image"]["description"] ?>">
+                        <input class="form-control" type="text" name="description" id="description" value="<?= $pageData[
+                        	"image"
+                        ]["description"] ?>">
 						</div>
-						
+
 						<div class="form-group">
                         <input class="btn btn-primary" type="submit" value="Update">
 						</div>

@@ -22,101 +22,119 @@ class Contact extends Model
 	protected $page; // Total records per page
 
 	// delete the product
-	function create() {
-		
+	function create()
+	{
 		// insert query
-		$query = "INSERT INTO 
-				" . $this->table . "
-			SET 
-				name = ?, 
-				description = ?, 
+		$query =
+			"INSERT INTO
+				" .
+			$this->table .
+			"
+			SET
+				name = ?,
+				description = ?,
 				created = ?";
 	}
-	
+
 	// delete the product
-	function readOne() {
-		
+	function readOne()
+	{
 		// select single record query
-		$query = "SELECT 
-				name, 
+		$query =
+			"SELECT
+				name,
 				description
-			FROM 
-				" . $this->table_name . "
-			WHERE 
+			FROM
+				" .
+			$this->table_name .
+			"
+			WHERE
 				id = ?
-			LIMIT 
+			LIMIT
 				0, 1";
 	}
 
 	// delete the product
-	function readAll() {
-		
+	function readAll()
+	{
 		// query select all categories
-		$query = "SELECT 
-				id, 
-				name, 
+		$query =
+			"SELECT
+				id,
+				name,
 				description
-			FROM 
-				" . $this->table . "
-			ORDER BY 
+			FROM
+				" .
+			$this->table .
+			"
+			ORDER BY
 				name
-			LIMIT 
+			LIMIT
 				?, ?";
-				
+
 		$this->records;
 		$this->page;
 	}
-	
+
 	// delete the product
-	function update() {
-		
+	function update()
+	{
 		// update query
-		$query = "UPDATE 
-				" . $this->table . "
-			SET 
-				name = :name, 
+		$query =
+			"UPDATE
+				" .
+			$this->table .
+			"
+			SET
+				name = :name,
 				description = :description
-			WHERE 
+			WHERE
 				id = :id";
 	}
-	
+
 	// delete the product
-	function delete() {
-		
+	function delete()
+	{
 		// delete query
-		$query = "DELETE FROM 
-				" . $this->table . " 
-			WHERE 
+		$query =
+			"DELETE FROM
+				" .
+			$this->table .
+			"
+			WHERE
 				id = ?";
 	}
-	
-	function search() {
-		
+
+	function search()
+	{
 		// search query
-		$query = "SELECT 
-				id, 
-				name, 
+		$query =
+			"SELECT
+				id,
+				name,
 				description
-			FROM 
-				" . $this->table_name . "
-			WHERE 
+			FROM
+				" .
+			$this->table_name .
+			"
+			WHERE
 				name LIKE ?
-			ORDER BY 
+			ORDER BY
 				name ASC
-			LIMIT 
+			LIMIT
 				?, ?";
-		
+
 		$this->search;
 		$this->records;
 		$this->page;
 	}
-	
-	// used for paging categories
-	public function countAll() {
 
+	// used for paging categories
+	public function countAll()
+	{
 		// query to count all data
 		$query = "SELECT count(*) FROM " . $this->table;
-		
+
 		// prepare query statement
 		$stmt = $this->conn->prepare($query);
 
@@ -129,6 +147,4 @@ class Contact extends Model
 		// return all data count
 		return $rows[0];
 	}
-	
-	
 }

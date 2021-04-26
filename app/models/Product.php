@@ -15,67 +15,73 @@ class Product extends Model
 	public $description; // Description
 	public $status; // Description
 	public $search; // Search query
-	
-	public function validateCreate ()
-	{
 
+	public function validateCreate()
+	{
 		// Validate fields
-		$this->validate->name('name')->value($this->name)->pattern('words')->required();
-		
+		$this->validate
+			->name("name")
+			->value($this->name)
+			->pattern("words")
+			->required();
+
 		// Username already exists in the database
 		if ($this->productExist()) {
-			$this->validate->errors[] = 'A category with that name already exist.';
+			$this->validate->errors[] =
+				"A category with that name already exist.";
 		}
-		
-		if($this->validate->isSuccess()) {
+
+		if ($this->validate->isSuccess()) {
 			return true;
-		}
-				
-		else {
+		} else {
 			$this->errors = $this->validate->displayErrors();
 			$this->getErrors();
 			return false;
 		}
 	}
 
-	public function validateSearch () {
-
+	public function validateSearch()
+	{
 		// Validate fields
-		$this->validate->name('search')->value($this->search)->pattern('words')->required();
+		$this->validate
+			->name("search")
+			->value($this->search)
+			->pattern("words")
+			->required();
 		$this->errors = $this->validate->displayErrors();
-		
-		if($this->validate->isSuccess()) {
+
+		if ($this->validate->isSuccess()) {
 			return true;
-		}
-		
-		else {
+		} else {
 			$this->getErrors();
 			return false;
 		}
 	}
-	
-	public function validateUpdate () {
 
+	public function validateUpdate()
+	{
 		// Validate fields
-		$this->validate->name('name')->value($this->name)->pattern('words')->required();
+		$this->validate
+			->name("name")
+			->value($this->name)
+			->pattern("words")
+			->required();
 
 		// Get user data from database
 		$this->product = $this->readOne();
-		
+
 		// If email doesn't match the email on record
-		if ($this->name  !== $this->product["name"]) {
-			
+		if ($this->name !== $this->product["name"]) {
 			// If new name isn't avaliable
 			if ($this->productExist()) {
-				$this->validate->errors[] = 'A category with that name already exist.';
-			}			
+				$this->validate->errors[] =
+					"A category with that name already exist.";
+			}
 		}
-				
-		if($this->validate->isSuccess()) {
+
+		if ($this->validate->isSuccess()) {
 			return true;
-		}
-		
-		else {
+		} else {
 			$this->errors = $this->validate->displayErrors();
 			$this->getErrors();
 			return false;
@@ -87,14 +93,17 @@ class Product extends Model
 	 * data into the users table.
 	 * Returns true if successful.
 	 */
-	public function create() {
-		
+	public function create()
+	{
 		// Set timestamp for the created record
 		$this->setTimeStamp();
-		
-        // insert query
-        $query = "INSERT INTO
-                    " . $this->product_table . "
+
+		// insert query
+		$query =
+			"INSERT INTO
+                    " .
+			$this->product_table .
+			"
                 SET
 					name = :name,
 					description = :description,
@@ -104,31 +113,34 @@ class Product extends Model
 
 		// Prepare prepared statement
 		$this->db->prepare($query);
-		
+
 		// Bind values
 		$this->db->bind(":name", $this->name);
 		$this->db->bind(":description", $this->description);
 		$this->db->bind(":category_id", $this->cid);
 		$this->db->bind(":status", $this->status);
 		$this->db->bind(":created", $this->timestamp);
-		
+
 		$result = $this->db->execute();
 
 		return $result;
 	}
 
 	// check if given email exist in the database
-	public function productExist(){
-
+	public function productExist()
+	{
 		// query to check if email exists
-		$query = "SELECT *
-			FROM 
-				" . $this->product_table . "
-			WHERE 
+		$query =
+			"SELECT *
+			FROM
+				" .
+			$this->product_table .
+			"
+			WHERE
 				name = ?
 			AND
 				category_id = ?
-			LIMIT 
+			LIMIT
 				0,1";
 
 		// prepare the query
@@ -142,8 +154,7 @@ class Product extends Model
 		$this->db->execute();
 
 		// if email exists, assign values to object properties for easy access and use for php sessions
-		if($this->db->rowCount() > 0) {
-
+		if ($this->db->rowCount() > 0) {
 			// return true because email exists in the database
 			return true;
 		}
@@ -151,19 +162,22 @@ class Product extends Model
 		// return false if email doesn't exist in the database
 		return false;
 	}
-	
+
 	// search all user rows from the database
-	public function searchWithPaging($search, $records, $perPage) {
-		
+	public function searchWithPaging($search, $records, $perPage)
+	{
 		// query to read all users
-		$query = "SELECT *
-			FROM 
-				" . $this->product_table . "
+		$query =
+			"SELECT *
+			FROM
+				" .
+			$this->product_table .
+			"
 			WHERE
 				name LIKE ?
 			OR
 				description LIKE ?
-			ORDER BY 
+			ORDER BY
 				name DESC
 			LIMIT
 				?, ?";
@@ -173,13 +187,13 @@ class Product extends Model
 
 		// sanitize
 		$search = "%{$search}%";
-		$search=htmlspecialchars(strip_tags($search));
+		$search = htmlspecialchars(strip_tags($search));
 
 		// bind variable values
 		$this->db->bind(1, $search);
 		$this->db->bind(2, $search);
-		$this->db->bind(3, (int)$records);
-		$this->db->bind(4, (int)$perPage);
+		$this->db->bind(3, (int) $records);
+		$this->db->bind(4, (int) $perPage);
 
 		// execute query
 		$result = $this->db->fetchAll();
@@ -187,21 +201,24 @@ class Product extends Model
 		// return values
 		return $result;
 	}
-	
+
 	// search all user rows from the database
-	public function searchByCategoryWithPaging($search, $records, $perPage) {
-		
+	public function searchByCategoryWithPaging($search, $records, $perPage)
+	{
 		// query to read all users
-		$query = "SELECT *
-			FROM 
-				" . $this->product_table . "
+		$query =
+			"SELECT *
+			FROM
+				" .
+			$this->product_table .
+			"
 			WHERE
 				name LIKE ?
 			OR
 				description LIKE ?
 			AND
 				category_id = ?
-			ORDER BY 
+			ORDER BY
 				name DESC
 			LIMIT
 				?, ?";
@@ -211,14 +228,14 @@ class Product extends Model
 
 		// sanitize
 		$search = "%{$search}%";
-		$search=htmlspecialchars(strip_tags($search));
+		$search = htmlspecialchars(strip_tags($search));
 
 		// bind variable values
 		$this->db->bind(1, $search);
 		$this->db->bind(2, $search);
 		$this->db->bind(3, $this->cid);
-		$this->db->bind(4, (int)$records);
-		$this->db->bind(5, (int)$perPage);
+		$this->db->bind(4, (int) $records);
+		$this->db->bind(5, (int) $perPage);
 
 		// execute query
 		$result = $this->db->fetchAll();
@@ -226,15 +243,18 @@ class Product extends Model
 		// return values
 		return $result;
 	}
-	
-	// read all user rows from the database
-	public function readAll() {
 
+	// read all user rows from the database
+	public function readAll()
+	{
 		// query to read all users
-		$query = "SELECT *
-			FROM 
-				" . $this->product_table . "
-			ORDER BY 
+		$query =
+			"SELECT *
+			FROM
+				" .
+			$this->product_table .
+			"
+			ORDER BY
 				name DESC";
 
 		// prepare query statement
@@ -246,22 +266,25 @@ class Product extends Model
 		// return values
 		return $result;
 	}
-	
-	// read all user rows from the database
-	public function readAllByCategory() {
 
+	// read all user rows from the database
+	public function readAllByCategory()
+	{
 		// query to read all users
-		$query = "SELECT *
-			FROM 
-				" . $this->product_table . "
+		$query =
+			"SELECT *
+			FROM
+				" .
+			$this->product_table .
+			"
 			WHERE
 				category_id = ?
-			ORDER BY 
+			ORDER BY
 				name DESC";
 
 		// prepare query statement
 		$this->db->prepare($query);
-		
+
 		// Bind param
 		$this->db->bind(1, $this->cid);
 
@@ -271,136 +294,152 @@ class Product extends Model
 		// return values
 		return $result;
 	}
-	
-	// read all user rows from the database
-	public function readAllByCategoryWithPaging($records, $perPage) {
 
+	// read all user rows from the database
+	public function readAllByCategoryWithPaging($records, $perPage)
+	{
 		// query to read all users
-		$query = "SELECT *
-			FROM 
-				" . $this->product_table . "
+		$query =
+			"SELECT *
+			FROM
+				" .
+			$this->product_table .
+			"
 			WHERE
 				category_id = ?
-			ORDER BY 
+			ORDER BY
 				name DESC
 			LIMIT
 				?, ?";
 
 		// prepare query statement
 		$this->db->prepare($query);
-		
+
 		// bind limit clause variables
 		$this->db->bind(1, $this->cid);
-		$this->db->bind(2, (int)$records);
-		$this->db->bind(3, (int)$perPage);
+		$this->db->bind(2, (int) $records);
+		$this->db->bind(3, (int) $perPage);
 
 		// execute query
 		$result = $this->db->fetchAll();
-		
+
 		// return values
 		return $result;
 	}
-	
-	// read all user rows from the database
-	public function readAllWithPaging($records, $perPage) {
 
+	// read all user rows from the database
+	public function readAllWithPaging($records, $perPage)
+	{
 		// query to read all users
-		$query = "SELECT *
-			FROM 
-				" . $this->product_table . "
-			ORDER BY 
+		$query =
+			"SELECT *
+			FROM
+				" .
+			$this->product_table .
+			"
+			ORDER BY
 				name DESC
 			LIMIT
 				?, ?";
 
 		// prepare query statement
 		$this->db->prepare($query);
-		
+
 		// bind limit clause variables
-		$this->db->bind(1, (int)$records);
-		$this->db->bind(2, (int)$perPage);
+		$this->db->bind(1, (int) $records);
+		$this->db->bind(2, (int) $perPage);
 
 		// execute query
 		$result = $this->db->fetchAll();
-		
+
 		// return values
 		return $result;
 	}
-	
-	public function countAll() {
 
-		$query = "SELECT 
+	public function countAll()
+	{
+		$query =
+			"SELECT
 			COUNT(*) as count
-			FROM 
+			FROM
 				" . $this->product_table;
 
 		$this->db->prepare($query);
-	
+
 		// execute the query
 		$this->db->execute();
 
 		$result = $this->db->fetch();
 
-		return (int)$result['count'];
+		return (int) $result["count"];
 	}
-	
+
 	// used for paging products based on search term
-	public function countAllBySearch($search) {
-	
-			$query = "SELECT 
+	public function countAllBySearch($search)
+	{
+		$query =
+			"SELECT
 			COUNT(*) as count
-			FROM 
-				" . $this->product_table ."
+			FROM
+				" .
+			$this->product_table .
+			"
 			WHERE
 				name LIKE ?
 			OR
 				description LIKE ?";
 
 		$this->db->prepare($query);
-		
+
 		$search = "%{$search}%";
 		$search = htmlspecialchars(strip_tags($search));
-		
+
 		// bind search term
 		$this->db->bind(1, $search);
 		$this->db->bind(2, $search);
-		
+
 		// execute the query
 		$this->db->execute();
 
 		$result = $this->db->fetch();
 
-		return (int)$result['count'];
+		return (int) $result["count"];
 	}
-	
-	public function countAllByCategory() {
 
-		$query = "SELECT 
+	public function countAllByCategory()
+	{
+		$query =
+			"SELECT
 			COUNT(*) as count
-			FROM 
-				" . $this->product_table . "
+			FROM
+				" .
+			$this->product_table .
+			"
 			WHERE
 				category_id = ?";
 
 		$this->db->prepare($query);
-	
+
 		$this->db->bind(1, $this->cid);
-	
+
 		// execute the query
 		$this->db->execute();
 
 		$result = $this->db->fetch();
 
-		return (int)$result['count'];
+		return (int) $result["count"];
 	}
-	
+
 	// used for paging products based on search term
-	public function countAllByCategorySearch($search) {
-	
-			$query = "SELECT 
+	public function countAllByCategorySearch($search)
+	{
+		$query =
+			"SELECT
 			COUNT(*) as count
-			FROM 
-				" . $this->product_table ."
+			FROM
+				" .
+			$this->product_table .
+			"
 			WHERE
 				name LIKE ?
 			OR
@@ -409,21 +448,21 @@ class Product extends Model
 				category_id = ?";
 
 		$this->db->prepare($query);
-		
+
 		$search = "%{$search}%";
 		$search = htmlspecialchars(strip_tags($search));
-		
+
 		// bind search term
 		$this->db->bind(1, $search);
 		$this->db->bind(2, $search);
 		$this->db->bind(3, $this->cid);
-		
+
 		// execute the query
 		$this->db->execute();
 
 		$result = $this->db->fetch();
 
-		return (int)$result['count'];
+		return (int) $result["count"];
 	}
 
 	/**
@@ -433,23 +472,26 @@ class Product extends Model
 	public function readOne()
 	{
 		// Set prepared query to be preformed
-		$query = "SELECT * 
-			FROM 
-				" . $this->product_table . "
-			WHERE 
-				id = :id 
-			LIMIT 
+		$query =
+			"SELECT *
+			FROM
+				" .
+			$this->product_table .
+			"
+			WHERE
+				id = :id
+			LIMIT
 				0,1";
-		
+
 		// Prepare query statement
 		$this->db->prepare($query);
-		
+
 		// Bind values
 		$this->db->bind(":id", $this->id);
 
 		// Execute and fetch row
 		$row = $this->db->fetch();
-		
+
 		// Return row
 		return $row;
 	}
@@ -459,25 +501,28 @@ class Product extends Model
 	 * Return a boolean.
 	 */
 	public function update()
-	{	
+	{
 		// Set timestamp for the created record
 		$this->setTimeStamp();
-				
+
 		// Prepared query statement
-		$query = "UPDATE 
-				" . $this->product_table . " 
-			SET 
+		$query =
+			"UPDATE
+				" .
+			$this->product_table .
+			"
+			SET
 				name = :name ,
 				description = :description,
 				category_id = :category_id,
 				status = :status,
 				modified = :modified
-			WHERE 
+			WHERE
 				id = :id";
 
 		// Prepare prepared query statement
 		$this->db->prepare($query);
-		
+
 		// Bind values
 		$this->db->bind(":name", $this->name);
 		$this->db->bind(":description", $this->description);
@@ -485,7 +530,7 @@ class Product extends Model
 		$this->db->bind(":status", $this->status);
 		$this->db->bind(":modified", $this->timestamp);
 		$this->db->bind(":id", $this->id);
-		
+
 		// Execute query
 		$result = $this->db->execute();
 
@@ -493,24 +538,27 @@ class Product extends Model
 		return $result;
 	}
 
-	/** 
+	/**
 	 * Delete a user and all associated list items.
 	 * Return a boolean.
 	 */
-	public function delete() {
-		
+	public function delete()
+	{
 		// Prepared query statement
-		$query = "DELETE FROM 
-				" . $this->product_table . " 
-			WHERE 
+		$query =
+			"DELETE FROM
+				" .
+			$this->product_table .
+			"
+			WHERE
 				id = :id";
 
 		// Prepare prepared query statement
 		$this->db->prepare($query);
-		
+
 		// Bind value
 		$this->db->bind(":id", $this->id);
-		
+
 		// Execute query
 		$result = $this->db->execute();
 

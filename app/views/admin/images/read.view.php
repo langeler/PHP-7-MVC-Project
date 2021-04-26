@@ -13,13 +13,15 @@
         </div>
       </div>
     </section>
-		
+
 <div class='container mt-3'>
 	<div class="row">
 		<div class="col-md-6 px-0">
 		</div>
 		<div class="col-md-6">
-			<a href="/admin/product/image/create/<?= $pageData['pid'] ?>" class='btn btn-success float-right'>
+			<a href="/admin/product/image/create/<?= $pageData[
+   	"pid"
+   ] ?>" class='btn btn-success float-right'>
 				<i class='fas fa-plus'></i> Create Record
 			</a>
 		</div>
@@ -29,7 +31,7 @@
 <div class='container mt-3'>
 	<div class='row'>
 		<div class='col-md-12'>
-			<?php if($pageData['images']): ?>
+			<?php if ($pageData["images"]): ?>
 			<table class='table table-hover table-responsive'>
 				<tr>
 					<th>Name</th>
@@ -38,8 +40,8 @@
 					<th>Created</th>
 					<th>Actions</th>
 				</tr>
-				
-				<?php foreach ($pageData['images'] as $image): ?>
+
+				<?php foreach ($pageData["images"] as $image): ?>
 				<tr>
 					<td>
 						<?= $image["name"] ?>
@@ -54,27 +56,31 @@
 						<?= $image["created"] ?>
 					</td>
 					<td>
-				    	<a class="btn btn-sm btn-primary" href="/admin/product/image/update/<?= strtolower($image["id"]) ?>">
+				    	<a class="btn btn-sm btn-primary" href="/admin/product/image/update/<?= strtolower(
+         	$image["id"]
+         ) ?>">
 							Update
 						</a>
-						
-						<a class="btn btn-sm btn-danger" href="/admin/product/image/delete/<?= strtolower($image["id"]) ?>">
+
+						<a class="btn btn-sm btn-danger" href="/admin/product/image/delete/<?= strtolower(
+      	$image["id"]
+      ) ?>">
 							Delete
 						</a>
 					</td>
 				</tr>
 				<?php endforeach; ?>
 			</table>
-			<?php else:?>
+			<?php else: ?>
 			<p>
 				No images were found!
 			</p>
 			<?php endif; ?>
-			
-			<?php echo $pageData['pagination'];?>
+
+			<?php echo $pageData["pagination"]; ?>
 		</div>
 	</div>
 </div>
-   
+
 <?php include VIEW_DIR . DS . "admin/partials/footer.php";
 ?>

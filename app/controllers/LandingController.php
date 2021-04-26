@@ -12,4 +12,3 @@ class LandingController extends Controller
 		$this->view("landing");
 	}
 }
-

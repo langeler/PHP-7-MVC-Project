@@ -8,13 +8,11 @@ class Order extends Model
 {
 	private $table = "orders";
 
-    // object properties
+	// object properties
 	protected $id;
 	protected $transaction_id;
 	protected $user_id;
 	protected $total;
 	protected $tax;
 	protected $status;
-	
-	
 }

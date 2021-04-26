@@ -1,5 +1,5 @@
 <?php include VIEW_DIR . DS . "admin/partials/header.php"; ?>
-    
+
   <div class="main-content mt-4">
     <section class="slice slice-lg min-vh-100 d-flex align-items-center bg-section-secondary">
       <!-- SVG background -->
@@ -23,48 +23,63 @@
                     </h6>
                   </div>
                   <span class="clearfix"></span>
-      				
+
       				<?php include VIEW_DIR . DS . "admin/partials/message.php"; ?>
-	  				
+
 	  				<form method="post" id="form-settings">
-                        
-                        <input name="csrf" type="hidden" value="<?= $pageData['csrf'] ?>">
-						
+
+                        <input name="csrf" type="hidden" value="<?= $pageData[
+                        	"csrf"
+                        ] ?>">
+
 						 <div class="form-group">
                         <label for="email">Username</label>
-                        <input readonly class="form-control" type="text" value="<?= $pageData["account"]["username"] ?>">
+                        <input readonly class="form-control" type="text" value="<?= $pageData[
+                        	"account"
+                        ]["username"] ?>">
                         <small>Username cannot be changed.</small>
 						</div>
-						
+
 						  <div class="form-group">
                         <label for="email">Email</label>
-                        <input class="form-control" type="text" name="email" id="email" value="<?= $pageData["account"]["email"] ?>">
+                        <input class="form-control" type="text" name="email" id="email" value="<?= $pageData[
+                        	"account"
+                        ]["email"] ?>">
 						</div>
-						
+
 						<div class="form-group">
                         <label for="forename">Forename</label>
-                        <input class="form-control" type="text" name="forename" id="forename" value="<?= $pageData["account"]["forename"] ?>">
+                        <input class="form-control" type="text" name="forename" id="forename" value="<?= $pageData[
+                        	"account"
+                        ]["forename"] ?>">
 						</div>
-						
+
 						<div class="form-group">
                         <label for="surname">Surname</label>
-                        <input class="form-control" type="text" name="surname" id="surname" value="<?= $pageData["account"]["surname"] ?>">
+                        <input class="form-control" type="text" name="surname" id="surname" value="<?= $pageData[
+                        	"account"
+                        ]["surname"] ?>">
 						</div>
-						
+
 						<div class="form-group">
                         <label for="phone">Phone</label>
-                        <input class="form-control" type="tel" name="phone" id="phone" value="<?= $pageData["account"]["phone"] ?>">
+                        <input class="form-control" type="tel" name="phone" id="phone" value="<?= $pageData[
+                        	"account"
+                        ]["phone"] ?>">
 						</div>
-						
+
 												<div class="form-group">
 						<label for="role">Role</label>
 						<select id="role" name="role" class="form-control">
-						<?php foreach ($pageData['roles'] as $role): ?>
-							<option value="<?php echo $role ?>"<?php echo $role == $pageData["account"]["role"] ? ' selected' : '' ?>><?php echo $role ?></option>
-						<?php endforeach ?>
+						<?php foreach ($pageData["roles"] as $role): ?>
+							<option value="<?php echo $role; ?>"<?php echo $role ==
+$pageData["account"]["role"]
+	? " selected"
+	: ""; ?>><?php echo $role; ?></option>
+						<?php endforeach; ?>
 						</select>
 						</div>
-						
+
 						<div class="form-group">
                         <input class="btn btn-primary" type="submit" value="Update">
 						</div>

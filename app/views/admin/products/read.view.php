@@ -13,12 +13,16 @@
         </div>
       </div>
     </section>
-		
+
 <div class='container mt-3'>
 	<div class="row">
 		<div class="col-md-6 px-0">
 			<form class="form-inline float-left "  action='<?= $pageUrl ?>' method="get">
-				<input class="form-control mr-sm-2" type="search" placeholder="Type a name..." name="search" id="search" <?php echo isset($pageData['search']) ? "value='{$pageData['search']}'" : ""; ?> aria-label="Search">
+				<input class="form-control mr-sm-2" type="search" placeholder="Type a name..." name="search" id="search" <?php echo isset(
+    	$pageData["search"]
+    )
+    	? "value='{$pageData["search"]}'"
+    	: ""; ?> aria-label="Search">
 			    <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i> Search</button>
 			</form>
 		</div>
@@ -33,7 +37,7 @@
 <div class='container mt-3'>
 	<div class='row'>
 		<div class='col-md-12'>
-			<?php if($pageData['products']): ?>
+			<?php if ($pageData["products"]): ?>
 			<table class='table table-hover table-responsive'>
 				<tr>
 					<th>Name</th>
@@ -43,19 +47,18 @@
 					<th>Created</th>
 					<th>Actions</th>
 				</tr>
-				
-				<?php foreach ($pageData['products'] as $product): 
-					
-						// shorten the product name, if it's too long
-						$short_desc = substr($product['description'], 0, 37);
 
-						// check if any letters were stripped
-						if ($short_desc != $product['description']) {
+				<?php foreach ($pageData["products"] as $product):
 
-							// if letters were stripped, add ...
-							$short_desc = $short_desc . "...";
-						}
-				?>
+    	// shorten the product name, if it's too long
+    	$short_desc = substr($product["description"], 0, 37);
+
+    	// check if any letters were stripped
+    	if ($short_desc != $product["description"]) {
+    		// if letters were stripped, add ...
+    		$short_desc = $short_desc . "...";
+    	}
+    	?>
 				<tr>
 					<td>
 						<?= $product["name"] ?>
@@ -73,33 +76,42 @@
 						<?= $product["created"] ?>
 					</td>
 					<td>
-				    	<a class="btn btn-sm btn-info" href="/admin/product/images/<?= strtolower($product["id"]) ?>">
+				    	<a class="btn btn-sm btn-info" href="/admin/product/images/<?= strtolower(
+         	$product["id"]
+         ) ?>">
 							Images
 						</a>
-				    	<a class="btn btn-sm btn-secondary" href="/admin/product/types/<?= strtolower($product["id"]) ?>">
+				    	<a class="btn btn-sm btn-secondary" href="/admin/product/types/<?= strtolower(
+         	$product["id"]
+         ) ?>">
 							Types
 						</a>
-				    	<a class="btn btn-sm btn-primary" href="/admin/product/update/<?= strtolower($product["id"]) ?>">
+				    	<a class="btn btn-sm btn-primary" href="/admin/product/update/<?= strtolower(
+         	$product["id"]
+         ) ?>">
 							Update
 						</a>
-						
-						<a class="btn btn-sm btn-danger" href="/admin/product/delete/<?= strtolower($product["id"]) ?>">
+
+						<a class="btn btn-sm btn-danger" href="/admin/product/delete/<?= strtolower(
+      	$product["id"]
+      ) ?>">
 							Delete
 						</a>
 					</td>
 				</tr>
-				<?php endforeach; ?>
+				<?php
+    endforeach; ?>
 			</table>
-			<?php else:?>
+			<?php else: ?>
 			<p>
 				No products were found!
 			</p>
 			<?php endif; ?>
-			
-			<?php echo $pageData['pagination'];?>
+
+			<?php echo $pageData["pagination"]; ?>
 		</div>
 	</div>
 </div>
-   
+
 <?php include VIEW_DIR . DS . "admin/partials/footer.php";
 ?>

@@ -15,7 +15,7 @@
         </div>
       </div>
     </section>
-		
+
 	   <div class="container">
           <?php include __DIR__ . "/partials/message.php"; ?>
             <form method="post" id="form-register">
@@ -54,4 +54,5 @@
             </form>
       </div>
 
-<?php include __DIR__ . "/partials/footer.php"; ?>
+<?php include __DIR__ . "/partials/footer.php";
+?>

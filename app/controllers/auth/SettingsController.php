@@ -19,34 +19,30 @@ class SettingsController extends Controller
 		// Get user by session value
 		$this->userModel->id = $this->session->getSessionValue("user_id");
 		$this->session->authenticate($this->userModel->id);
-		
+
 		// Set CSRF token to be verified
 		$this->session->csrf = $post["csrf"];
-		
+
 		// Verify CSRF token
 		if ($this->session->validateCSRF()) {
-		
-			$this->userModel->forename = $this->clean($post['forename']);
-			$this->userModel->surname = $this->clean($post['surname']);
-			$this->userModel->phone = $this->clean($post['phone']);
-			$this->userModel->email = $this->clean($post['email']);
+			$this->userModel->forename = $this->clean($post["forename"]);
+			$this->userModel->surname = $this->clean($post["surname"]);
+			$this->userModel->phone = $this->clean($post["phone"]);
+			$this->userModel->email = $this->clean($post["email"]);
 			$this->userModel->role = DEFAULT_ROLE; // Default role definied
-			
+
 			if ($this->userModel->validateUpdate()) {
-	
 				// Update settings
 				if ($this->userModel->update()) {
 					// Redirect to profile
-					$this->redirect("profile");	
+					$this->redirect("profile");
 				}
-			}
-			
-			else {
+			} else {
 				// Set error message
 				$this->message = $this->userModel->getErrors($this->errors);
 
 				echo $this->message;
-				exit();	
+				exit();
 			}
 		}
 	}

@@ -33,17 +33,18 @@ class Database
 	 */
 	public function __construct()
 	{
-		
 		// Check if database params are set
-		if(!defined('DB_HOST')
-		|| !defined('DB_NAME')
-		|| !defined('DB_USERNAME')
-		|| !defined('DB_PASSWORD')) {
-			$this->error = 'Database configuration is missing.';
+		if (
+			!defined("DB_HOST") ||
+			!defined("DB_NAME") ||
+			!defined("DB_USERNAME") ||
+			!defined("DB_PASSWORD")
+		) {
+			$this->error = "Database configuration is missing.";
 		}
-		
+
 		$this->dsn = "mysql:host=" . $this->host . ";dbname=" . $this->dbname;
-		
+
 		// Set database options
 		$this->options = [
 			PDO::ATTR_PERSISTENT => true,
@@ -52,11 +53,14 @@ class Database
 
 		// Try establishing a connection
 		try {
-			$this->handler = new PDO($this->dsn, $this->user, $this->pass, $this->options);
-		}
-		
-		// Throw error if unable to establish a connection
-		catch (PDOException $e) {
+			$this->handler = new PDO(
+				$this->dsn,
+				$this->user,
+				$this->pass,
+				$this->options
+			);
+		} catch (PDOException $e) {
+			// Throw error if unable to establish a connection
 			$this->error = $e->getMessage();
 		}
 	}
@@ -90,7 +94,7 @@ class Database
 					$type = PDO::PARAM_STR;
 			}
 		}
-		
+
 		$this->statement->bindValue($param, $value, $type);
 	}
 
@@ -101,9 +105,7 @@ class Database
 	{
 		try {
 			return $this->statement->execute();
-		}
-		
-		catch (PDOException $e) {
+		} catch (PDOException $e) {
 			$this->error = $e->getMessage();
 		}
 	}

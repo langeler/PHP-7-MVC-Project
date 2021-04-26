@@ -1,5 +1,5 @@
 <?php include VIEW_DIR . DS . "admin/partials/header.php"; ?>
-    
+
   <div class="main-content mt-4">
     <section class="slice slice-lg min-vh-100 d-flex align-items-center bg-section-secondary">
       <!-- SVG background -->
@@ -23,18 +23,22 @@
                     </h6>
                   </div>
                   <span class="clearfix"></span>
-      				
+
       				<?php include VIEW_DIR . DS . "admin/partials/message.php"; ?>
-	  				
+
 	  				<form method="post" id="form-settings">
-                        
-                        <input name="csrf" type="hidden" value="<?= $pageData['csrf'] ?>">
-						
+
+                        <input name="csrf" type="hidden" value="<?= $pageData[
+                        	"csrf"
+                        ] ?>">
+
 						 <div class="form-group">
                         <label for="id">Image id</label>
-                        <input readonly class="form-control" type="text" value="<?= $pageData["id"] ?>">
+                        <input readonly class="form-control" type="text" value="<?= $pageData[
+                        	"id"
+                        ] ?>">
 						</div>
-						
+
 						<div class="form-group">
                         <input class="btn btn-danger" type="submit" value="Delete">
 						</div>

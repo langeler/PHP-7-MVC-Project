@@ -11,23 +11,21 @@ class adminTypes extends Controller
 	protected $pageData;
 	protected $message;
 	protected $csrf;
-	
-	function access() {
-		
+
+	function access()
+	{
 		$isLoggedIn = $this->session->isUserLoggedIn();
 		$role = $this->session->getSessionValue("role");
-		
+
 		//var_dump($isLoggedIn);
 		//var_dump($this->role);
 		//exit;
-		
+
 		if ($isLoggedIn && $role == "admin") {
 			return true;
-		}
-		
-		else {
+		} else {
 			$this->redirect("");
-			exit;
+			exit();
 		}
 	}
 
@@ -36,29 +34,37 @@ class adminTypes extends Controller
 		$this->access();
 		$get = $this->filter_get();
 
-		if ($vars['pid']) {
+		if ($vars["pid"]) {
+			$this->productModel->id = (int) $vars["pid"];
+			$this->typeModel->pid = (int) $vars["pid"];
 
-			$this->productModel->id = (int)$vars['pid'];
-			$this->typeModel->pid = (int)$vars['pid'];
-		
 			$this->pageTitle = "Read All Product Types";
-			$this->pageUrl = DOMAIN . "admin/product/types/" . $vars['pid'];
+			$this->pageUrl = DOMAIN . "admin/product/types/" . $vars["pid"];
 
 			// Pagination
-			$page = isset($get['page']) ? $get['page'] : 1;
-		
+			$page = isset($get["page"]) ? $get["page"] : 1;
+
 			// Pagination settings
 			$perPage = 3;
 			$displayArrows = true;
-			$fromRecords = ($perPage * $page) - $perPage;
+			$fromRecords = $perPage * $page - $perPage;
 
 			$product = $this->productModel->readOne();
 			$records = $this->typeModel->countAll();
-			$types = $this->typeModel->readAllWithPaging($fromRecords, $perPage);
+			$types = $this->typeModel->readAllWithPaging(
+				$fromRecords,
+				$perPage
+			);
 
 			// Pagination variable
-			$pagination = $this->pagination->paging($records, $this->pageUrl, $page, $perPage, $displayArrows);
-		
+			$pagination = $this->pagination->paging(
+				$records,
+				$this->pageUrl,
+				$page,
+				$perPage,
+				$displayArrows
+			);
+
 			$this->pageData = [
 				"pid" => $this->typeModel->pid,
 				"types" => $types,
@@ -78,18 +84,18 @@ class adminTypes extends Controller
 	function create($vars = null)
 	{
 		$this->access();
-		
-		if ($vars['pid']) {
 
-			$this->productModel->id = (int)$vars['pid'];
-			$this->typeModel->pid = (int)$vars['pid'];
-		
+		if ($vars["pid"]) {
+			$this->productModel->id = (int) $vars["pid"];
+			$this->typeModel->pid = (int) $vars["pid"];
+
 			$this->pageTitle = "Create Product Type";
-			$this->pageUrl = DOMAIN . "admin/product/type/create/" . $vars['pid'];
-		
+			$this->pageUrl =
+				DOMAIN . "admin/product/type/create/" . $vars["pid"];
+
 			$this->pageData = [
 				"pid" => $this->typeModel->pid,
-				"csrf" => $this->session->getSessionValue("csrf")
+				"csrf" => $this->session->getSessionValue("csrf"),
 			];
 
 			$this->view("admin/types/create", [
@@ -104,59 +110,55 @@ class adminTypes extends Controller
 	function createType($vars = null)
 	{
 		$this->access();
-		
-		if ($vars['pid']) {
 
-			$this->productModel->id = (int)$vars['pid'];
-			$this->typeModel->pid = (int)$vars['pid'];
-		
+		if ($vars["pid"]) {
+			$this->productModel->id = (int) $vars["pid"];
+			$this->typeModel->pid = (int) $vars["pid"];
+
 			// Filter post fields
 			$post = $this->filter_post();
-		
+
 			// Set CSRF token to be verified
 			$this->session->csrf = $post["csrf"];
 
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
-			
 				$this->typeModel->name = $this->clean($post["name"]);
-				$this->typeModel->description = $this->clean($surname = $post["description"]);
+				$this->typeModel->description = $this->clean(
+					$surname = $post["description"]
+				);
 				$this->typeModel->price = $this->clean($post["price"]);
 				$this->typeModel->stock = $this->clean($post["stock"]);
-			
+
 				// Validate username, password, and email
 				if ($this->typeModel->validateCreate()) {
-				
 					// Register new user
 					$this->typeModel->create();
-			
+
 					// Redirect to profile
-					$this->redirect('admin/products/');
-				}
-			
-				else {
+					$this->redirect("admin/products/");
+				} else {
 					// Set error message
 					$this->message = $this->typeModel->errors;
 
 					echo $this->message;
-					exit();	
+					exit();
 				}
 			}
 		}
 	}
-	
-	
+
 	function update($vars = null)
 	{
 		$this->access();
-		
-		if ($vars['id']) {
 
-			$this->typeModel->id = $vars['id'];
+		if ($vars["id"]) {
+			$this->typeModel->id = $vars["id"];
 
 			$this->pageTitle = "Update Product Type";
-			$this->pageUrl = DOMAIN . "admin/product/type/update/" . $this->typeModel->id;
-			
+			$this->pageUrl =
+				DOMAIN . "admin/product/type/update/" . $this->typeModel->id;
+
 			$this->pageData = [
 				"type" => $this->typeModel->readOne(),
 				"csrf" => $this->session->getSessionValue("csrf"),
@@ -176,51 +178,48 @@ class adminTypes extends Controller
 		$this->access();
 		$post = $this->filter_post();
 
-		if ($vars['id']) {
-			
+		if ($vars["id"]) {
 			// Set CSRF token to be verified
 			$this->session->csrf = $post["csrf"];
-		
+
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
-		
-				$this->typeModel->id = $vars['id'];
-				$this->typeModel->name = $this->clean($post['name']);
-				$this->typeModel->description = $this->clean($post['description']);
-				$this->typeModel->price = $this->clean($post['price']);
-				$this->typeModel->stock = $this->clean($post['stock']);
-								
+				$this->typeModel->id = $vars["id"];
+				$this->typeModel->name = $this->clean($post["name"]);
+				$this->typeModel->description = $this->clean(
+					$post["description"]
+				);
+				$this->typeModel->price = $this->clean($post["price"]);
+				$this->typeModel->stock = $this->clean($post["stock"]);
+
 				if ($this->typeModel->validateUpdate()) {
-	
 					// Update settings
 					if ($this->typeModel->update()) {
 						// Redirect to profile
-						$this->redirect("admin/products/");	
+						$this->redirect("admin/products/");
 					}
-				}
-			
-				else {
+				} else {
 					// Set error message
 					$this->message = $this->typeModel->errors;
 
 					echo $this->message;
-					exit();	
+					exit();
 				}
 			}
 		}
 	}
-	
-	function delete($vars = null) {
-		
-		$this->access();
-		
-		if ($vars['id']) {
 
-			$this->typeModel->id = $vars['id'];
+	function delete($vars = null)
+	{
+		$this->access();
+
+		if ($vars["id"]) {
+			$this->typeModel->id = $vars["id"];
 
 			$this->pageTitle = "Delete Product Type";
-			$this->pageUrl = DOMAIN . "admin/product/type/delete/" . $this->productModel->id;
-			
+			$this->pageUrl =
+				DOMAIN . "admin/product/type/delete/" . $this->productModel->id;
+
 			$this->pageData = [
 				"id" => $this->typeModel->id,
 				"csrf" => $this->session->getSessionValue("csrf"),
@@ -234,20 +233,19 @@ class adminTypes extends Controller
 		}
 	}
 
-	function deleteType($vars = null) {
-		
+	function deleteType($vars = null)
+	{
 		// Check logged in & permission
 		$this->access();
-		
+
 		// If an id exist
-		if ($vars['id']) {
-			
+		if ($vars["id"]) {
 			// Set user id to be deleted
-			$this->typeModel->id = $vars['id'];
-			
+			$this->typeModel->id = $vars["id"];
+
 			// Delete user
 			$this->typeModel->delete();
-			
+
 			// Redirect to admin/users
 			$this->redirect("admin/products/");
 		}

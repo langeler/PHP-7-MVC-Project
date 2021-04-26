@@ -10,28 +10,26 @@ class adminController extends Controller
 	protected $pageUrl;
 	protected $pageData;
 
-	function access() {
-		
+	function access()
+	{
 		$isLoggedIn = $this->session->isUserLoggedIn();
 		$this->role = $this->session->getSessionValue("role");
-		
+
 		//var_dump($isLoggedIn);
 		//var_dump($this->role);
 		//exit;
-		
+
 		if ($isLoggedIn && $this->role == "admin") {
 			return true;
-		}
-		
-		else {
+		} else {
 			$this->redirect("");
-			exit;
+			exit();
 		}
 	}
 
 	function index()
 	{
-		$this->access();	
+		$this->access();
 		$this->pageTitle = "Admin Dashboard";
 		$this->pageUrl = DOMAIN . "admin/";
 
