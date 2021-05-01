@@ -5,10 +5,14 @@
  * @param string $ string
  * @return $ string
  */
-function clean($string)
+function clean($value)
 {
+	if(is_array($value)) {
+		return array_map('clean', $value);
+    }
+	
 	return htmlspecialchars(
-		stripslashes(strip_tags(trim($string))),
+		stripslashes(strip_tags(trim($value))),
 		ENT_QUOTES,
 		"UTF-8"
 	);

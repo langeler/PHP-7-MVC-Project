@@ -7,17 +7,33 @@ use App\Models\ListClass;
 
 class ProfileController extends Controller
 {
-	protected $pageTitle = "Profile";
-	protected $account;
+	protected $pageTitle;
+	protected $pageUrl;
+	protected $pageData;
+	protected $message;
 
 	public function get()
 	{
-		$this->userModel->id = $this->session->getSessionValue("user_id");
-		$this->session->authenticate($this->userModel->id);
+		$this->pageTitle = "Profile";
+		$this->pageUrl = DOMAIN . "profile";
 
 		// Get user by session value
-		$this->account = $this->userModel->readOne();
+		$this->userModel->id = $this->session->getSessionValue("user_id");
+		$account = $this->userModel->readOne();
 
-		$this->view("auth/profile");
+		// Set page data with variables
+		$this->pageData = [
+			"account" => $account,
+		];
+
+		if (!$this->isUserLoggedIn()) {
+			$this->redirect("login");
+		}
+
+		$this->view("auth/profile", [
+			"pageTitle" => $this->pageTitle,
+			"pageUrl" => $this->pageUrl,
+			"pageData" => $this->pageData,
+		]);
 	}
 }

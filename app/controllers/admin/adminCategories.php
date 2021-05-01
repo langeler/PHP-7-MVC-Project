@@ -235,6 +235,23 @@ class adminCategories extends Controller
 		if ($vars["id"]) {
 			// Set user id to be deleted
 			$this->categoryModel->id = $vars["id"];
+			$this->productModel->cid = $vars["id"];
+			$products = $this->productModel->readAllByCategory();
+
+			foreach ($products as $product) {
+				$this->pImageModel->pid = $product["id"];
+				$this->typeModel->pid = $product["id"];
+
+				$images = $this->pImageModel->readAll();
+
+				foreach ($images as $image) {
+					$this->pImageModel->name = $image["name"];
+					$this->pImageModel->remove();
+				}
+
+				$this->pImageModel->deleteAll();
+				$this->typeModel->deleteAll();
+			}
 
 			// Delete user
 			$this->categoryModel->delete();

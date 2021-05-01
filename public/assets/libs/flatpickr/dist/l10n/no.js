@@ -2,12 +2,12 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (global = global || self, factory(global.no = {}));
-}(this, (function (exports) { 'use strict';
+}(this, function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {},
+          l10ns: {}
       };
   var Norwegian = {
       weekdays: {
@@ -20,7 +20,7 @@
               "Torsdag",
               "Fredag",
               "Lørdag",
-          ],
+          ]
       },
       months: {
           shorthand: [
@@ -50,17 +50,16 @@
               "Oktober",
               "November",
               "Desember",
-          ],
+          ]
       },
       firstDayOfWeek: 1,
       rangeSeparator: " til ",
       weekAbbreviation: "Uke",
       scrollTitle: "Scroll for å endre",
       toggleTitle: "Klikk for å veksle",
-      time_24hr: true,
       ordinal: function () {
           return ".";
-      },
+      }
   };
   fp.l10ns.no = Norwegian;
   var no = fp.l10ns;
@@ -70,4 +69,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));

@@ -2,12 +2,12 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (global = global || self, factory(global.et = {}));
-}(this, (function (exports) { 'use strict';
+}(this, function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {},
+          l10ns: {}
       };
   var Estonian = {
       weekdays: {
@@ -20,7 +20,7 @@
               "Neljapäev",
               "Reede",
               "Laupäev",
-          ],
+          ]
       },
       months: {
           shorthand: [
@@ -50,7 +50,7 @@
               "Oktoober",
               "November",
               "Detsember",
-          ],
+          ]
       },
       firstDayOfWeek: 1,
       ordinal: function () {
@@ -59,8 +59,7 @@
       weekAbbreviation: "Näd",
       rangeSeparator: " kuni ",
       scrollTitle: "Keri, et suurendada",
-      toggleTitle: "Klõpsa, et vahetada",
-      time_24hr: true,
+      toggleTitle: "Klõpsa, et vahetada"
   };
   fp.l10ns.et = Estonian;
   var et = fp.l10ns;
@@ -70,4 +69,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));

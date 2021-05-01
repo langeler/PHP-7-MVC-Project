@@ -1,12 +1,4 @@
-/*
-Language: Makefile
-Author: Ivan Sagalaev <maniac@softwaremaniacs.org>
-Contributors: Joël Porquet <joel@porquet.org>
-Website: https://www.gnu.org/software/make/manual/html_node/Introduction.html
-Category: common
-*/
-
-function makefile(hljs) {
+module.exports = function(hljs) {
   /* Variables: simple (eg $(var)) and special (eg $@) */
   var VARIABLE = {
     className: 'variable',
@@ -45,17 +37,23 @@ function makefile(hljs) {
     ]
   };
   /* Variable assignment */
-  var ASSIGNMENT = {
-    begin: '^' + hljs.UNDERSCORE_IDENT_RE + '\\s*(?=[:+?]?=)'
+  var VAR_ASSIG = {
+    begin: '^' + hljs.UNDERSCORE_IDENT_RE + '\\s*[:+?]?=',
+    illegal: '\\n',
+    returnBegin: true,
+    contains: [
+      {
+        begin: '^' + hljs.UNDERSCORE_IDENT_RE, end: '[:+?]?=',
+        excludeEnd: true,
+      }
+    ]
   };
   /* Meta targets (.PHONY) */
   var META = {
     className: 'meta',
     begin: /^\.PHONY:/, end: /$/,
-    keywords: {
-      $pattern: /[\.\w]+/,
-      'meta-keyword': '.PHONY'
-    }
+    keywords: {'meta-keyword': '.PHONY'},
+    lexemes: /[\.\w]+/
   };
   /* Targets */
   var TARGET = {
@@ -64,23 +62,19 @@ function makefile(hljs) {
     contains: [VARIABLE,]
   };
   return {
-    name: 'Makefile',
     aliases: ['mk', 'mak'],
-    keywords: {
-      $pattern: /[\w-]+/,
-      keyword: 'define endef undefine ifdef ifndef ifeq ifneq else endif ' +
-      'include -include sinclude override export unexport private vpath'
-    },
+    keywords:
+      'define endef undefine ifdef ifndef ifeq ifneq else endif ' +
+      'include -include sinclude override export unexport private vpath',
+    lexemes: /[\w-]+/,
     contains: [
       hljs.HASH_COMMENT_MODE,
       VARIABLE,
       QUOTE_STRING,
       FUNC,
-      ASSIGNMENT,
+      VAR_ASSIG,
       META,
       TARGET,
     ]
   };
-}
-
-module.exports = makefile;
+};

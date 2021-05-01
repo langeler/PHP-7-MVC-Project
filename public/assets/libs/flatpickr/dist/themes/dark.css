@@ -66,7 +66,7 @@
 .flatpickr-calendar .hasWeeks .dayContainer {
   border-left: 0;
 }
-.flatpickr-calendar.hasTime .flatpickr-time {
+.flatpickr-calendar.showTimeInput.hasTime .flatpickr-time {
   height: 40px;
   border-top: 1px solid #20222c;
 }
@@ -85,16 +85,9 @@
   left: 22px;
 }
 .flatpickr-calendar.rightMost:before,
-.flatpickr-calendar.arrowRight:before,
-.flatpickr-calendar.rightMost:after,
-.flatpickr-calendar.arrowRight:after {
+.flatpickr-calendar.rightMost:after {
   left: auto;
   right: 22px;
-}
-.flatpickr-calendar.arrowCenter:before,
-.flatpickr-calendar.arrowCenter:after {
-  left: 50%;
-  right: 50%;
 }
 .flatpickr-calendar:before {
   border-width: 5px;
@@ -138,10 +131,10 @@
   display: flex;
 }
 .flatpickr-months .flatpickr-month {
-  background: #3f4458;
+  background: transparent;
   color: #fff;
   fill: #fff;
-  height: 34px;
+  height: 28px;
   line-height: 1;
   text-align: center;
   position: relative;
@@ -160,15 +153,16 @@
   text-decoration: none;
   cursor: pointer;
   position: absolute;
-  top: 0;
-  height: 34px;
+  top: 0px;
+  line-height: 16px;
+  height: 28px;
   padding: 10px;
   z-index: 3;
   color: #fff;
   fill: #fff;
 }
-.flatpickr-months .flatpickr-prev-month.flatpickr-disabled,
-.flatpickr-months .flatpickr-next-month.flatpickr-disabled {
+.flatpickr-months .flatpickr-prev-month.disabled,
+.flatpickr-months .flatpickr-next-month.disabled {
   display: none;
 }
 .flatpickr-months .flatpickr-prev-month i,
@@ -309,9 +303,9 @@
   position: absolute;
   width: 75%;
   left: 12.5%;
-  padding: 7.48px 0 0 0;
+  padding: 6.16px 0 0 0;
   line-height: 1;
-  height: 34px;
+  height: 28px;
   display: inline-block;
   text-align: center;
   -webkit-transform: translate3d(0px, 0px, 0px);
@@ -370,41 +364,6 @@
   background: transparent;
   pointer-events: none;
 }
-.flatpickr-current-month .flatpickr-monthDropdown-months {
-  appearance: menulist;
-  background: #3f4458;
-  border: none;
-  border-radius: 0;
-  box-sizing: border-box;
-  color: inherit;
-  cursor: pointer;
-  font-size: inherit;
-  font-family: inherit;
-  font-weight: 300;
-  height: auto;
-  line-height: inherit;
-  margin: -1px 0 0 0;
-  outline: none;
-  padding: 0 0 0 0.5ch;
-  position: relative;
-  vertical-align: initial;
-  -webkit-box-sizing: border-box;
-  -webkit-appearance: menulist;
-  -moz-appearance: menulist;
-  width: auto;
-}
-.flatpickr-current-month .flatpickr-monthDropdown-months:focus,
-.flatpickr-current-month .flatpickr-monthDropdown-months:active {
-  outline: none;
-}
-.flatpickr-current-month .flatpickr-monthDropdown-months:hover {
-  background: rgba(192,187,167,0.05);
-}
-.flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month {
-  background-color: #3f4458;
-  outline: none;
-  padding: 0;
-}
 .flatpickr-weekdays {
   background: transparent;
   text-align: center;
@@ -433,7 +392,7 @@
 span.flatpickr-weekday {
   cursor: default;
   font-size: 90%;
-  background: #3f4458;
+  background: transparent;
   color: #fff;
   line-height: 1;
   margin: 0;
@@ -594,8 +553,8 @@ span.flatpickr-weekday {
   -webkit-box-shadow: -5px 0 0 #646c8c, 5px 0 0 #646c8c;
           box-shadow: -5px 0 0 #646c8c, 5px 0 0 #646c8c;
 }
-.flatpickr-day.flatpickr-disabled,
-.flatpickr-day.flatpickr-disabled:hover,
+.flatpickr-day.disabled,
+.flatpickr-day.disabled:hover,
 .flatpickr-day.prevMonthDay,
 .flatpickr-day.nextMonthDay,
 .flatpickr-day.notAllowed,
@@ -606,8 +565,8 @@ span.flatpickr-weekday {
   border-color: transparent;
   cursor: default;
 }
-.flatpickr-day.flatpickr-disabled,
-.flatpickr-day.flatpickr-disabled:hover {
+.flatpickr-day.disabled,
+.flatpickr-day.disabled:hover {
   cursor: not-allowed;
   color: rgba(255,255,255,0.1);
 }
@@ -623,6 +582,7 @@ span.flatpickr-weekday {
   margin-top: 1px;
 }
 .flatpickr-weekwrapper {
+  display: inline-block;
   float: left;
 }
 .flatpickr-weekwrapper .flatpickr-weeks {
@@ -736,6 +696,7 @@ span.flatpickr-weekday {
 .flatpickr-time .flatpickr-time-separator,
 .flatpickr-time .flatpickr-am-pm {
   height: inherit;
+  display: inline-block;
   float: left;
   line-height: inherit;
   color: rgba(255,255,255,0.95);

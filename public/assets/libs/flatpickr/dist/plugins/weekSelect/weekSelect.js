@@ -2,25 +2,12 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global = global || self, global.weekSelect = factory());
-}(this, (function () { 'use strict';
-
-  function getEventTarget(event) {
-      try {
-          if (typeof event.composedPath === "function") {
-              var path = event.composedPath();
-              return path[0];
-          }
-          return event.target;
-      }
-      catch (error) {
-          return event.target;
-      }
-  }
+}(this, function () { 'use strict';
 
   function weekSelectPlugin() {
       return function (fp) {
           function onDayHover(event) {
-              var day = getEventTarget(event);
+              var day = event.target;
               if (!day.classList.contains("flatpickr-day"))
                   return;
               var days = fp.days.childNodes;
@@ -43,8 +30,8 @@
               if (selDate !== undefined &&
                   selDate.getMonth() === fp.currentMonth &&
                   selDate.getFullYear() === fp.currentYear) {
-                  fp.weekStartDay = fp.days.childNodes[7 * Math.floor(fp.selectedDateElem.$i / 7)].dateObj;
-                  fp.weekEndDay = fp.days.childNodes[7 * Math.ceil(fp.selectedDateElem.$i / 7 + 0.01) - 1].dateObj;
+                  fp.weekStartDay = (fp.days.childNodes[7 * Math.floor(fp.selectedDateElem.$i / 7)]).dateObj;
+                  fp.weekEndDay = (fp.days.childNodes[7 * Math.ceil(fp.selectedDateElem.$i / 7 + 0.01) - 1]).dateObj;
               }
               var days = fp.days.childNodes;
               for (var i = days.length; i--;) {
@@ -82,18 +69,12 @@
                       ? fp.config.altFormat
                       : "\\W\\e\\e\\k #W, Y";
               },
-              onReady: [
-                  onReady,
-                  highlightWeek,
-                  function () {
-                      fp.loadedPlugins.push("weekSelect");
-                  },
-              ],
-              onDestroy: onDestroy,
+              onReady: [onReady, highlightWeek],
+              onDestroy: onDestroy
           };
       };
   }
 
   return weekSelectPlugin;
 
-})));
+}));

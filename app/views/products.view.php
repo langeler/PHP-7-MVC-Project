@@ -1,4 +1,4 @@
-<?php include VIEW_DIR . DS . "admin/partials/header.php"; ?>
+<?php include VIEW_DIR . DS . "partials" . DS . "header.php"; ?>
 
 	<section class="slice slice-lg bg-gradient-dark" data-offset-top="#header-main" style="padding-top: 147.1875px;">
       <div class="container pt-5 pb-6 pt-lg-6 pb-lg-6">
@@ -95,4 +95,5 @@
 	</div>
 </div>
 
-<?php include VIEW_DIR . DS . "admin/partials/footer.php";
+<?php include VIEW_DIR . DS . "partials" . DS . "footer.php";
+?>

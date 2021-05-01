@@ -53,30 +53,25 @@ class productController extends Controller
 		}
 	}
 
-	function creat($vars = null)
+	function post()
 	{
-		if ($vars["id"]) {
-			// Filter post fields
-			$post = $this->filter_post();
+		$post = $this->filter_post();
 
-			// Set CSRF token to be verified
-			$this->session->csrf = $post["csrf"];
+		// Set CSRF token to be verified
+		$this->session->csrf = $post["csrf"];
 
-			// Get user_id from session
-			$user_id = $this->session->getSessionValue("user_id");
+		// Verify CSRF token
+		if ($this->session->validateCSRF()) {
+			$quantity = $post["quantity"] ? $post["quantity"] : 1;
 
-			// Verify CSRF token
-			if ($this->session->validateCSRF()) {
-				// Set & clean post => model values
-				$this->cartItemModel->uid = $user_id;
-				$this->cartItemModel->pid = $vars["id"];
-				$this->cartItemModel->tid = $this->clean($post["type"]);
-				$this->cartItemModel->quantity = $this->clean(
-					$post["quantity"]
-				);
-
-				$this->cartItemModel->create();
-			}
+			redirect(
+				"cart/add/" .
+					$post["product"] .
+					"/" .
+					$post["type"] .
+					"/" .
+					$quantity
+			);
 		}
 	}
 }

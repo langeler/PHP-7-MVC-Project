@@ -1,15 +1,5 @@
-/*
-Language: Diff
-Description: Unified and context diff
-Author: Vasily Polovnyov <vast@whiteants.net>
-Website: https://www.gnu.org/software/diffutils/
-Category: common
-*/
-
-/** @type LanguageFn */
-function diff(hljs) {
+module.exports = function(hljs) {
   return {
-    name: 'Diff',
     aliases: ['patch'],
     contains: [
       {
@@ -29,7 +19,7 @@ function diff(hljs) {
           {begin: /^\-{3}/, end: /$/},
           {begin: /^\*{3} /, end: /$/},
           {begin: /^\+{3}/, end: /$/},
-          {begin: /^\*{15}$/ }
+          {begin: /\*{5}/, end: /\*{5}$/}
         ]
       },
       {
@@ -46,6 +36,4 @@ function diff(hljs) {
       }
     ]
   };
-}
-
-module.exports = diff;
+};

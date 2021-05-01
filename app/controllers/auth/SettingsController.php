@@ -7,10 +7,10 @@ use App\Models\ListClass;
 
 class SettingsController extends Controller
 {
-	protected $pageTitle = "Settings";
+	protected $pageTitle;
+	protected $pageUrl;
+	protected $pageData;
 	protected $message;
-	protected $account;
-	protected $csrf;
 
 	public function post()
 	{
@@ -18,6 +18,11 @@ class SettingsController extends Controller
 
 		// Get user by session value
 		$this->userModel->id = $this->session->getSessionValue("user_id");
+		$this->userModel->role = $this->session->getSessionValue("role");
+		$this->userModel->username = $this->session->getSessionValue(
+			"username"
+		);
+
 		$this->session->authenticate($this->userModel->id);
 
 		// Set CSRF token to be verified
@@ -25,11 +30,10 @@ class SettingsController extends Controller
 
 		// Verify CSRF token
 		if ($this->session->validateCSRF()) {
-			$this->userModel->forename = $this->clean($post["forename"]);
-			$this->userModel->surname = $this->clean($post["surname"]);
-			$this->userModel->phone = $this->clean($post["phone"]);
-			$this->userModel->email = $this->clean($post["email"]);
-			$this->userModel->role = DEFAULT_ROLE; // Default role definied
+			$this->userModel->forename = clean($post["forename"]);
+			$this->userModel->surname = clean($post["surname"]);
+			$this->userModel->phone = clean($post["phone"]);
+			$this->userModel->email = clean($post["email"]);
 
 			if ($this->userModel->validateUpdate()) {
 				// Update settings
@@ -49,13 +53,27 @@ class SettingsController extends Controller
 
 	public function get()
 	{
-		$this->userModel->id = $this->session->getSessionValue("user_id");
-		$this->session->authenticate($this->userModel->id);
-		$this->csrf = $this->session->getSessionValue("csrf");
+		$this->pageTitle = "Settings";
+		$this->pageUrl = DOMAIN . "settings";
 
 		// Get user by session value
-		$this->account = $this->userModel->readOne();
+		$this->userModel->id = $this->session->getSessionValue("user_id");
+		$account = $this->userModel->readOne();
 
-		$this->view("auth/settings");
+		// Set page data with variables
+		$this->pageData = [
+			"csrf" => $this->session->getSessionValue("csrf"),
+			"account" => $account,
+		];
+
+		if (!$this->isUserLoggedIn()) {
+			$this->redirect("login");
+		}
+
+		$this->view("auth/settings", [
+			"pageTitle" => $this->pageTitle,
+			"pageUrl" => $this->pageUrl,
+			"pageData" => $this->pageData,
+		]);
 	}
 }

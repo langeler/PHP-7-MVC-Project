@@ -1,55 +1,5 @@
 # Changelog
 
-### 14.6.2 (*2020-09-16*)
-- Fixed: Ignore erroneous mouse events on taps for iOS 13.4 (#1095);
-- Added: `exactInput` argument to `set` and `setHandle` methods (#436, #1094);
-
-### 14.6.1 (*2020-08-17*)
-- Fixed: Pips in count mode ignores pip at end of range (#1088);
-
-### 14.6.0 (*2020-06-27*)
-- Added: `keyboardPageMultiplier` and `keyboardDefaultStep` options (#1083);
-- Fixed: Ignore erroneous tap events for iOS (#1057, #1079);
-
-### 14.5.0 (*2020-05-20*)
-- Added: Support for `margin`, `padding` and `limit` on non-linear sliders (#911, #1030, #1031, #1071);
-
-### 14.4.0 (*2020-05-06*)
-- Added: `getOrigins` and `getTooltips` methods;
-- Added: Default styling to support merging overlapping tooltips (#1032);
-
-### 14.3.0 (*2020-05-05*)
-- Added: Default `cssClasses` are now exposed and can be modified;
-- Fixed: Destroying sliders with multiple classes in `cssClasses` fails (#1069);
-
-### 14.2.0 (*2020-03-27*)
-- Added: Slider api as event parameter (#1058);
-- Added: Allow multiple classes in `cssClasses` option (#1054);
-- Fixed: Slider not working within shadow DOM (#1060);
-- Fixed: Last pip not rendered if it is also the first and at the slider edge (#1063);
-
-### 14.1.1 (*2019-12-15*)
-- Fixed: Text direction is not correctly determined when the slider is not in the DOM (#1038);
-
-### 14.1.0 (*2019-12-04*)
-- Fixed: Styling requires a root `html` node, so noUiSlider can't be used in shadow dom (#1035);
-- Added: Support for PageUp/PageDown and Home/End keys in keyboard support (#1036);
-
-### 14.0.3 (*2019-10-10*)
-- Fixed: Initialising handle values near the slider edge does not always respect `margin` (#1009);
-
-### 14.0.2 (*2019-06-28*)
-- Fixed: Keyboard interaction uses formatter when it does not need to (#1000);
-
-### 14.0.1 (*2019-06-21*)
-- Fixed: Visual regression in Safari caused by fixing #987 (#998);
-
-### 14.0.0 (*2019-06-20*)
-- Fixed: `change` & `slide` events should fire on keyboard control (#994);
-- Fixed: `.noUi-origin` overflows document on vertical sliders (#987);
-- Fixed: Clicking to right of handle doesn't move it when it's at the same point as another (#965);
-- Added: Additional documentation on number formatting (#978, #985);
-
 ### 13.1.5 (*2019-04-24*)
 - Fixed: Full-range padding (#880);
 
@@ -85,7 +35,7 @@ Alternatively, built-in keyboard support can be disabled using `keyboardSupport:
 - Added: `setHandle` API (#917);
 - Changed: point to `nouislider.js` in `package.json`.`main` (#921);
 
-### 12.0.0 (*2018-09-14*)
+### 12.0.0 (*2018-09-14*) 
 - Change: License changed to MIT;
 - Change: Build process is now based on NPM scripts, phasing out the Grunt task runner.
 - Fixed: Aria values are now as per spec (#889);

@@ -1,38 +1,77 @@
-<?php include __DIR__ . "/partials/header.php"; ?>
+<?php include VIEW_DIR . DS . "partials" . DS . "header.php"; ?>
 
-	<section class="slice slice-lg bg-gradient-dark" data-offset-top="#header-main" style="padding-top: 147.1875px;">
-      <div class="container pt-5 pb-6 pt-lg-6 pb-lg-6">
-        <div class="row row-grid justify-content-center">
-          <div class="col-lg-7 text-center">
-            <h6 class="text-uppercase text-sm ls-2 text-info font-weight-700">
-	            <?= $this->pageTitle ?>
-            </h6>
-            <h1 class="text-white mb-4">
-				Sign in to your account
-			</h1>
-			 <p class="lead text-muted lh-180 mb-0">Sign in with your username and password. <br />Don't have an account? <a href="/register">Register here</a>.</p>
-		 </div>
-        </div>
-      </div>
-    </section>
+<!-- Main content -->
+<section class="section-half-rounded bg-cover bg-size--cover py-4 py-sm-0" style="background-image: url(../../assets/img/backgrounds/img-3.jpg);">
+	<div class="container-fluid d-flex flex-column py-4 py-sm-0 py-lg-5 py-xl-0">
+    	<div class="row align-items-center min-vh-100">
+    		<div class="col-md-8 col-lg-6 mx-auto">
+        		<div class="card shadow-lg border-0 mb-0">
+            		<div class="card-body py-5 px-sm-5">
+                    	<div>
+                        	<div class="mb-5 text-center">
+                        		<h6 class="h3 mb-1">
+									Create your account
+								</h6>
 
-    	<div class="container">
-		  <?php include __DIR__ . "/partials/message.php"; ?>
-			<form method="post" action="">
-                <input name="csrf" type="hidden" value="<?= $this->csrf ?>">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username">
+								<p class="text-muted mb-0">
+									Made with love for designers &amp; developers.
+								</p>
+                            </div>
 
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password">
+							<span class="clearfix"></span>
 
-                <div class="actions">
-                    <?php include __DIR__ . "/partials/message.php"; ?>
-                    <input type="submit" class="accent-button" value="Log In">
-                    <a class="button" href="/forgot-password">Forgot Password?</a>
-                </div>
-            </form>
-        </div>
+                    		<?php include VIEW_DIR .
+                      	DS .
+                      	"partials" .
+                      	DS .
+                      	"message.php"; ?>
 
-<?php include __DIR__ . "/partials/footer.php";
+							<nav class="nav nav-pills nav-justified my-4">
+								<a class="nav-link" href="/register">
+									Register
+								</a>
+
+								<a class="nav-link active" href="/login">
+									Login
+								</a>
+
+								<a class="nav-link" href="/forgot-password">
+									Recover
+								</a>
+							</nav>
+
+							<form method="post" action="">
+								<input name="csrf" type="hidden" value="<?= $pageData["csrf"] ?>">
+
+                				<div class="form-group">
+        							<label for="username">
+										Username
+									</label>
+
+									<input type="text" id="username" name="username" class="form-control">
+    							</div>
+
+    							<div class="form-group">
+            						<label for="password">
+										Password
+									</label>
+
+									<input type="password" id="password" name="password" class="form-control">
+                				</div>
+
+								<div class="mt-4">
+									<button type="submit" class="btn btn-block btn-primary">
+										Sign in to my account
+									</button>
+								</div>
+							</form>
+    					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<?php include VIEW_DIR . DS . "partials" . DS . "footer.php";
 ?>

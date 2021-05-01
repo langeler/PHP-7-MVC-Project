@@ -1,17 +1,31 @@
-<?php include __DIR__ . "/partials/header.php"; ?>
+<?php include VIEW_DIR . DS . "admin" . DS . "partials" . DS . "header.php"; ?>
 
-	<section class="slice slice-lg bg-gradient-dark" data-offset-top="#header-main" style="padding-top: 147.1875px;">
-      <div class="container pt-5 pb-6 pt-lg-6 pb-lg-6">
-        <div class="row row-grid justify-content-center">
-          <div class="col-lg-7 text-center">
-            <h6 class="text-uppercase text-sm ls-2 text-info font-weight-700">
-	            <?= $this->pageTitle ?>
-            </h6>
-            <p>Welcome to the protected admin panel. In order to access this page, your account must be logged in and have the (admin) role.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 
-<?php include __DIR__ . "/partials/footer.php";
+	<h1 class="h2">
+		Dashboard
+	</h1>
+
+	<div class="btn-toolbar mb-2 mb-md-0">
+    	<div class="btn-group mr-2">
+        	<button type="button" class="btn btn-sm btn-outline-secondary">
+				Share
+			</button>
+
+			<button type="button" class="btn btn-sm btn-outline-secondary">
+				Export
+			</button>
+		</div>
+
+		<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+        	<span data-feather="calendar"></span>
+        	This week
+    	</button>
+	</div>
+</div>
+
+<h2>
+	Section title
+</h2>
+<?php include VIEW_DIR . DS . "admin" . DS . "partials" . DS . "footer.php";
 ?>

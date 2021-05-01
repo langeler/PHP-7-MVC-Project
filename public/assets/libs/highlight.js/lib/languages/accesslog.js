@@ -1,24 +1,10 @@
-/*
- Language: Apache Access Log
- Author: Oleg Efimov <efimovov@gmail.com>
- Description: Apache/Nginx Access Logs
- Website: https://httpd.apache.org/docs/2.4/logs.html#accesslog
- */
-
- /** @type LanguageFn */
-function accesslog(hljs) {
-  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
-  var HTTP_VERBS = [
-    "GET", "POST", "HEAD", "PUT", "DELETE", "CONNECT", "OPTIONS", "PATCH", "TRACE"
-  ];
+module.exports = function(hljs) {
   return {
-    name: 'Apache Access Log',
     contains: [
       // IP
       {
         className: 'number',
-        begin: '^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}(:\\d{1,5})?\\b',
-        relevance:5
+        begin: '\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}(:\\d{1,5})?\\b'
       },
       // Other numbers
       {
@@ -29,47 +15,23 @@ function accesslog(hljs) {
       // Requests
       {
         className: 'string',
-        begin: '"(' + HTTP_VERBS.join("|") + ')', end: '"',
-        keywords: HTTP_VERBS.join(" "),
+        begin: '"(GET|POST|HEAD|PUT|DELETE|CONNECT|OPTIONS|PATCH|TRACE)', end: '"',
+        keywords: 'GET POST HEAD PUT DELETE CONNECT OPTIONS PATCH TRACE',
         illegal: '\\n',
-        relevance: 5,
-        contains: [{
-          begin: 'HTTP/[12]\\.\\d',
-          relevance:5
-        }]
+        relevance: 10
       },
       // Dates
       {
         className: 'string',
-        // dates must have a certain length, this prevents matching
-        // simple array accesses a[123] and [] and other common patterns
-        // found in other languages
-        begin: /\[\d[^\]\n]{8,}\]/,
-        illegal: '\\n',
-        relevance: 1
-      },
-      {
-        className: 'string',
         begin: /\[/, end: /\]/,
-        illegal: '\\n',
-        relevance: 0
-      },
-      // User agent / relevance boost
-      {
-        className: 'string',
-        begin: '"Mozilla/\\d\\.\\d \\\(', end: '"',
-        illegal: '\\n',
-        relevance: 3
+        illegal: '\\n'
       },
       // Strings
       {
         className: 'string',
         begin: '"', end: '"',
-        illegal: '\\n',
-        relevance: 0
+        illegal: '\\n'
       }
     ]
   };
-}
-
-module.exports = accesslog;
+};

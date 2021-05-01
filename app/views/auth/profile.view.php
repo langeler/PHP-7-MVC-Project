@@ -1,4 +1,4 @@
-<?php include __DIR__ . "/partials/header.php"; ?>
+<?php include VIEW_DIR . DS . "partials" . DS . "header.php"; ?>
 
 	<section class="slice slice-lg bg-gradient-dark" data-offset-top="#header-main" style="padding-top: 147.1875px;">
       <div class="container pt-5 pb-6 pt-lg-6 pb-lg-6">
@@ -8,21 +8,21 @@
 	            <?= $this->pageTitle ?>
             </h6>
             <h1 class="text-white mb-4">
-	        	<?= $this->account["username"] ?>
+	        	<?= $pageData["account"]["username"] ?>
             </h1>
 
 		<p>
-        <?php if (!empty($this->account["forename"])): ?>
-        	<?= $this->account["forename"] ?>
+        <?php if (!empty($pageData["account"]["forename"])): ?>
+        	<?= $pageData["account"]["forename"] ?>
         <?php endif; ?>
 
-        <?php if (!empty($this->account["surname"])): ?>
-       		<?= $this->account["surname"] ?>
+        <?php if (!empty($pageData["account"]["surname"])): ?>
+       		<?= $pageData["account"]["surname"] ?>
         <?php endif; ?>
         </p>
 
-        <?php if (!empty($this->account["email"])): ?>
-       		<?= $this->account["email"] ?>
+        <?php if (!empty($pageData["account"]["email"])): ?>
+       		<?= $pageData["account"]["email"] ?>
         <?php endif; ?>
         </p>
     </div>
@@ -36,5 +36,5 @@
     </div>
 </section>
 
-<?php include __DIR__ . "/partials/footer.php";
+<?php include VIEW_DIR . DS . "partials" . DS . "footer.php";
 ?>

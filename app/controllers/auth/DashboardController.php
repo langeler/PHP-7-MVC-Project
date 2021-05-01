@@ -7,16 +7,33 @@ use App\Models\ListClass;
 
 class DashboardController extends Controller
 {
-	protected $pageTitle = "Dashboard";
-	protected $account;
-	public $csrf;
+	protected $pageTitle;
+	protected $pageUrl;
+	protected $pageData;
+	protected $message;
 
 	public function get()
 	{
-		$this->userModel->id = $this->session->getSessionValue("user_id");
-		$this->session->authenticate($this->userModel->id);
-		$this->account = $this->userModel->readOne();
+		$this->pageTitle = "Dashboard";
+		$this->pageUrl = DOMAIN . "dashboard";
 
-		$this->view("auth/dashboard");
+		// Get user by session value
+		$this->userModel->id = $this->session->getSessionValue("user_id");
+		$account = $this->userModel->readOne();
+
+		// Set page data with variables
+		$this->pageData = [
+			"account" => $account,
+		];
+
+		if (!$this->isUserLoggedIn()) {
+			$this->redirect("login");
+		}
+
+		$this->view("auth/dashboard", [
+			"pageTitle" => $this->pageTitle,
+			"pageUrl" => $this->pageUrl,
+			"pageData" => $this->pageData,
+		]);
 	}
 }

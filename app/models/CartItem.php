@@ -15,6 +15,27 @@ class CartItem extends Model
 	public $tid; // Type id
 	public $quantity; // Quantity
 
+	public function validateCreate()
+	{
+		// Username already exists in the database
+		if ($this->itemExist()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public function validateUpdate()
+	{
+		$item = $this->readOne();
+
+		if ($item["quantity"] != $this->quantity) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public function create()
 	{
 		// Set timestamp for the created record
@@ -58,13 +79,16 @@ class CartItem extends Model
 				" .
 			$this->cart_table .
 			"
-			ORDER BY
-				created DESC
 			WHERE
-				user_id = ?";
+				user_id = :user_id
+			ORDER BY
+				created DESC";
 
 		// prepare query statement
 		$this->db->prepare($query);
+
+		// Bind values
+		$this->db->bind(":user_id", $this->uid);
 
 		// execute query
 		$result = $this->db->fetchAll();
@@ -83,9 +107,12 @@ class CartItem extends Model
 			$this->cart_table .
 			"
 			WHERE
-				user_id = ?";
+				user_id = :user_id";
 
 		$this->db->prepare($query);
+
+		// Bind values
+		$this->db->bind(":user_id", $this->uid);
 
 		// execute the query
 		$this->db->execute();
@@ -93,6 +120,45 @@ class CartItem extends Model
 		$result = $this->db->fetch();
 
 		return (int) $result["count"];
+	}
+
+	public function itemExist()
+	{
+		// Set prepared query to be preformed
+		$query =
+			"SELECT *
+			FROM
+				" .
+			$this->cart_table .
+			"
+			WHERE
+				user_id = :user_id
+			AND
+				product_id = :product_id
+			AND
+				type_id = :type_id
+			LIMIT
+				0,1";
+
+		// Prepare query statement
+		$this->db->prepare($query);
+
+		// Bind values
+		$this->db->bind(":user_id", $this->uid);
+		$this->db->bind(":product_id", $this->pid);
+		$this->db->bind(":type_id", $this->tid);
+
+		// execute the query
+		$this->db->execute();
+
+		// if email exists, assign values to object properties for easy access and use for php sessions
+		if ($this->db->rowCount() > 0) {
+			// return true because email exists in the database
+			return true;
+		}
+
+		// return false if email doesn't exist in the database
+		return false;
 	}
 
 	public function readOne()
@@ -114,6 +180,39 @@ class CartItem extends Model
 
 		// Bind values
 		$this->db->bind(":id", $this->id);
+
+		// Execute and fetch row
+		$row = $this->db->fetch();
+
+		// Return row
+		return $row;
+	}
+
+	public function readByIds()
+	{
+		// Set prepared query to be preformed
+		$query =
+			"SELECT *
+			FROM
+				" .
+			$this->cart_table .
+			"
+			WHERE
+				user_id = :user_id
+			AND
+				product_id = :product_id
+			AND
+				type_id = :type_id
+			LIMIT
+				0,1";
+
+		// Prepare query statement
+		$this->db->prepare($query);
+
+		// Bind values
+		$this->db->bind(":user_id", $this->uid);
+		$this->db->bind(":product_id", $this->pid);
+		$this->db->bind(":type_id", $this->tid);
 
 		// Execute and fetch row
 		$row = $this->db->fetch();
@@ -144,6 +243,7 @@ class CartItem extends Model
 
 		// Bind values
 		$this->db->bind(":quantity", $this->quantity);
+		$this->db->bind(":modified", $this->timestamp);
 		$this->db->bind(":id", $this->id);
 
 		// Execute query

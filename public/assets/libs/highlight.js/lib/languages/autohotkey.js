@@ -1,26 +1,21 @@
-/*
-Language: AutoHotkey
-Author: Seongwon Lee <dlimpid@gmail.com>
-Description: AutoHotkey language definition
-Category: scripting
-*/
-
-/** @type LanguageFn */
-function autohotkey(hljs) {
+module.exports = function(hljs) {
   var BACKTICK_ESCAPE = {
     begin: '`[\\s\\S]'
   };
 
   return {
-    name: 'AutoHotkey',
     case_insensitive: true,
-    aliases: ['ahk'],
+    aliases: [ 'ahk' ],
     keywords: {
       keyword: 'Break Continue Critical Exit ExitApp Gosub Goto New OnExit Pause return SetBatchLines SetTimer Suspend Thread Throw Until ahk_id ahk_class ahk_pid ahk_exe ahk_group',
-      literal: 'true false NOT AND OR',
+      literal: 'A|0 true false NOT AND OR',
       built_in: 'ComSpec Clipboard ClipboardAll ErrorLevel',
     },
     contains: [
+      {
+        className: 'built_in',
+        begin: 'A_[a-zA-Z0-9]+'
+      },
       BACKTICK_ESCAPE,
       hljs.inherit(hljs.QUOTE_STRING_MODE, {contains: [BACKTICK_ESCAPE]}),
       hljs.COMMENT(';', '$', {relevance: 0}),
@@ -31,17 +26,23 @@ function autohotkey(hljs) {
         relevance: 0
       },
       {
-        className: 'variable', //subst would be the most accurate however fails the point of highlighting. variable is comparably the most accurate that actually has some effect
-        begin: '%[a-zA-Z0-9#_$@]+%'
+        className: 'subst', // FIXED
+        begin: '%(?=[a-zA-Z0-9#_$@])', end: '%',
+        illegal: '[^a-zA-Z0-9#_$@]'
       },
       {
         className: 'built_in',
-        begin: '^\\s*\\w+\\s*(,|%)'
+        begin: '^\\s*\\w+\\s*,'
         //I don't really know if this is totally relevant
       },
       {
-        className: 'title', //symbol would be most accurate however is highlighted just like built_in and that makes up a lot of AutoHotkey code
-		                        //meaning that it would fail to highlight anything
+        className: 'meta', 
+        begin: '^\\s*#\w+', end:'$',
+        relevance: 0
+      },
+      {
+        className: 'symbol',
+        contains: [BACKTICK_ESCAPE],
         variants: [
           {begin: '^[^\\n";]+::(?!=)'},
           {begin: '^[^\\n";]+:(?!=)', relevance: 0} // zero relevance as it catches a lot of things
@@ -49,20 +50,9 @@ function autohotkey(hljs) {
         ]
       },
       {
-        className: 'meta',
-        begin: '^\\s*#\\w+', end:'$',
-        relevance: 0
-      },
-	    {
-        className: 'built_in',
-        begin: 'A_[a-zA-Z0-9]+'
-      },
-      {
         // consecutive commas, not for highlighting but just for relevance
         begin: ',\\s*,'
       }
     ]
   }
-}
-
-module.exports = autohotkey;
+};

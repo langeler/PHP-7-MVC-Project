@@ -14,29 +14,32 @@
   <!-- Favicon -->
   <link rel="icon" href="../../assets/img/brand/favicon.png" type="image/png">
 
-  <!-- Font Awesome 5 -->
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
+<!-- Font Awesome 5 -->
+  <link rel="stylesheet" href="<?= $this->getLibStyle(
+  	"@fortawesome/fontawesome-free/css/all.min"
+  ) ?>">
 
   <!-- Page CSS -->
   <link rel="stylesheet" href="<?= $this->getLibStyle(
   	"animate.css/animate.min"
   ) ?>">
-  <link rel="stylesheet" href="<?= $this->getLibStyle(
-  	"swiper/dist/css/swiper.min"
-  ) ?>">
 
   <!-- Purpose CSS -->
-  <link href="<?= $this->getStylesheet("purpose") ?>?<?= date(
+  <link href="<?= $this->getStylesheet("web") ?>?<?= date(
+	"d-m-Y"
+) ?>" rel="stylesheet">
+
+<!-- Purpose CSS -->
+  <link href="<?= $this->getStylesheet("style") ?>?<?= date(
 	"d-m-Y"
 ) ?>" rel="stylesheet">
 </head>
 <body>
 
-	<header class="header header-transparent" id="header-main">
-		<?php include __DIR__ . "/navigation.php"; ?>
-	</header>
+<header class="header header-transparent" id="header-main">
+  <!-- Top navigation -->
+  <?php include VIEW_DIR . DS . "partials" . DS . "navbar.php"; ?>
+</header>
 
-	<?php include __DIR__ . "/search.php"; ?>
-
-<!-- Main content div -->
-<div class="main-content">
+<!-- Main (content) -->
+<main class="main-content">

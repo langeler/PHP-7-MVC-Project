@@ -1,58 +1,131 @@
-<?php include __DIR__ . "/partials/header.php"; ?>
+<?php include VIEW_DIR . DS . "partials" . DS . "header.php"; ?>
 
-	<section class="slice slice-lg bg-gradient-dark" data-offset-top="#header-main" style="padding-top: 147.1875px;">
-      <div class="container pt-5 pb-6 pt-lg-6 pb-lg-6">
-        <div class="row row-grid justify-content-center">
-          <div class="col-lg-7 text-center">
-            <h6 class="text-uppercase text-sm ls-2 text-info font-weight-700">
-	            <?= $this->pageTitle ?>
-            </h6>
-            <h1 class="text-white mb-4">
-				Register an account
-			</h1>
-			 <p class="lead text-muted lh-180 mb-0">Already have an account? <a href="/login">Log in here</a>.</p>
-		 </div>
-        </div>
-      </div>
-    </section>
+<!-- Main content -->
+<section class="section-half-rounded bg-cover bg-size--cover py-4 py-sm-0" style="background-image: url(../../assets/img/backgrounds/img-3.jpg);">
+    <div class="container-fluid d-flex flex-column py-4 py-sm-0 py-lg-5 py-xl-0">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-md-8 col-lg-6 mx-auto">
+                <div class="card shadow-lg border-0 mb-0">
+                    <div class="card-body py-5 px-sm-5">
+                        <div>
+                            <div class="my-5 text-center">
+                                <h6 class="h3 mt-5 mb-1">
+                                    Create your account
+                                </h6>
 
-	   <div class="container">
-          <?php include __DIR__ . "/partials/message.php"; ?>
-            <form method="post" id="form-register">
-                <h3>Sign up for Laconia</h3>
+                                <p class="text-muted mb-0">
+                                    Made with love for designers &amp; developers.
+                                </p>
+                            </div>
 
-                <p>This website is a demo. You're not signing up for any product, just testing out the front end of Laconia. Your password is securely encrypted, and you can fully delete all your information at any time.</p>
+                            <span class="clearfix"></span>
 
-                <input name="csrf" type="hidden" value="<?= $this->csrf ?>">
+                            <?php include VIEW_DIR .
+                            	DS .
+                            	"partials" .
+                            	DS .
+                            	"message.php"; ?>
 
-                <label for="forename">Forename</label>
-                <input type="text" id="forename" name="forename">
+                            <nav class="nav nav-pills nav-justified my-4">
+                                <a class="nav-link active" href="/register">
+                                    Register
+                                </a>
 
-                <label for="surname">Surname</label>
-                <input type="text" id="surname" name="surname">
+                                <a class="nav-link" href="/login">
+                                    Login
+                                </a>
 
-                <label for="phone">Phone</label>
-                <input type="text" id="phone" name="phone">
+                                <a class="nav-link" href="/forgot-password">
+                                    Recover
+                                </a>
+                            </nav>
 
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username">
+                            <form method="post" action="">
+                                <input name="csrf" type="hidden" value="<?= $pageData[
+                                	"csrf"
+                                ] ?>">
 
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="forename">
+                                                Forename
+                                            </label>
 
-                <label for="cpassword">Confirm Password</label>
-                <input type="password" id="cpassword" name="cpassword">
+                                            <input type="text" id="forename" name="forename" class="form-control">
+                                        </div>
+                                    </div>
 
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email">
-                <small>You can register with a fake email.</small>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="surname">
+                                                Surname
+                                            </label>
 
-                <div class="actions">
-                    <?php include __DIR__ . "/partials/message.php"; ?>
-                    <input type="submit" value="Register">
+                                            <input type="text" id="surname" name="surname" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">
+                                        Email
+                                    </label>
+
+                                    <input type="email" id="email" name="email" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phone">
+                                        Phone
+                                    </label>
+
+                                    <input type="text" id="phone" name="phone" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="username">
+                                        Username
+                                    </label>
+
+                                    <input type="text" id="username" name="username" class="form-control">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="password">
+                                                Password
+                                            </label>
+
+                                            <input type="password" id="password" name="password" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="cpassword">
+                                                Confirm Password
+                                            </label>
+
+                                            <input type="password" id="cpassword" name="cpassword" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-block btn-primary">
+                                        Create my account
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-            </form>
-      </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-<?php include __DIR__ . "/partials/footer.php";
+<?php include VIEW_DIR . DS . "partials" . DS . "footer.php";
 ?>

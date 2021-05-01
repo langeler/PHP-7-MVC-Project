@@ -1,18 +1,10 @@
-/*
-Language: Rust
-Author: Andrey Vlasovskikh <andrey.vlasovskikh@gmail.com>
-Contributors: Roman Shmatov <romanshmatov@gmail.com>, Kasper Andersen <kma_untrusted@protonmail.com>
-Website: https://www.rust-lang.org
-Category: common, system
-*/
-
-function rust(hljs) {
+module.exports = function(hljs) {
   var NUM_SUFFIX = '([ui](8|16|32|64|128|size)|f(32|64))\?';
   var KEYWORDS =
-    'abstract as async await become box break const continue crate do dyn ' +
-    'else enum extern false final fn for if impl in let loop macro match mod ' +
-    'move mut override priv pub ref return self Self static struct super ' +
-    'trait true try type typeof unsafe unsized use virtual where while yield';
+    'alignof as be box break const continue crate do else enum extern ' +
+    'false fn for if impl in let loop match mod mut offsetof once priv ' +
+    'proc pub pure ref return self Self sizeof static struct super trait true ' +
+    'type typeof unsafe unsized use virtual while where yield move default';
   var BUILTINS =
     // functions
     'drop ' +
@@ -34,10 +26,8 @@ function rust(hljs) {
     'option_env! print! println! select! stringify! try! unimplemented! ' +
     'unreachable! vec! write! writeln! macro_rules! assert_ne! debug_assert_ne!';
   return {
-    name: 'Rust',
     aliases: ['rs'],
     keywords: {
-      $pattern: hljs.IDENT_RE + '!?',
       keyword:
         KEYWORDS,
       literal:
@@ -45,6 +35,7 @@ function rust(hljs) {
       built_in:
         BUILTINS
     },
+    lexemes: hljs.IDENT_RE + '!?',
     illegal: '</',
     contains: [
       hljs.C_LINE_COMMENT_MODE,
@@ -113,6 +104,4 @@ function rust(hljs) {
       }
     ]
   };
-}
-
-module.exports = rust;
+};

@@ -2,12 +2,12 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (global = global || self, factory(global.hu = {}));
-}(this, (function (exports) { 'use strict';
+}(this, function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {},
+          l10ns: {}
       };
   var Hungarian = {
       firstDayOfWeek: 1,
@@ -21,7 +21,7 @@
               "Csütörtök",
               "Péntek",
               "Szombat",
-          ],
+          ]
       },
       months: {
           shorthand: [
@@ -51,7 +51,7 @@
               "Október",
               "November",
               "December",
-          ],
+          ]
       },
       ordinal: function () {
           return ".";
@@ -59,8 +59,7 @@
       weekAbbreviation: "Hét",
       scrollTitle: "Görgessen",
       toggleTitle: "Kattintson a váltáshoz",
-      rangeSeparator: " - ",
-      time_24hr: true,
+      rangeSeparator: " - "
   };
   fp.l10ns.hu = Hungarian;
   var hu = fp.l10ns;
@@ -70,4 +69,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));

@@ -1,25 +1,16 @@
-/*
-Language: BASIC
-Author: Raphaël Assénat <raph@raphnet.net>
-Description: Based on the BASIC reference from the Tandy 1000 guide
-Website: https://en.wikipedia.org/wiki/Tandy_1000
-*/
-
-/** @type LanguageFn */
-function basic(hljs) {
+module.exports = function(hljs) {
   return {
-    name: 'BASIC',
     case_insensitive: true,
     illegal: '^\.',
-    // Support explicitly typed variables that end with $%! or #.
+    // Support explicitely typed variables that end with $%! or #.
+    lexemes: '[a-zA-Z][a-zA-Z0-9_\$\%\!\#]*',
     keywords: {
-        $pattern: '[a-zA-Z][a-zA-Z0-9_\$\%\!\#]*',
         keyword:
           'ABS ASC AND ATN AUTO|0 BEEP BLOAD|10 BSAVE|10 CALL CALLS CDBL CHAIN CHDIR CHR$|10 CINT CIRCLE ' +
           'CLEAR CLOSE CLS COLOR COM COMMON CONT COS CSNG CSRLIN CVD CVI CVS DATA DATE$ ' +
           'DEFDBL DEFINT DEFSNG DEFSTR DEF|0 SEG USR DELETE DIM DRAW EDIT END ENVIRON ENVIRON$ ' +
           'EOF EQV ERASE ERDEV ERDEV$ ERL ERR ERROR EXP FIELD FILES FIX FOR|0 FRE GET GOSUB|10 GOTO ' +
-          'HEX$ IF THEN ELSE|0 INKEY$ INP INPUT INPUT# INPUT$ INSTR IMP INT IOCTL IOCTL$ KEY ON ' +
+          'HEX$ IF|0 THEN ELSE|0 INKEY$ INP INPUT INPUT# INPUT$ INSTR IMP INT IOCTL IOCTL$ KEY ON ' +
           'OFF LIST KILL LEFT$ LEN LET LINE LLIST LOAD LOC LOCATE LOF LOG LPRINT USING LSET ' +
           'MERGE MID$ MKDIR MKD$ MKI$ MKS$ MOD NAME NEW NEXT NOISE NOT OCT$ ON OR PEN PLAY STRIG OPEN OPTION ' +
           'BASE OUT PAINT PALETTE PCOPY PEEK PMAP POINT POKE POS PRINT PRINT] PSET PRESET ' +
@@ -56,6 +47,4 @@ function basic(hljs) {
       }
     ]
   };
-}
-
-module.exports = basic;
+};

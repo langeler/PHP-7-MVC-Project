@@ -1,15 +1,9 @@
-/*
-Language: Extended Backus-Naur Form
-Author: Alex McKibben <alex@nullscope.net>
-Website: https://en.wikipedia.org/wiki/Extended_Backus–Naur_form
-*/
-
-function ebnf(hljs) {
+module.exports = function(hljs) {
     var commentMode = hljs.COMMENT(/\(\*/, /\*\)/);
 
     var nonTerminalMode = {
         className: "attribute",
-        begin: /^[ ]*[a-zA-Z][a-zA-Z-_]*([\s-_]+[a-zA-Z][a-zA-Z]*)*/
+        begin: /^[ ]*[a-zA-Z][a-zA-Z-]*([\s-]+[a-zA-Z][a-zA-Z]*)*/
     };
 
     var specialSequenceMode = {
@@ -18,24 +12,16 @@ function ebnf(hljs) {
     };
 
     var ruleBodyMode = {
-        begin: /=/, end: /[.;]/,
+        begin: /=/, end: /;/,
         contains: [
             commentMode,
             specialSequenceMode,
-            {
-              // terminals
-              className: 'string',
-              variants: [
-                hljs.APOS_STRING_MODE,
-                hljs.QUOTE_STRING_MODE,
-                {begin: '`', end: '`'},
-              ]
-            },
+            // terminals
+            hljs.APOS_STRING_MODE, hljs.QUOTE_STRING_MODE
         ]
     };
 
     return {
-        name: 'Extended Backus-Naur Form',
         illegal: /\S/,
         contains: [
             commentMode,
@@ -43,6 +29,4 @@ function ebnf(hljs) {
             ruleBodyMode
         ]
     };
-}
-
-module.exports = ebnf;
+};

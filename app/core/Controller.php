@@ -143,8 +143,18 @@ abstract class Controller
 		exit();
 	}
 
+	protected function isUserLoggedIn()
+	{
+		return $this->session->isUserLoggedIn();
+	}
+
+	protected function isAdmin()
+	{
+		return $this->session->isAdmin();
+	}
+
 	// function to generate a random token
-	public function random()
+	protected function random()
 	{
 		// generate random token
 		$token = bin2hex(random_bytes(32));

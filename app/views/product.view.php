@@ -1,4 +1,4 @@
-<?php include VIEW_DIR . DS . "admin/partials/header.php"; ?>
+<?php include VIEW_DIR . DS . "partials" . DS . "header.php"; ?>
 
 	<section class="slice slice-lg bg-gradient-dark" data-offset-top="#header-main" style="padding-top: 147.1875px;">
       <div class="container pt-5 pb-6 pt-lg-6 pb-lg-6">
@@ -44,6 +44,10 @@
 						</select>
 						<?php endforeach; ?>
 
+						<input class="form-control" name="product" value="<?= $pageData["product"][
+      	"id"
+      ] ?>" type="hidden">
+
 						<input class="form-control" min="0" name="quantity" value="1" type="number">
 
 						<button type="submit" class="btn btn-block btn-primary my-3">
@@ -59,4 +63,5 @@
 	</div>
 </div>
 
-<?php include VIEW_DIR . DS . "admin/partials/footer.php";
+<?php include VIEW_DIR . DS . "partials" . DS . "footer.php";
+?>

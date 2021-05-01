@@ -6,10 +6,10 @@ use App\Core\Controller as Controller;
 
 class RegisterController extends Controller
 {
-	protected $pageTitle = "Register";
+	protected $pageTitle;
+	protected $pageUrl;
+	protected $pageData;
 	protected $message;
-	protected $account;
-	protected $csrf;
 
 	public function post()
 	{
@@ -21,15 +21,13 @@ class RegisterController extends Controller
 
 		// Verify CSRF token
 		if ($this->session->validateCSRF()) {
-			$this->userModel->forename = $this->clean($post["forename"]);
-			$this->userModel->surname = $this->clean(
-				$surname = $post["surname"]
-			);
-			$this->userModel->phone = $this->clean($post["phone"]);
-			$this->userModel->email = $this->clean($post["email"]);
-			$this->userModel->username = $this->clean($post["username"]);
-			$this->userModel->password = $this->clean($post["password"]);
-			$this->userModel->cpassword = $this->clean($post["cpassword"]);
+			$this->userModel->forename = clean($post["forename"]);
+			$this->userModel->surname = clean($surname = $post["surname"]);
+			$this->userModel->phone = clean($post["phone"]);
+			$this->userModel->email = clean($post["email"]);
+			$this->userModel->username = clean($post["username"]);
+			$this->userModel->password = clean($post["password"]);
+			$this->userModel->cpassword = clean($post["cpassword"]);
 			$this->userModel->role = DEFAULT_ROLE; // Default role definied
 
 			// Validate username, password, and email
@@ -51,13 +49,22 @@ class RegisterController extends Controller
 
 	public function get()
 	{
-		$isLoggedIn = $this->session->isUserLoggedIn();
-		$this->csrf = $this->session->getSessionValue("csrf");
+		$this->pageTitle = "Register";
+		$this->pageUrl = DOMAIN . "register";
 
-		if ($isLoggedIn) {
+		// Set page data with variables
+		$this->pageData = [
+			"csrf" => $this->session->getSessionValue("csrf"),
+		];
+
+		if ($this->isUserLoggedIn()) {
 			$this->redirect("dashboard");
 		}
 
-		$this->view("auth/register");
+		$this->view("auth/register", [
+			"pageTitle" => $this->pageTitle,
+			"pageUrl" => $this->pageUrl,
+			"pageData" => $this->pageData,
+		]);
 	}
 }

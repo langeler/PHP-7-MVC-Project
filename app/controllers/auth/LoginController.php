@@ -6,10 +6,16 @@ use App\Core\Controller as Controller;
 
 class LoginController extends Controller
 {
-	protected $pageTitle = "Login";
-	protected $account;
+	protected $pageTitle;
+	protected $pageUrl;
+	protected $pageData;
 	protected $message;
-	protected $csrf;
+
+	public function logout()
+	{
+		$this->session->logout();
+		$this->redirect("");
+	}
 
 	public function post()
 	{
@@ -17,8 +23,8 @@ class LoginController extends Controller
 
 		$this->session->csrf = $post["csrf"];
 		if ($this->session->validateCSRF()) {
-			$this->userModel->username = $this->clean($post["username"]);
-			$this->userModel->password = $this->clean($post["password"]);
+			$this->userModel->username = clean($post["username"]);
+			$this->userModel->password = clean($post["password"]);
 
 			// Validate username, password, and email
 			if ($this->userModel->validateLogin()) {
@@ -41,13 +47,22 @@ class LoginController extends Controller
 
 	public function get()
 	{
-		$isLoggedIn = $this->session->isUserLoggedIn();
-		$this->csrf = $this->session->getSessionValue("csrf");
+		$this->pageTitle = "Login";
+		$this->pageUrl = DOMAIN . "login";
 
-		if ($isLoggedIn) {
+		// Set page data with variables
+		$this->pageData = [
+			"csrf" => $this->session->getSessionValue("csrf"),
+		];
+
+		if ($this->isUserLoggedIn()) {
 			$this->redirect("dashboard");
 		}
 
-		$this->view("auth/login");
+		$this->view("auth/login", [
+			"pageTitle" => $this->pageTitle,
+			"pageUrl" => $this->pageUrl,
+			"pageData" => $this->pageData,
+		]);
 	}
 }

@@ -103,6 +103,20 @@ class Session
 	}
 
 	/**
+	 * Return true if user is administrator.
+	 */
+	public function isAdmin()
+	{
+		if ($this->isUserLoggedIn()) {
+			if (isset($_SESSION["role"]) && $_SESSION["role"] == "admin") {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Validate CSRF
 	 */
 	public function validateCSRF()

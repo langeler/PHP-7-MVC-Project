@@ -7,14 +7,19 @@ $router->get("401", "InternalExceptionController@get");
 $router->get("404", "NotFoundExceptionController@get");
 $router->get("500", "unauthorizedExceptionController@get");
 
-// Get admin product routes
+// Get product routes
+$router->get("cart", "cartController@index");
+$router->get("cart/add/{pid}/{tid}", "cartController@creat");
+$router->get("cart/add/{pid}/{tid}/{quantity}", "cartController@creat");
+$router->get("cart/remove/{id}", "cartController@delete");
+$router->get("cart/empty", "cartController@deleteAll");
 $router->get("products", "productsController@index");
 $router->get("category/{id}/{name}", "categoryController@index");
 $router->get("product/{id}/{name}", "productController@index");
 
 // Post product routes
-$router->post("product/{id}/{name}", "productController@creat");
-// $router->post("product/{id}/{name}/", "productController@add");
+$router->post("cart", "cartController@update");
+$router->post("product/{id}/{name}", "productController@post");
 
 // Get logged out routes
 $router->get("forgot-password", "ForgotPasswordController@get");
@@ -25,7 +30,7 @@ $router->get("register", "RegisterController@get");
 
 // Get logged in routes
 $router->get("dashboard", "DashboardController@get");
-$router->get("logout", "LogoutController@get");
+$router->get("logout", "LoginController@logout");
 $router->get("profile", "ProfileController@get");
 $router->get("settings", "SettingsController@get");
 

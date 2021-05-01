@@ -2,12 +2,12 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (global = global || self, factory(global.be = {}));
-}(this, (function (exports) { 'use strict';
+}(this, function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {},
+          l10ns: {}
       };
   var Belarusian = {
       weekdays: {
@@ -20,7 +20,7 @@
               "Чацвер",
               "Пятніца",
               "Субота",
-          ],
+          ]
       },
       months: {
           shorthand: [
@@ -50,7 +50,7 @@
               "Кастрычнік",
               "Лістапад",
               "Снежань",
-          ],
+          ]
       },
       firstDayOfWeek: 1,
       ordinal: function () {
@@ -61,8 +61,7 @@
       scrollTitle: "Пракруціце для павелічэння",
       toggleTitle: "Націсніце для пераключэння",
       amPM: ["ДП", "ПП"],
-      yearAriaLabel: "Год",
-      time_24hr: true,
+      yearAriaLabel: "Год"
   };
   fp.l10ns.be = Belarusian;
   var be = fp.l10ns;
@@ -72,4 +71,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));

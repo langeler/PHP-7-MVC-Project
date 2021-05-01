@@ -1,12 +1,4 @@
-/*
-Language: Stylus
-Author: Bryant Williams <b.n.williams@gmail.com>
-Description: Stylus is an expressive, robust, feature-rich CSS language built for nodejs.
-Website: https://github.com/stylus/stylus
-Category: css
-*/
-
-function stylus(hljs) {
+module.exports = function(hljs) {
 
   var VARIABLE = {
     className: 'variable',
@@ -122,7 +114,7 @@ function stylus(hljs) {
     'video'
   ];
 
-  var LOOKAHEAD_TAG_END = '(?=[\\.\\s\\n\\[\\:,])';
+  var TAG_END = '[\\.\\s\\n\\[\\:,]';
 
   var ATTRIBUTES = [
     'align-content',
@@ -346,7 +338,6 @@ function stylus(hljs) {
   ];
 
   return {
-    name: 'Stylus',
     aliases: ['styl'],
     case_insensitive: false,
     keywords: 'if else for in',
@@ -366,25 +357,34 @@ function stylus(hljs) {
 
       // class tag
       {
-        begin: '\\.[a-zA-Z][a-zA-Z0-9_-]*' + LOOKAHEAD_TAG_END,
-        className: 'selector-class'
+        begin: '\\.[a-zA-Z][a-zA-Z0-9_-]*' + TAG_END,
+        returnBegin: true,
+        contains: [
+          {className: 'selector-class', begin: '\\.[a-zA-Z][a-zA-Z0-9_-]*'}
+        ]
       },
 
       // id tag
       {
-        begin: '\\#[a-zA-Z][a-zA-Z0-9_-]*' + LOOKAHEAD_TAG_END,
-        className: 'selector-id'
+        begin: '\\#[a-zA-Z][a-zA-Z0-9_-]*' + TAG_END,
+        returnBegin: true,
+        contains: [
+          {className: 'selector-id', begin: '\\#[a-zA-Z][a-zA-Z0-9_-]*'}
+        ]
       },
 
       // tags
       {
-        begin: '\\b(' + TAGS.join('|') + ')' + LOOKAHEAD_TAG_END,
-        className: 'selector-tag'
+        begin: '\\b(' + TAGS.join('|') + ')' + TAG_END,
+        returnBegin: true,
+        contains: [
+          {className: 'selector-tag', begin: '\\b[a-zA-Z][a-zA-Z0-9_-]*'}
+        ]
       },
 
       // psuedo selectors
       {
-        begin: '&?:?:\\b(' + PSEUDO_SELECTORS.join('|') + ')' + LOOKAHEAD_TAG_END
+        begin: '&?:?:\\b(' + PSEUDO_SELECTORS.join('|') + ')' + TAG_END
       },
 
       // @ keywords
@@ -450,6 +450,4 @@ function stylus(hljs) {
       }
     ]
   };
-}
-
-module.exports = stylus;
+};

@@ -1,14 +1,6 @@
-/*
- Language: SQL
- Contributors: Nikolay Lisienko <info@neor.ru>, Heiko August <post@auge8472.de>, Travis Odom <travis.a.odom@gmail.com>, Vadimtro <vadimtro@yahoo.com>, Benjamin Auder <benjamin.auder@gmail.com>
- Website: https://en.wikipedia.org/wiki/SQL
- Category: common
- */
-
-function sql(hljs) {
+module.exports = function(hljs) {
   var COMMENT_MODE = hljs.COMMENT('--', '$');
   return {
-    name: 'SQL',
     case_insensitive: true,
     illegal: /[<>{}*]/,
     contains: [
@@ -20,8 +12,8 @@ function sql(hljs) {
           'unlock purge reset change stop analyze cache flush optimize repair kill ' +
           'install uninstall checksum restore check backup revoke comment values with',
         end: /;/, endsWithParent: true,
+        lexemes: /[\w\.]+/,
         keywords: {
-          $pattern: /[\w\.]+/,
           keyword:
             'as abort abs absolute acc acce accep accept access accessed accessible account acos action activate add ' +
             'addtime admin administer advanced advise aes_decrypt aes_encrypt after agent aggregate ali alia alias ' +
@@ -137,22 +129,23 @@ function sql(hljs) {
             'true false null unknown',
           built_in:
             'array bigint binary bit blob bool boolean char character date dec decimal float int int8 integer interval number ' +
-            'numeric real record serial serial8 smallint text time timestamp tinyint varchar varchar2 varying void'
+            'numeric real record serial serial8 smallint text time timestamp tinyint varchar varying void'
         },
         contains: [
           {
             className: 'string',
             begin: '\'', end: '\'',
-            contains: [{begin: '\'\''}]
+            contains: [hljs.BACKSLASH_ESCAPE, {begin: '\'\''}]
           },
           {
             className: 'string',
             begin: '"', end: '"',
-            contains: [{begin: '""'}]
+            contains: [hljs.BACKSLASH_ESCAPE, {begin: '""'}]
           },
           {
             className: 'string',
-            begin: '`', end: '`'
+            begin: '`', end: '`',
+            contains: [hljs.BACKSLASH_ESCAPE]
           },
           hljs.C_NUMBER_MODE,
           hljs.C_BLOCK_COMMENT_MODE,
@@ -165,6 +158,4 @@ function sql(hljs) {
       hljs.HASH_COMMENT_MODE
     ]
   };
-}
-
-module.exports = sql;
+};

@@ -249,6 +249,19 @@ class adminProducts extends Controller
 			// Set user id to be deleted
 			$this->productModel->id = $vars["id"];
 
+			$this->pImageModel->pid = $vars["id"];
+			$this->typeModel->pid = $vars["id"];
+
+			$images = $this->pImageModel->readAll();
+
+			foreach ($images as $image) {
+				$this->pImageModel->name = $image["name"];
+				$this->pImageModel->remove();
+			}
+
+			$this->pImageModel->deleteAll();
+			$this->typeModel->deleteAll();
+
 			// Delete user
 			$this->productModel->delete();
 
