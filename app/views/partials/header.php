@@ -24,6 +24,11 @@
   	"animate.css/animate.min"
   ) ?>">
 
+<!-- Swiper CSS -->
+  <link rel="stylesheet" href="<?= $this->getLibStyle(
+  	"swiper/dist/css/swiper.min"
+  ) ?>">
+
   <!-- Purpose CSS -->
   <link href="<?= $this->getStylesheet("web") ?>?<?= date(
 	"d-m-Y"

@@ -19,30 +19,44 @@
                     </li>
 
                     <li class="nav-item ">
+                        <a class="nav-link" href="/about">
+                            About
+                        </a>
+                    </li>
+
+                    <li class="nav-item ">
+                        <a class="nav-link" href="/contact">
+                            Contact
+                        </a>
+                    </li>
+
+                    <li class="nav-item ">
                         <a class="nav-link" href="/products">
                             Products
                         </a>
                     </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="#" id="navbar-primary_dropdown_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Categories <i class="fas fa-caret-down"></i>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-primary_dropdown_1">
+                            <?php foreach (
+                            	$this->getCategories()
+                            	as $category
+                            ): ?>
+
+                                <a class="dropdown-item" href="/category/<?= $category[
+                                	"id"
+                                ] ?>/<?= $category["name"] ?>">
+                                    <?= $category["name"] ?>
+                                </a>
+
+                            <?php endforeach; ?>
+                        </div>
+                    </li>
                 </ul>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="#" id="navbar-primary_dropdown_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Categories
-                    </a>
-
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-primary_dropdown_1">
-                        <?php foreach ($this->getCategories() as $category): ?>
-
-
-                            <a class="dropdown-item" href="/category/<?= $category[
-                            	"id"
-                            ] ?>/<?= $category["name"] ?>">
-                                <?= $category["name"] ?>
-                            </a>
-
-                        <?php endforeach; ?>
-                    </div>
-                </li>
 
                 <ul class="navbar-nav ml-lg-auto">
                     <li class="nav-item">
