@@ -14,6 +14,7 @@ $router->get("cart/add/{pid}/{tid}/{quantity}", "cartController@creat");
 $router->get("cart/remove/{id}", "cartController@delete");
 $router->get("cart/empty", "cartController@deleteAll");
 $router->get("products", "productsController@index");
+$router->get("category/{id}", "categoryController@index");
 $router->get("category/{id}/{name}", "categoryController@index");
 $router->get("product/{id}/{name}", "productController@index");
 

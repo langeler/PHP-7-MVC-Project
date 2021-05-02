@@ -24,7 +24,7 @@ class adminUsers extends Controller
 		if ($isLoggedIn && $role == "admin") {
 			return true;
 		} else {
-			$this->redirect("");
+			redirect("");
 			exit();
 		}
 	}
@@ -119,16 +119,14 @@ class adminUsers extends Controller
 
 		// Verify CSRF token
 		if ($this->session->validateCSRF()) {
-			$this->userModel->forename = $this->clean($post["forename"]);
-			$this->userModel->surname = $this->clean(
-				$surname = $post["surname"]
-			);
-			$this->userModel->phone = $this->clean($post["phone"]);
-			$this->userModel->email = $this->clean($post["email"]);
-			$this->userModel->username = $this->clean($post["username"]);
-			$this->userModel->password = $this->clean($post["password"]);
-			$this->userModel->cpassword = $this->clean($post["cpassword"]);
-			$this->userModel->role = $this->clean($post["role"]);
+			$this->userModel->forename = $post["forename"];
+			$this->userModel->surname = $post["surname"];
+			$this->userModel->phone = $post["phone"];
+			$this->userModel->email = $post["email"];
+			$this->userModel->username = $post["username"];
+			$this->userModel->password = $post["password"];
+			$this->userModel->cpassword = $post["cpassword"];
+			$this->userModel->role = $post["role"];
 
 			// Validate username, password, and email
 			if ($this->userModel->validateCreate()) {
@@ -136,7 +134,7 @@ class adminUsers extends Controller
 				$this->userModel->create();
 
 				// Redirect to profile
-				$this->redirect("admin/users/");
+				redirect("admin/users/");
 			} else {
 				// Set error message
 				$this->message = $this->userModel->errors;
@@ -186,17 +184,17 @@ class adminUsers extends Controller
 
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
-				$this->userModel->forename = $this->clean($post["forename"]);
-				$this->userModel->surname = $this->clean($post["surname"]);
-				$this->userModel->phone = $this->clean($post["phone"]);
-				$this->userModel->email = $this->clean($post["email"]);
-				$this->userModel->role = $this->clean($post["role"]);
+				$this->userModel->forename = $post["forename"];
+				$this->userModel->surname = $post["surname"];
+				$this->userModel->phone = $post["phone"];
+				$this->userModel->email = $post["email"];
+				$this->userModel->role = $post["role"];
 
 				if ($this->userModel->validateUpdate()) {
 					// Update settings
 					if ($this->userModel->update()) {
 						// Redirect to profile
-						$this->redirect("admin/users/");
+						redirect("admin/users/");
 					}
 				} else {
 					// Set error message
@@ -247,7 +245,7 @@ class adminUsers extends Controller
 			$this->userModel->delete();
 
 			// Redirect to admin/users
-			$this->redirect("admin/users/");
+			redirect("admin/users/");
 		}
 	}
 }

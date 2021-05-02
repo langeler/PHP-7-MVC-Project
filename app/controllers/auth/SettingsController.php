@@ -30,16 +30,16 @@ class SettingsController extends Controller
 
 		// Verify CSRF token
 		if ($this->session->validateCSRF()) {
-			$this->userModel->forename = clean($post["forename"]);
-			$this->userModel->surname = clean($post["surname"]);
-			$this->userModel->phone = clean($post["phone"]);
-			$this->userModel->email = clean($post["email"]);
+			$this->userModel->forename = $post["forename"];
+			$this->userModel->surname = $post["surname"];
+			$this->userModel->phone = $post["phone"];
+			$this->userModel->email = $post["email"];
 
 			if ($this->userModel->validateUpdate()) {
 				// Update settings
 				if ($this->userModel->update()) {
 					// Redirect to profile
-					$this->redirect("profile");
+					redirect("profile");
 				}
 			} else {
 				// Set error message
@@ -67,7 +67,7 @@ class SettingsController extends Controller
 		];
 
 		if (!$this->isUserLoggedIn()) {
-			$this->redirect("login");
+			redirect("login");
 		}
 
 		$this->view("auth/settings", [

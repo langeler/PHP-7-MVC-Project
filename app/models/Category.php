@@ -208,7 +208,7 @@ class Category extends Model
 			$this->category_table .
 			"
 			ORDER BY
-				created DESC";
+				name ASC";
 
 		// prepare query statement
 		$this->db->prepare($query);

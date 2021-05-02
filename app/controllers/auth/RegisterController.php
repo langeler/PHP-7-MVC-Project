@@ -21,13 +21,13 @@ class RegisterController extends Controller
 
 		// Verify CSRF token
 		if ($this->session->validateCSRF()) {
-			$this->userModel->forename = clean($post["forename"]);
-			$this->userModel->surname = clean($surname = $post["surname"]);
-			$this->userModel->phone = clean($post["phone"]);
-			$this->userModel->email = clean($post["email"]);
-			$this->userModel->username = clean($post["username"]);
-			$this->userModel->password = clean($post["password"]);
-			$this->userModel->cpassword = clean($post["cpassword"]);
+			$this->userModel->forename = $post["forename"];
+			$this->userModel->surname = $post["surname"];
+			$this->userModel->phone = $post["phone"];
+			$this->userModel->email = $post["email"];
+			$this->userModel->username = $post["username"];
+			$this->userModel->password = $post["password"];
+			$this->userModel->cpassword = $post["cpassword"];
 			$this->userModel->role = DEFAULT_ROLE; // Default role definied
 
 			// Validate username, password, and email
@@ -36,7 +36,7 @@ class RegisterController extends Controller
 				$this->userModel->create();
 
 				// Redirect to profile
-				$this->redirect("login");
+				redirect("login");
 			} else {
 				// Set error message
 				$this->message = $this->userModel->errors;
@@ -58,7 +58,7 @@ class RegisterController extends Controller
 		];
 
 		if ($this->isUserLoggedIn()) {
-			$this->redirect("dashboard");
+			redirect("dashboard");
 		}
 
 		$this->view("auth/register", [

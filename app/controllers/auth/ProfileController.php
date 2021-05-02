@@ -27,7 +27,7 @@ class ProfileController extends Controller
 		];
 
 		if (!$this->isUserLoggedIn()) {
-			$this->redirect("login");
+			redirect("login");
 		}
 
 		$this->view("auth/profile", [

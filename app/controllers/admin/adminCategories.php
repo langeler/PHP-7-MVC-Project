@@ -24,7 +24,7 @@ class adminCategories extends Controller
 		if ($isLoggedIn && $role == "admin") {
 			return true;
 		} else {
-			$this->redirect("");
+			redirect("");
 			exit();
 		}
 	}
@@ -118,10 +118,8 @@ class adminCategories extends Controller
 
 		// Verify CSRF token
 		if ($this->session->validateCSRF()) {
-			$this->categoryModel->name = $this->clean($post["name"]);
-			$this->categoryModel->description = $this->clean(
-				$surname = $post["description"]
-			);
+			$this->categoryModel->name = $post["name"];
+			$this->categoryModel->description = $post["description"];
 
 			// Validate username, password, and email
 			if ($this->categoryModel->validateCreate()) {
@@ -129,7 +127,7 @@ class adminCategories extends Controller
 				$this->categoryModel->create();
 
 				// Redirect to profile
-				$this->redirect("admin/categories/");
+				redirect("admin/categories/");
 			} else {
 				// Set error message
 				$this->message = $this->categoryModel->errors;
@@ -178,16 +176,14 @@ class adminCategories extends Controller
 
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
-				$this->categoryModel->name = $this->clean($post["name"]);
-				$this->categoryModel->description = $this->clean(
-					$post["description"]
-				);
+				$this->categoryModel->name = $post["name"];
+				$this->categoryModel->description = $post["description"];
 
 				if ($this->categoryModel->validateUpdate()) {
 					// Update settings
 					if ($this->categoryModel->update()) {
 						// Redirect to profile
-						$this->redirect("admin/categories/");
+						redirect("admin/categories/");
 					}
 				} else {
 					// Set error message
@@ -257,7 +253,7 @@ class adminCategories extends Controller
 			$this->categoryModel->delete();
 
 			// Redirect to admin/users
-			$this->redirect("admin/categories");
+			redirect("admin/categories");
 		}
 	}
 }

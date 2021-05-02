@@ -24,7 +24,7 @@ class adminProducts extends Controller
 		if ($isLoggedIn && $role == "admin") {
 			return true;
 		} else {
-			$this->redirect("");
+			redirect("");
 			exit();
 		}
 	}
@@ -123,12 +123,10 @@ class adminProducts extends Controller
 
 		// Verify CSRF token
 		if ($this->session->validateCSRF()) {
-			$this->productModel->name = $this->clean($post["name"]);
-			$this->productModel->description = $this->clean(
-				$surname = $post["description"]
-			);
-			$this->productModel->cid = $this->clean($post["category"]);
-			$this->productModel->status = $this->clean($post["status"]);
+			$this->productModel->name = $post["name"];
+			$this->productModel->description = $post["description"];
+			$this->productModel->cid = $post["category"];
+			$this->productModel->status = $post["status"];
 
 			// Validate username, password, and email
 			if ($this->productModel->validateCreate()) {
@@ -136,7 +134,7 @@ class adminProducts extends Controller
 				$this->productModel->create();
 
 				// Redirect to profile
-				$this->redirect("admin/products/");
+				redirect("admin/products/");
 			} else {
 				// Set error message
 				$this->message = $this->productModel->errors;
@@ -189,18 +187,16 @@ class adminProducts extends Controller
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
 				$this->productModel->id = $vars["id"];
-				$this->productModel->name = $this->clean($post["name"]);
-				$this->productModel->description = $this->clean(
-					$post["description"]
-				);
-				$this->productModel->cid = $this->clean($post["category"]);
-				$this->productModel->status = $this->clean($post["status"]);
+				$this->productModel->name = $post["name"];
+				$this->productModel->description = $post["description"];
+				$this->productModel->cid = $post["category"];
+				$this->productModel->status = $post["status"];
 
 				if ($this->productModel->validateUpdate()) {
 					// Update settings
 					if ($this->productModel->update()) {
 						// Redirect to profile
-						$this->redirect("admin/products/");
+						redirect("admin/products/");
 					}
 				} else {
 					// Set error message
@@ -266,7 +262,7 @@ class adminProducts extends Controller
 			$this->productModel->delete();
 
 			// Redirect to admin/users
-			$this->redirect("admin/products/");
+			redirect("admin/products/");
 		}
 	}
 }

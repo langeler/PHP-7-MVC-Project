@@ -132,15 +132,12 @@ abstract class Controller
 		return $redirect === $view;
 	}
 
-	/**
-	 * Redirects to the specified page.
-	 */
-	protected function redirect($view)
+	// Function to read all categories
+	protected function getCategories()
 	{
-		$view = strtolower($view);
+		$categories = $this->categoryModel->readAll();
 
-		header("Location: /" . $view);
-		exit();
+		return $categories;
 	}
 
 	protected function isUserLoggedIn()

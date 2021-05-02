@@ -24,7 +24,7 @@ class adminTypes extends Controller
 		if ($isLoggedIn && $role == "admin") {
 			return true;
 		} else {
-			$this->redirect("");
+			redirect("");
 			exit();
 		}
 	}
@@ -123,12 +123,10 @@ class adminTypes extends Controller
 
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
-				$this->typeModel->name = $this->clean($post["name"]);
-				$this->typeModel->description = $this->clean(
-					$surname = $post["description"]
-				);
-				$this->typeModel->price = $this->clean($post["price"]);
-				$this->typeModel->stock = $this->clean($post["stock"]);
+				$this->typeModel->name = $post["name"]);
+				$this->typeModel->description = $post["description"];
+				$this->typeModel->price = $post["price"];
+				$this->typeModel->stock = $post["stock"];
 
 				// Validate username, password, and email
 				if ($this->typeModel->validateCreate()) {
@@ -136,7 +134,7 @@ class adminTypes extends Controller
 					$this->typeModel->create();
 
 					// Redirect to profile
-					$this->redirect("admin/products/");
+					redirect("admin/products/");
 				} else {
 					// Set error message
 					$this->message = $this->typeModel->errors;
@@ -185,18 +183,16 @@ class adminTypes extends Controller
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
 				$this->typeModel->id = $vars["id"];
-				$this->typeModel->name = $this->clean($post["name"]);
-				$this->typeModel->description = $this->clean(
-					$post["description"]
-				);
-				$this->typeModel->price = $this->clean($post["price"]);
-				$this->typeModel->stock = $this->clean($post["stock"]);
+				$this->typeModel->name = $post["name"];
+				$this->typeModel->description = $post["description"];
+				$this->typeModel->price = $post["price"];
+				$this->typeModel->stock = $post["stock"];
 
 				if ($this->typeModel->validateUpdate()) {
 					// Update settings
 					if ($this->typeModel->update()) {
 						// Redirect to profile
-						$this->redirect("admin/products/");
+						redirect("admin/products/");
 					}
 				} else {
 					// Set error message
@@ -247,7 +243,7 @@ class adminTypes extends Controller
 			$this->typeModel->delete();
 
 			// Redirect to admin/users
-			$this->redirect("admin/products/");
+			redirect("admin/products/");
 		}
 	}
 }

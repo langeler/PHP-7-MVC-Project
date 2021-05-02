@@ -1,37 +1,39 @@
 <?php include VIEW_DIR . DS . "admin" . DS . "partials" . DS . "header.php"; ?>
 
-	<section class="slice slice-lg bg-gradient-dark" data-offset-top="#header-main" style="padding-top: 147.1875px;">
-      <div class="container pt-5 pb-6 pt-lg-6 pb-lg-6">
-        <div class="row row-grid justify-content-center">
-          <div class="col-lg-7 text-center">
-            <h6 class="text-uppercase text-sm ls-2 text-info font-weight-700">
-	            <?= $this->pageTitle ?>
-            </h6>
-            <p>In a real application, it wouldn't really make sense to just list all your users. But for ease of testing, I made
-                this page.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 
-<div class='container mt-3'>
-	<div class="row">
-		<div class="col-md-6 px-0">
+	<form class="form-inline float-left "  action='<?= $pageUrl ?>' method="get">
+		<div class="input-group mb-3">
+			<input class="form-control" type="search" placeholder="Type a name..." name="search" id="search" <?php echo isset(
+   	$pageData["search"]
+   )
+   	? "value='{$pageData["search"]}'"
+   	: ""; ?> aria-label="Search">
+
+			<div class="input-group-append">
+				<button class="btn btn-outline-primary" type="submit">
+					<i class="fas fa-search"></i>
+				</button>
+			</div>
 		</div>
-		<div class="col-md-6">
+	</form>
+
+	<div class="btn-toolbar mb-2 mb-md-0">
+		<div class="btn-group mr-2">
+			<button type="button" class="btn btn-sm btn-outline-danger">
+				<i class="fas fa-trash"></i> Delete
+			</button>
+
 			<a href="/admin/product/image/create/<?= $pageData[
    	"pid"
-   ] ?>" class='btn btn-success float-right'>
-				<i class='fas fa-plus'></i> Create Record
+   ] ?>" class="btn btn-sm btn-outline-success">
+				<i class="fas fa-plus"></i> Create
 			</a>
 		</div>
 	</div>
 </div>
 
-<div class='container mt-3'>
-	<div class='row'>
-		<div class='col-md-12'>
-			<?php if ($pageData["images"]): ?>
+		<?php if ($pageData["images"]): ?>
 			<table class='table table-hover table-responsive'>
 				<tr>
 					<th>Name</th>
@@ -71,16 +73,14 @@
 				</tr>
 				<?php endforeach; ?>
 			</table>
-			<?php else: ?>
-			<p>
-				No images were found!
-			</p>
-			<?php endif; ?>
+		<?php else: ?>
+		<p>
+			No images were found!
+		</p>
 
-			<?php echo $pageData["pagination"]; ?>
-		</div>
-	</div>
-</div>
+		<?php endif; ?>
+
+		<?php echo $pageData["pagination"]; ?>
 
 <?php include VIEW_DIR . DS . "admin" . DS . "partials" . DS . "footer.php";
 ?>

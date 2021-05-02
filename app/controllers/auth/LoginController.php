@@ -14,7 +14,7 @@ class LoginController extends Controller
 	public function logout()
 	{
 		$this->session->logout();
-		$this->redirect("");
+		redirect("");
 	}
 
 	public function post()
@@ -23,13 +23,13 @@ class LoginController extends Controller
 
 		$this->session->csrf = $post["csrf"];
 		if ($this->session->validateCSRF()) {
-			$this->userModel->username = clean($post["username"]);
-			$this->userModel->password = clean($post["password"]);
+			$this->userModel->username = $post["username"];
+			$this->userModel->password = $post["password"];
 
 			// Validate username, password, and email
 			if ($this->userModel->validateLogin()) {
 				if ($this->userModel->login()) {
-					$this->redirect("dashboard");
+					redirect("dashboard");
 				} else {
 					$this->message = LOGIN_FAIL;
 
@@ -56,7 +56,7 @@ class LoginController extends Controller
 		];
 
 		if ($this->isUserLoggedIn()) {
-			$this->redirect("dashboard");
+			redirect("dashboard");
 		}
 
 		$this->view("auth/login", [

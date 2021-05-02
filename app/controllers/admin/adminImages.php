@@ -24,7 +24,7 @@ class adminImages extends Controller
 		if ($isLoggedIn && $role == "admin") {
 			return true;
 		} else {
-			$this->redirect("");
+			redirect("");
 			exit();
 		}
 	}
@@ -122,14 +122,12 @@ class adminImages extends Controller
 
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
-				$this->imageModel->description = $this->clean(
-					$surname = $post["description"]
-				);
+				$this->imageModel->description = $post["description"];
 
 				// Register new user
 				if ($this->imageModel->upload()) {
 					// Redirect to profile
-					$this->redirect("admin/products/");
+					redirect("admin/products/");
 				} else {
 					// Set error message
 					$this->message = $this->imageModel->errors;
@@ -178,15 +176,13 @@ class adminImages extends Controller
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
 				$this->imageModel->id = $vars["id"];
-				$this->imageModel->description = $this->clean(
-					$post["description"]
-				);
+				$this->imageModel->description = $post["description"];
 
 				if ($this->imageModel->validateUpdate()) {
 					// Update settings
 					if ($this->imageModel->update()) {
 						// Redirect to profile
-						$this->redirect("admin/products/");
+						redirect("admin/products/");
 					}
 				} else {
 					// Set error message
@@ -243,7 +239,7 @@ class adminImages extends Controller
 				$this->imageModel->delete();
 
 				// Redirect to admin/users
-				$this->redirect("admin/products/");
+				redirect("admin/products/");
 			}
 		}
 	}
