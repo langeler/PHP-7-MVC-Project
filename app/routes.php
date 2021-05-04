@@ -23,11 +23,11 @@ $router->post("cart", "cartController@update");
 $router->post("product/{id}/{name}", "productController@post");
 
 // Get logged out routes
-$router->get("forgot-password", "ForgotPasswordController@get");
-$router->get("reset-password", "ResetPasswordController@get");
-$router->get("create-password", "CreatePasswordController@get");
+$router->get("change", "changeController@get");
 $router->get("login", "LoginController@get");
+$router->get("recover", "recoverController@get");
 $router->get("register", "RegisterController@get");
+$router->get("reset/{username}/{access}", "resetController@get");
 
 // Get logged in routes
 $router->get("dashboard", "DashboardController@get");
@@ -36,11 +36,13 @@ $router->get("profile", "ProfileController@get");
 $router->get("settings", "SettingsController@get");
 
 // Post logged out routes
-$router->post("create-password", "CreatePasswordController@post");
-$router->post("forgot-password", "ForgotPasswordController@post");
 $router->post("login", "LoginController@post");
+$router->post("recover", "recoverController@post");
 $router->post("register", "RegisterController@post");
-$router->post("reset-password", "ResetPasswordController@post");
+$router->post("reset/{username}/{access}", "resetController@post");
+
+// Post logged in routes
+$router->post("change", "changeController@post");
 $router->post("settings", "SettingsController@post");
 
 // Get admin pages
@@ -78,6 +80,37 @@ $router->get("admin/product/image/delete/{id}", "adminImages@delete");
 $router->post("admin/product/image/create/{pid}", "adminImages@createImage");
 $router->post("admin/product/image/update/{id}", "adminImages@updateImage");
 $router->post("admin/product/image/delete/{id}", "adminImages@deleteImage");
+
+// Get admin product option routes
+$router->get("admin/product/options/{qid}", "adminOptions@index");
+$router->get("admin/product/option/create/{qid}", "adminOptions@create");
+$router->get("admin/product/option/update/{id}", "adminOptions@update");
+$router->get("admin/product/option/delete/{id}", "adminOptions@delete");
+
+// Post admin product option routes
+$router->post("admin/product/option/create/{qid}", "adminOptions@createOption");
+$router->post("admin/product/option/update/{id}", "adminOptions@updateOption");
+$router->post("admin/product/option/delete/{id}", "adminOptions@deleteOption");
+
+// Get admin product question routes
+$router->get("admin/product/questions/{tid}", "adminQuestions@index");
+$router->get("admin/product/question/create/{tid}", "adminQuestions@create");
+$router->get("admin/product/question/update/{id}", "adminQuestions@update");
+$router->get("admin/product/question/delete/{id}", "adminQuestions@delete");
+
+// Post admin product question routes
+$router->post(
+	"admin/product/question/create/{tid}",
+	"adminQuestions@createQuestion"
+);
+$router->post(
+	"admin/product/question/update/{id}",
+	"adminQuestions@updateQuestion"
+);
+$router->post(
+	"admin/product/question/delete/{id}",
+	"adminQuestions@deleteQuestion"
+);
 
 // Get admin product type routes
 $router->get("admin/product/types/{pid}", "adminTypes@index");

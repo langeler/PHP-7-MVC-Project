@@ -10,7 +10,7 @@
                     	<div>
                         	<div class="mb-5 text-center">
                         		<h6 class="h3 mb-1">
-									Sign in to your account
+									Recover your account
 								</h6>
 
 								<p class="text-muted mb-0">
@@ -31,11 +31,11 @@
 									Register
 								</a>
 
-								<a class="nav-link active" href="/login">
+								<a class="nav-link" href="/login">
 									Login
 								</a>
 
-								<a class="nav-link" href="/recover">
+								<a class="nav-link active" href="/recover">
 									Recover
 								</a>
 							</nav>
@@ -51,17 +51,17 @@
 									<input type="text" id="username" name="username" class="form-control">
     							</div>
 
-    							<div class="form-group">
-            						<label for="password">
-										Password
+								<div class="form-group">
+									<label for="email">
+										Email
 									</label>
 
-									<input type="password" id="password" name="password" class="form-control">
-                				</div>
+									<input type="email" id="email" name="email" class="form-control">
+								</div>
 
 								<div class="mt-4">
 									<button type="submit" class="btn btn-block btn-primary">
-										Sign in
+										Recover account
 									</button>
 								</div>
 							</form>

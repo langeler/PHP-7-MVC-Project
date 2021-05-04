@@ -10,7 +10,7 @@
                         <div>
                             <div class="mb-5 text-center">
                                 <h6 class="h3 mb-1">
-                                    Update your account
+                                    Change your password
                                 </h6>
 
                                 <p class="text-muted mb-0">
@@ -27,11 +27,11 @@
                             	"message.php"; ?>
 
                             <nav class="nav nav-pills nav-justified my-4">
-                                <a class="nav-link active" href="/settings">
+                                <a class="nav-link" href="/settings">
                                     Settings
                                 </a>
 
-                                <a class="nav-link" href="/change">
+                                <a class="nav-link active" href="/change">
                                     Password
                                 </a>
 
@@ -44,54 +44,39 @@
 								<input name="csrf" type="hidden" value="<?= $pageData["csrf"] ?>">
 
 								<div class="form-group">
-                    				<label for="email">
-										Email
+                    				<label for="password">
+										Old password
 									</label>
 
-									<input class="form-control" type="text" name="email" id="email" value="<?= $pageData[
-         	"account"
-         ]["email"] ?>">
+									<input class="form-control" type="password" name="password" id="password" value="">
 								</div>
 
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
-                    						<label for="forename">
-												Forename
+											<label for="npassword">
+												New password
 											</label>
 
-											<input class="form-control" type="text" name="forename" id="forename" value="<?= $pageData[
-           	"account"
-           ]["forename"] ?>">
+											<input class="form-control" type="password" name="npassword" id="npassword" value="">
 										</div>
 									</div>
+
 
 									<div class="col-sm-6">
 										<div class="form-group">
-                    						<label for="surname">
-												Surname
+                    						<label for="cpassword">
+												Confirm password
 											</label>
 
-											<input class="form-control" type="text" name="surname" id="surname" value="<?= $pageData[
-           	"account"
-           ]["surname"] ?>">
+											<input class="form-control" type="password" name="cpassword" id="cpassword" value="">
 										</div>
 									</div>
-								</div>
-
-								<div class="form-group">
-                					<label for="phone">
-										Phone
-									</label>
-
-									<input class="form-control" type="tel" name="phone" id="phone" value="<?= $pageData[
-         	"account"
-         ]["phone"] ?>">
 								</div>
 
 								<div class="mt-4">
 									<button type="submit" class="btn btn-block btn-primary">
-										Update settings
+										Update Password
 									</button>
 								</div>
 							</form>

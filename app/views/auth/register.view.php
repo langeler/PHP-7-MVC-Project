@@ -35,7 +35,7 @@
                                     Login
                                 </a>
 
-                                <a class="nav-link" href="/forgot-password">
+                                <a class="nav-link" href="/recover">
                                     Recover
                                 </a>
                             </nav>

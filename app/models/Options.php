@@ -4,16 +4,14 @@ namespace App\Models;
 
 use App\Core\Model as Model;
 
-class Types extends Model
+class Options extends Model
 {
-	private $type_table = "product_types";
+	private $option_table = "product_options";
 
 	public $id;
-	public $pid;
+	public $qid;
 	public $name;
 	public $description;
-	public $price;
-	public $stock;
 
 	public function validateCreate()
 	{
@@ -23,18 +21,9 @@ class Types extends Model
 			->value($this->name)
 			->pattern("text")
 			->required();
-		$this->validate
-			->name("price")
-			->value($this->price)
-			->pattern("float")
-			->required();
-		$this->validate
-			->name("stock")
-			->value($this->stock)
-			->pattern("int");
 
 		// Username already exists in the database
-		if ($this->typeExist()) {
+		if ($this->optionExist()) {
 			$this->validate->errors[] = "A type with that name already exist.";
 		}
 
@@ -53,28 +42,18 @@ class Types extends Model
 		$this->validate
 			->name("name")
 			->value($this->name)
-			->pattern("words")
-			->required();
-		$this->validate
-			->name("price")
-			->value($this->price)
-			->pattern("float")
-			->required();
-		$this->validate
-			->name("stock")
-			->value($this->stock)
-			->pattern("int")
+			->pattern("text")
 			->required();
 
 		// Get user data from database
-		$this->type = $this->readOne();
+		$this->option = $this->readOne();
 
 		// If email doesn't match the email on record
-		if ($this->name !== $this->type["name"]) {
+		if ($this->name !== $this->option["name"]) {
 			// If new name isn't avaliable
-			if ($this->typeExist()) {
+			if ($this->optionExist()) {
 				$this->validate->errors[] =
-					"A type with that name already exist.";
+					"A question with that name already exist.";
 			}
 		}
 
@@ -92,22 +71,16 @@ class Types extends Model
 		// Set timestamp for the created record
 		$this->setTimeStamp();
 
-		if ($this->stock == null) {
-			$this->stock = 0;
-		}
-
 		// insert query
 		$query =
 			"INSERT INTO
                     " .
-			$this->type_table .
+			$this->option_table .
 			"
                 SET
 					name = :name,
 					description = :description,
-					price = :price,
-					stock = :stock,
-					product_id = :product_id,
+					question_id = :question_id,
 					created = :created";
 
 		// Prepare prepared statement
@@ -116,9 +89,7 @@ class Types extends Model
 		// Bind values
 		$this->db->bind(":name", $this->name);
 		$this->db->bind(":description", $this->description);
-		$this->db->bind(":price", $this->price);
-		$this->db->bind(":product_id", $this->pid);
-		$this->db->bind(":stock", $this->stock);
+		$this->db->bind(":question_id", $this->qid);
 		$this->db->bind(":created", $this->timestamp);
 
 		$result = $this->db->execute();
@@ -127,19 +98,19 @@ class Types extends Model
 	}
 
 	// check if given email exist in the database
-	public function typeExist()
+	public function optionExist()
 	{
 		// query to check if email exists
 		$query =
 			"SELECT *
 			FROM
 				" .
-			$this->type_table .
+			$this->option_table .
 			"
 			WHERE
 				name = ?
 			AND
-				product_id = ?
+				question_id = ?
 			LIMIT
 				0,1";
 
@@ -148,7 +119,7 @@ class Types extends Model
 
 		// bind given email value
 		$this->db->bind(1, $this->name);
-		$this->db->bind(2, $this->pid);
+		$this->db->bind(2, $this->qid);
 
 		// execute the query
 		$this->db->execute();
@@ -171,7 +142,7 @@ class Types extends Model
 			"SELECT *
 			FROM
 				" .
-			$this->type_table .
+			$this->option_table .
 			"
 			WHERE
 				id = :id
@@ -199,17 +170,17 @@ class Types extends Model
 			"SELECT *
 			FROM
 				" .
-			$this->type_table .
+			$this->option_table .
 			"
 			WHERE
-				product_id = ?
+				question_id = ?
 			ORDER BY
 				name DESC";
 
 		// prepare query statement
 		$this->db->prepare($query);
 
-		$this->db->bind(1, $this->pid);
+		$this->db->bind(1, $this->qid);
 
 		// execute query
 		$result = $this->db->fetchAll();
@@ -226,10 +197,10 @@ class Types extends Model
 			"SELECT *
 			FROM
 				" .
-			$this->type_table .
+			$this->option_table .
 			"
 			WHERE
-				product_id = ?
+				question_id = ?
 			ORDER BY
 				name DESC
 			LIMIT
@@ -239,7 +210,7 @@ class Types extends Model
 		$this->db->prepare($query);
 
 		// bind limit clause variables
-		$this->db->bind(1, $this->pid);
+		$this->db->bind(1, $this->qid);
 		$this->db->bind(2, (int) $records);
 		$this->db->bind(3, (int) $perPage);
 
@@ -259,13 +230,11 @@ class Types extends Model
 		$query =
 			"UPDATE
 				" .
-			$this->type_table .
+			$this->option_table .
 			"
 			SET
 				name = :name ,
 				description = :description,
-				price = :price,
-				stock = :stock,
 				modified = :modified
 			WHERE
 				id = :id";
@@ -276,8 +245,6 @@ class Types extends Model
 		// Bind values
 		$this->db->bind(":name", $this->name);
 		$this->db->bind(":description", $this->description);
-		$this->db->bind(":price", $this->price);
-		$this->db->bind(":stock", $this->stock);
 		$this->db->bind(":modified", $this->timestamp);
 		$this->db->bind(":id", $this->id);
 
@@ -295,14 +262,14 @@ class Types extends Model
 			COUNT(*) as count
 			FROM
 				" .
-			$this->type_table .
+			$this->option_table .
 			"
 			WHERE
-				product_id = ?";
+				question_id = ?";
 
 		$this->db->prepare($query);
 
-		$this->db->bind(1, $this->pid);
+		$this->db->bind(1, $this->qid);
 
 		// execute the query
 		$this->db->execute();
@@ -318,7 +285,7 @@ class Types extends Model
 		$query =
 			"DELETE FROM
 				" .
-			$this->type_table .
+			$this->option_table .
 			"
 			WHERE
 				id = :id";
@@ -342,16 +309,16 @@ class Types extends Model
 		$query =
 			"DELETE FROM
 				" .
-			$this->type_table .
+			$this->option_table .
 			"
 			WHERE
-				product_id = :product_id";
+				question_id = :question_id";
 
 		// Prepare prepared query statement
 		$this->db->prepare($query);
 
 		// Bind value
-		$this->db->bind(":product_id", $this->pid);
+		$this->db->bind(":question_id", $this->qid);
 
 		// Execute query
 		$result = $this->db->execute();

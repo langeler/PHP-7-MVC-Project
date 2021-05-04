@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 
-class adminTypes extends Controller
+class adminOptions extends Controller
 {
 	protected $pageTitle;
 	protected $pageUrl;
@@ -34,24 +34,24 @@ class adminTypes extends Controller
 		$this->access();
 		$get = $this->filter_get();
 
-		if ($vars["pid"]) {
-			$this->productModel->id = (int) $vars["pid"];
-			$this->typeModel->pid = (int) $vars["pid"];
+		if ($vars["qid"]) {
+			$this->questionModel->id = (int) $vars["qid"];
+			$this->optionModel->qid = (int) $vars["qid"];
 
-			$this->pageTitle = "Read All Product Types";
-			$this->pageUrl = DOMAIN . "admin/product/types/" . $vars["pid"];
+			$this->pageTitle = "Read All Product Options";
+			$this->pageUrl = DOMAIN . "admin/product/options/" . $vars["pid"];
 
 			// Pagination
 			$page = isset($get["page"]) ? $get["page"] : 1;
 
 			// Pagination settings
-			$perPage = 3;
+			$perPage = 5;
 			$displayArrows = true;
 			$fromRecords = $perPage * $page - $perPage;
 
-			$product = $this->productModel->readOne();
-			$records = $this->typeModel->countAll();
-			$types = $this->typeModel->readAllWithPaging(
+			$question = $this->questionModel->readOne();
+			$records = $this->optionModel->countAll();
+			$options = $this->optionModel->readAllWithPaging(
 				$fromRecords,
 				$perPage
 			);
@@ -66,13 +66,13 @@ class adminTypes extends Controller
 			);
 
 			$this->pageData = [
-				"pid" => $this->typeModel->pid,
-				"types" => $types,
-				"types" => $types,
+				"qid" => $this->optionModel->qid,
+				"question" => $question,
+				"options" => $options,
 				"pagination" => $pagination,
 			];
 
-			$this->view("admin/types/read", [
+			$this->view("admin/options/read", [
 				"pageTitle" => $this->pageTitle,
 				"pageUrl" => $this->pageUrl,
 				"pageData" => $this->pageData,
@@ -85,20 +85,20 @@ class adminTypes extends Controller
 	{
 		$this->access();
 
-		if ($vars["pid"]) {
-			$this->productModel->id = (int) $vars["pid"];
-			$this->typeModel->pid = (int) $vars["pid"];
+		if ($vars["qid"]) {
+			$this->questionModel->id = (int) $vars["qid"];
+			$this->optionModel->qid = (int) $vars["qid"];
 
-			$this->pageTitle = "Create Product Type";
+			$this->pageTitle = "Create Product Option";
 			$this->pageUrl =
-				DOMAIN . "admin/product/type/create/" . $vars["pid"];
+				DOMAIN . "admin/product/option/create/" . $vars["pid"];
 
 			$this->pageData = [
-				"pid" => $this->typeModel->pid,
+				"qid" => $this->optionModel->qid,
 				"csrf" => $this->session->getSessionValue("csrf"),
 			];
 
-			$this->view("admin/types/create", [
+			$this->view("admin/options/create", [
 				"pageTitle" => $this->pageTitle,
 				"pageUrl" => $this->pageUrl,
 				"pageData" => $this->pageData,
@@ -107,13 +107,13 @@ class adminTypes extends Controller
 	}
 
 	// Post create user function
-	function createType($vars = null)
+	function createOption($vars = null)
 	{
 		$this->access();
 
-		if ($vars["pid"]) {
-			$this->productModel->id = (int) $vars["pid"];
-			$this->typeModel->pid = (int) $vars["pid"];
+		if ($vars["qid"]) {
+			$this->questionModel->id = (int) $vars["qid"];
+			$this->optionModel->qid = (int) $vars["qid"];
 
 			// Filter post fields
 			$post = $this->filter_post();
@@ -123,21 +123,19 @@ class adminTypes extends Controller
 
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
-				$this->typeModel->name = $post["name"];
-				$this->typeModel->description = $post["description"];
-				$this->typeModel->price = $post["price"];
-				$this->typeModel->stock = $post["stock"];
+				$this->optionModel->name = $post["name"];
+				$this->optionModel->description = $post["description"];
 
 				// Validate username, password, and email
-				if ($this->typeModel->validateCreate()) {
+				if ($this->optionModel->validateCreate()) {
 					// Register new user
-					$this->typeModel->create();
+					$this->optionModel->create();
 
 					// Redirect to profile
 					redirect("admin/products/");
 				} else {
 					// Set error message
-					$this->message = $this->typeModel->errors;
+					$this->message = $this->optionModel->errors;
 
 					echo $this->message;
 					exit();
@@ -151,18 +149,20 @@ class adminTypes extends Controller
 		$this->access();
 
 		if ($vars["id"]) {
-			$this->typeModel->id = $vars["id"];
+			$this->optionModel->id = $vars["id"];
 
-			$this->pageTitle = "Update Product Type";
+			$this->pageTitle = "Update Product Question";
 			$this->pageUrl =
-				DOMAIN . "admin/product/type/update/" . $this->typeModel->id;
+				DOMAIN .
+				"admin/product/option/update/" .
+				$this->optionModel->id;
 
 			$this->pageData = [
-				"type" => $this->typeModel->readOne(),
+				"option" => $this->optionModel->readOne(),
 				"csrf" => $this->session->getSessionValue("csrf"),
 			];
 
-			$this->view("admin/types/update", [
+			$this->view("admin/options/update", [
 				"pageTitle" => $this->pageTitle,
 				"pageUrl" => $this->pageUrl,
 				"pageData" => $this->pageData,
@@ -171,7 +171,7 @@ class adminTypes extends Controller
 	}
 
 	// Post update user function
-	function updateType($vars = null)
+	function updateOption($vars = null)
 	{
 		$this->access();
 		$post = $this->filter_post();
@@ -182,21 +182,19 @@ class adminTypes extends Controller
 
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
-				$this->typeModel->id = $vars["id"];
-				$this->typeModel->name = $post["name"];
-				$this->typeModel->description = $post["description"];
-				$this->typeModel->price = $post["price"];
-				$this->typeModel->stock = $post["stock"];
+				$this->optionModel->id = $vars["id"];
+				$this->optionModel->name = $post["name"];
+				$this->optionModel->description = $post["description"];
 
-				if ($this->typeModel->validateUpdate()) {
+				if ($this->optionModel->validateUpdate()) {
 					// Update settings
-					if ($this->typeModel->update()) {
+					if ($this->optionModel->update()) {
 						// Redirect to profile
 						redirect("admin/products/");
 					}
 				} else {
 					// Set error message
-					$this->message = $this->typeModel->errors;
+					$this->message = $this->optionModel->errors;
 
 					echo $this->message;
 					exit();
@@ -210,18 +208,20 @@ class adminTypes extends Controller
 		$this->access();
 
 		if ($vars["id"]) {
-			$this->typeModel->id = $vars["id"];
+			$this->optionModel->id = $vars["id"];
 
-			$this->pageTitle = "Delete Product Type";
+			$this->pageTitle = "Delete Product Option";
 			$this->pageUrl =
-				DOMAIN . "admin/product/type/delete/" . $this->productModel->id;
+				DOMAIN .
+				"admin/product/option/delete/" .
+				$this->productModel->id;
 
 			$this->pageData = [
-				"id" => $this->typeModel->id,
+				"id" => $this->optionModel->id,
 				"csrf" => $this->session->getSessionValue("csrf"),
 			];
 
-			$this->view("admin/types/delete", [
+			$this->view("admin/options/delete", [
 				"pageTitle" => $this->pageTitle,
 				"pageUrl" => $this->pageUrl,
 				"pageData" => $this->pageData,
@@ -229,7 +229,7 @@ class adminTypes extends Controller
 		}
 	}
 
-	function deleteType($vars = null)
+	function deleteOption($vars = null)
 	{
 		// Check logged in & permission
 		$this->access();
@@ -237,10 +237,10 @@ class adminTypes extends Controller
 		// If an id exist
 		if ($vars["id"]) {
 			// Set user id to be deleted
-			$this->typeModel->id = $vars["id"];
+			$this->optionModel->id = $vars["id"];
 
 			// Delete user
-			$this->typeModel->delete();
+			$this->optionModel->delete();
 
 			// Redirect to admin/users
 			redirect("admin/products/");

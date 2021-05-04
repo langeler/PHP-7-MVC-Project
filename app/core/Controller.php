@@ -14,10 +14,12 @@ use App\Models\Article;
 use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Contact;
+use App\Models\Options;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\Questions;
 use App\Models\Subject;
 use App\Models\Types;
 use App\Models\User;
@@ -31,10 +33,12 @@ abstract class Controller
 	protected $cartItemModel;
 	protected $categoryModel;
 	protected $contact;
+	protected $optionModel;
 	protected $order_item;
 	protected $order;
 	protected $productModel;
 	protected $pImageModel;
+	protected $questionModel;
 	protected $subject;
 	protected $typeModel;
 	protected $userModel;
@@ -52,10 +56,12 @@ abstract class Controller
 		$this->cartItemModel = new CartItem();
 		$this->categoryModel = new Category();
 		$this->contact = new Contact();
+		$this->optionModel = new Options();
 		$this->order_item = new OrderItem();
 		$this->order = new Order();
 		$this->productModel = new Product();
 		$this->imageModel = new ProductImage();
+		$this->questionModel = new Questions();
 		$this->subject = new Subject();
 		$this->typeModel = new Types();
 		$this->userModel = new User();
@@ -132,6 +138,41 @@ abstract class Controller
 		return $redirect === $view;
 	}
 
+	// get string slug, used for product names in URLs
+	public function slugify($string, $separator = "-")
+	{
+		setlocale(LC_ALL, "en_US.UTF8");
+
+		// remove double quote
+		$string = str_replace("\"", "", $string);
+
+		// remove single quote
+		$string = str_replace("'", "", $string);
+
+		// remove dots
+		$string = str_replace(".", "", $string);
+
+		// do the slug
+		$accents_regex =
+			"~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i";
+		$special_cases = ["&" => "and"];
+		$string = mb_strtolower(trim($string), "UTF-8");
+		$string = str_replace(
+			array_keys($special_cases),
+			array_values($special_cases),
+			$string
+		);
+		$string = preg_replace(
+			$accents_regex,
+			'$1',
+			htmlentities($string, ENT_QUOTES, "UTF-8")
+		);
+		$string = preg_replace("/[^a-z0-9]/u", "$separator", $string);
+		$string = preg_replace("/[$separator]+/u", "$separator", $string);
+
+		return $string;
+	}
+
 	// Function to read all categories
 	protected function getCategories()
 	{
@@ -150,11 +191,39 @@ abstract class Controller
 		return $this->session->isAdmin();
 	}
 
+	// send email using built in php mailer
+	protected function sendEmailViaPhpMail(
+		$from_name,
+		$from_email,
+		$to_email,
+		$subject,
+		$body
+	) {
+		$headers = "MIME-Version: 1.0\r\n";
+		$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+		$headers .= "From: {$from_name} <{$from_email}> \n";
+
+		if (mail($to_email, $subject, $body, $headers)) {
+			return true;
+		} else {
+			echo "<pre>";
+			print_r(error_get_last());
+			echo "</pre>";
+		}
+
+		return false;
+	}
+
 	// function to generate a random token
 	protected function random()
 	{
-		// generate random token
-		$token = bin2hex(random_bytes(32));
+		if (function_exists("random_bytes")) {
+			$token = bin2hex(random_bytes(32));
+		} elseif (function_exists("mcrypt_create_iv")) {
+			$token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+		} else {
+			$token = bin2hex(openssl_random_pseudo_bytes(32));
+		}
 
 		// return the token
 		return $token;

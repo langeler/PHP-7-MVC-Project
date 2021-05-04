@@ -70,7 +70,7 @@
 								<div class="hover-scale-110">
 									<a href="/category/
 										<?= $category["id"] ?>/
-										<?= $category["name"] ?>
+										<?= $this->slugify($category["name"]) ?>
 									">
 										<img alt="Image placeholder" src="assets/img/placeholder.jpg" class="img-fluid img-center">
 									</a>
@@ -79,7 +79,7 @@
 								<div class="text-center mt-3">
 									<a href="/category/
 										<?= $category["id"] ?>/
-										<?= $category["name"] ?>
+										<?= $this->slugify($category["name"]) ?>
 									" class="h6 font-weight-bolder">
 										<?= $category["name"] ?>
 									</a>

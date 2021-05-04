@@ -24,8 +24,8 @@
 				<i class="fas fa-trash"></i> Delete
 			</button>
 
-			<a href="/admin/product/type/create/<?= $pageData[
-   	"pid"
+			<a href="/admin/product/option/create/<?= $pageData[
+   	"qid"
    ] ?>" class="btn btn-sm btn-outline-success">
 				<i class="fas fa-plus"></i> Create
 			</a>
@@ -36,53 +36,39 @@
 <div class='container mt-3'>
 	<div class='row'>
 		<div class='col-md-12'>
-			<?php if ($pageData["types"]): ?>
+			<?php if ($pageData["options"]): ?>
 			<table class='table table-hover table-responsive'>
 				<tr>
 					<th>Name</th>
 					<th>Description</th>
-					<th>price</th>
-					<th>stock</th>
-					<th>pid</th>
+					<th>qid</th>
 					<th>Created</th>
 					<th>Actions</th>
 				</tr>
 
-				<?php foreach ($pageData["types"] as $type): ?>
+				<?php foreach ($pageData["options"] as $option): ?>
 				<tr>
 					<td>
-						<?= $type["name"] ?>
+						<?= $option["name"] ?>
 					</td>
 					<td>
-						<?= $type["description"] ?>
+						<?= $option["description"] ?>
 					</td>
 					<td>
-						<?= $type["price"] ?>
+						<?= $option["question_id"] ?>
 					</td>
 					<td>
-						<?= $type["stock"] ?>
+						<?= $option["created"] ?>
 					</td>
 					<td>
-						<?= $type["product_id"] ?>
-					</td>
-					<td>
-						<?= $type["created"] ?>
-					</td>
-					<td>
-						<a class="btn btn-sm btn-secondary" href="/admin/product/questions/<?= strtolower(
-      	$type["id"]
-      ) ?>">
-														Options
-						</a>
-
-						<a class="btn btn-sm btn-primary" href="/admin/product/type/update/<?= strtolower(
-      	$type["id"]
-      ) ?>">
+				    	<a class="btn btn-sm btn-primary" href="/admin/product/option/update/<?= strtolower(
+         	$option["id"]
+         ) ?>">
 							Update
 						</a>
 
-						<a class="btn btn-sm btn-danger" href="/admin/product/type/delete/<?= strtolower(
-      	$type["id"]
+						<a class="btn btn-sm btn-danger" href="/admin/product/option/delete/<?= strtolower(
+      	$option["id"]
       ) ?>">
 							Delete
 						</a>
@@ -92,7 +78,7 @@
 			</table>
 			<?php else: ?>
 			<p>
-				No types were found!
+				No options were found!
 			</p>
 			<?php endif; ?>
 

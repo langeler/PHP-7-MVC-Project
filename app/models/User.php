@@ -16,12 +16,14 @@ class User extends Model
 	public $email;
 	public $username;
 	public $password;
+	public $npassword;
 	public $cpassword;
 	public $passwordHash;
+	public $npasswordHash;
 	public $forename;
 	public $surname;
 	public $phone;
-	public $access_code;
+	public $access;
 	public $role;
 	public $status = 1;
 	public $created;
@@ -36,6 +38,21 @@ class User extends Model
 		$this->passwordHash = password_hash($this->password, PASSWORD_BCRYPT, [
 			"cost" => 12,
 		]);
+	}
+
+	/**
+	 * Securely hash a password.
+	 * Returns hashed password.
+	 */
+	public function hashNewPassword()
+	{
+		$this->npasswordHash = password_hash(
+			$this->npassword,
+			PASSWORD_BCRYPT,
+			[
+				"cost" => 12,
+			]
+		);
 	}
 
 	/**
@@ -135,6 +152,63 @@ class User extends Model
 		}
 	}
 
+	public function validateChange()
+	{
+		$this->validate
+			->name("password")
+			->value($this->password)
+			->customPattern("[A-Za-z0-9-.;_!#@]{5,15}")
+			->required();
+
+		$this->validate
+			->name("npassword")
+			->value($this->npassword)
+			->customPattern("[A-Za-z0-9-.;_!#@]{5,15}")
+			->required();
+
+		$this->validate
+			->name("cpassword")
+			->value($this->cpassword)
+			->customPattern("[A-Za-z0-9-.;_!#@]{5,15}")
+			->required();
+
+		// Check if passwords match
+		if ($this->cpassword != $this->npassword) {
+			$this->validate->errors[] =
+				"Password and confirm password do not match!";
+		}
+
+		// Retrieve the user account information for the given username
+		$this->account = $this->readOne();
+
+		$this->passwordHash = $this->account["password"];
+
+		if (!$this->verifyPassword()) {
+			$this->validate->errors[] =
+				"Old password do not match our records!";
+		}
+
+		// Get user data from database
+		$this->account = $this->readOne();
+
+		// If email doesn't match the email on record
+		if ($this->email !== $this->account["email"]) {
+			// If new email isn't avaliable
+			if ($this->emailExists()) {
+				$this->validate->errors[] = EMAIL_EXISTS;
+			}
+		}
+
+		$this->errors = $this->validate->displayErrors();
+
+		if ($this->validate->isSuccess()) {
+			return true;
+		} else {
+			$this->getErrors();
+			return false;
+		}
+	}
+
 	public function validateLogin()
 	{
 		$this->validate
@@ -171,6 +245,94 @@ class User extends Model
 			->value($this->search)
 			->pattern("words")
 			->required();
+		$this->errors = $this->validate->displayErrors();
+
+		if ($this->validate->isSuccess()) {
+			return true;
+		} else {
+			$this->getErrors();
+			return false;
+		}
+	}
+
+	public function validateReset()
+	{
+		// Validate fields
+		$this->validate
+			->name("username")
+			->value($this->username)
+			->pattern("alpha")
+			->required();
+
+		$this->validate
+			->name("access")
+			->value($this->access)
+			->required();
+
+		// Get user data from database
+		$this->account = $this->readOneByUsername();
+
+		// If email doesn't match the email on record
+		if ($this->access !== $this->account["email"]) {
+			// If new email isn't avaliable
+			if ($this->emailExists()) {
+				$this->validate->errors[] = EMAIL_EXISTS;
+			}
+		}
+
+		$this->errors = $this->validate->displayErrors();
+
+		if ($this->validate->isSuccess()) {
+			return true;
+		} else {
+			$this->getErrors();
+			return false;
+		}
+	}
+
+	public function validateResetPassword()
+	{
+		// Validate fields
+		$this->validate
+			->name("username")
+			->value($this->username)
+			->pattern("alpha")
+			->required();
+
+		$this->validate
+			->name("access")
+			->value($this->access)
+			->required();
+
+		$this->validate
+			->name("npassword")
+			->value($this->npassword)
+			->customPattern("[A-Za-z0-9-.;_!#@]{5,15}")
+			->required();
+
+		$this->validate
+			->name("cpassword")
+			->value($this->cpassword)
+			->customPattern("[A-Za-z0-9-.;_!#@]{5,15}")
+			->required();
+
+		// Get user data from database
+		$this->account = $this->readOneByUsername();
+
+		// If email doesn't match the email on record
+		if ($this->access !== $this->account["access"]) {
+			// If new email isn't avaliable
+			if ($this->emailExists()) {
+				$this->validate->errors[] = EMAIL_EXISTS;
+			}
+		}
+
+		// Check if passwords match
+		if ($this->cpassword != $this->npassword) {
+			$this->validate->errors[] =
+				"Password and confirm password do not match!";
+		}
+
 		$this->errors = $this->validate->displayErrors();
 
 		if ($this->validate->isSuccess()) {
@@ -260,7 +422,7 @@ class User extends Model
 		$this->setTimeStamp();
 
 		// Hash the password
-		$this->hashPassword();
+		$this->hashNewPassword();
 
 		// insert query
 		$query =
@@ -634,6 +796,45 @@ class User extends Model
 		$this->db->bind(":email", $this->email);
 		$this->db->bind(":phone", $this->phone);
 		$this->db->bind(":role", $this->role);
+		$this->db->bind(":modified", $this->timestamp);
+		$this->db->bind(":id", $this->id);
+
+		// Execute query
+		$result = $this->db->execute();
+
+		// Return result
+		return $result;
+	}
+
+	/**
+	 * Update the settings of a user.
+	 * Return a boolean.
+	 */
+	public function updatePassword()
+	{
+		// Set timestamp for the created record
+		$this->setTimeStamp();
+
+		// Hash the password
+		$this->hashNewPassword();
+
+		// Prepared query statement
+		$query =
+			"UPDATE
+				" .
+			$this->user_table .
+			"
+			SET
+				password = :password,
+				modified = :modified
+			WHERE
+				id = :id";
+
+		// Prepare prepared query statement
+		$this->db->prepare($query);
+
+		// Bind values
+		$this->db->bind(":password", $this->npasswordHash);
 		$this->db->bind(":modified", $this->timestamp);
 		$this->db->bind(":id", $this->id);
 
