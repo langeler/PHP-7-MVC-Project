@@ -17,6 +17,7 @@ $router->get("products", "productsController@index");
 $router->get("category/{id}", "categoryController@index");
 $router->get("category/{id}/{name}", "categoryController@index");
 $router->get("product/{id}/{name}", "productController@index");
+$router->get("product/type/{pid}/{tid}", "typeController@index");
 
 // Post product routes
 $router->post("cart", "cartController@update");

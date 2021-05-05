@@ -1,19 +1,5 @@
 <?php include VIEW_DIR . DS . "partials" . DS . "header.php"; ?>
 
-	<section class="slice slice-lg bg-gradient-dark" data-offset-top="#header-main" style="padding-top: 147.1875px;">
-      <div class="container pt-5 pb-6 pt-lg-6 pb-lg-6">
-        <div class="row row-grid justify-content-center">
-          <div class="col-lg-7 text-center">
-            <h6 class="text-uppercase text-sm ls-2 text-info font-weight-700">
-	            <?= $this->pageTitle ?>
-            </h6>
-            <p>In a real application, it wouldn't really make sense to just list all your users. But for ease of testing, I made
-                this page.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
 <div class='container mt-3'>
 	<div class='row'>
 		<?php if ($pageData["product"]): ?>
@@ -36,10 +22,17 @@
 
 						<input name="csrf" type="hidden" value="<?= $pageData["csrf"] ?>">
 
-						<?php foreach ($pageData["types"] as $types => $type): ?>
-						<a href="/product/type/<?= $pageData["product"]["id"] ?>/<?= $type["id"] ?>">
-							<?= $type["name"] ?>
-						</a>
+
+						<?php foreach ($pageData["questions"] as $questions => $question): ?>
+							<label for="options">
+								<?= $question["name"] ?>
+							<select name="options" id="options" class="form-control my-3">
+							<?php foreach ($pageData["options"] as $options => $option): ?>
+
+							<option value="<?= $option["id"] ?>"><?= $option["name"] ?></option>
+
+							<?php endforeach; ?>
+							</select>
 						<?php endforeach; ?>
 
 						<input class="form-control" name="product" value="<?= $pageData["product"][

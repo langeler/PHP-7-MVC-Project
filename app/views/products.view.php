@@ -66,18 +66,20 @@
 						<?= $product["description"] ?>
 					</p>
 
+					<select name="type" class="form-control">
 					<?php foreach ($product["types"] as $types => $type): ?>
 
-					<select name="type" class="form-control">
+
 					<option value="<?= $type["name"] ?>"><?= $type["name"] .
 	" - " .
 	$type["price"] ?> kr</option>
-					</select>
+
 					<?php endforeach; ?>
+					</select>
 
 					<a class="btn btn-block btn-secondary mt-2" href="/product/<?= strtolower(
      	$product["id"]
-     ) ?>/<?= strtolower($product["name"]) ?>">
+     ) ?>/<?= strtolower($this->slugify($product["name"])) ?>">
 						Details
 					</a>
 				</div>

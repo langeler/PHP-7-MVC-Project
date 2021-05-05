@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 
-class productController extends Controller
+class typeController extends Controller
 {
 	protected $pageTitle;
 	protected $pageUrl;
@@ -14,32 +14,38 @@ class productController extends Controller
 
 	function index($vars = null)
 	{
-		if ($vars["id"]) {
-			$this->productModel->id = $vars["id"];
-			$this->imageModel->pid = $vars["id"];
-			$this->categoryModel->pid = $vars["id"];
-			$this->typeModel->pid = $vars["id"];
+		if ($vars["pid"] && $vars["tid"]) {
+			$this->productModel->id = $vars["pid"];
+			$this->imageModel->pid = $vars["pid"];
+			$this->categoryModel->pid = $vars["pid"];
+			$this->typeModel->id = $vars["tid"];
+			$this->questionModel->tid = $vars["tid"];
 
 			// Set variables for easy access
 			$product = $this->productModel->readOne();
 			$image = $this->imageModel->readAll();
-			$types = $this->typeModel->readAll();
+			$type = $this->typeModel->readOne();
+
+			$questions = [];
+			$options = [];
+
+			foreach ($this->questionModel->readAll() as $question) {
+				$questions[] = $question;
+				$this->optionModel->qid = (int) $question["id"];
+				foreach ($this->optionModel->readAll() as $row) {
+					$options[] = $row;
+				}
+			}
+			$productOptions = [
+				"questions" => $questions,
+				"options" => $options,
+			];
 
 			// Read category one category based on category id from product
 			$this->categoryModel->id = $product["category_id"];
 
 			// Set variable for easy access
 			$category = $this->categoryModel->readOne();
-
-			foreach ($types as $type) {
-				$this->questionModel->tid = $type["id"];
-				$questions = $this->questionModel->readAll();
-			}
-
-			foreach ($questions as $question) {
-				$this->optionModel->qid = $question["id"];
-				$options = $this->optionModel->readAll();
-			}
 
 			$this->pageTitle = "Update Product";
 			$this->pageUrl = DOMAIN . "product/" . $this->productModel->id;
@@ -51,13 +57,13 @@ class productController extends Controller
 				"csrf" => $this->session->getSessionValue("csrf"),
 				"product" => $product,
 				"images" => $image,
-				"types" => $types,
+				"types" => $type,
 				"questions" => $questions,
 				"options" => $options,
 				"category" => $category,
 			];
 
-			$this->view("product", [
+			$this->view("type", [
 				"pageTitle" => $this->pageTitle,
 				"pageUrl" => $this->pageUrl,
 				"pageData" => $this->pageData,
