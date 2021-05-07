@@ -1,65 +1,97 @@
 <?php include VIEW_DIR . DS . "partials" . DS . "header.php"; ?>
 
-	<section class="slice slice-lg bg-gradient-dark" data-offset-top="#header-main" style="padding-top: 147.1875px;">
-      <div class="container pt-5 pb-6 pt-lg-6 pb-lg-6">
-        <div class="row row-grid justify-content-center">
-          <div class="col-lg-7 text-center">
-            <h6 class="text-uppercase text-sm ls-2 text-info font-weight-700">
-	            <?= $this->pageTitle ?>
-            </h6>
-            <p>In a real application, it wouldn't really make sense to just list all your users. But for ease of testing, I made
-                this page.</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
-<div class='container mt-3'>
-	<div class='row'>
-		<?php if ($pageData["product"]): ?>
-			<div class='col-sm-12'>
-				<div class="card">
-					<a href="/category/<?= $pageData["category"]["id"] ?>/<?= $pageData["category"][
-	"name"
-] ?>">
-						<?= $pageData["category"]["name"] ?>
-					</a>
-					<h3 class="card-title">
-						<?= $pageData["product"]["name"] ?>
-					</h3>
+<?php if ($pageData["product"]): ?>
+<section class="section-process">
+	<div class="section-process-step">
+		<div class="container">
+			<div class="mb-5 text-center">
+				<h1 class=" mt-4">
+					<?= $pageData["product"]["name"] ?>
+				</h1>
 
-					<p class="card-text">
+				<div class="fluid-paragraph mt-3">
+					<p class="lead lh-180">
 						<?= $pageData["product"]["description"] ?>
 					</p>
-
-					<form method="post" action="">
-
-						<input name="csrf" type="hidden" value="<?= $pageData["csrf"] ?>">
-
-						<?php foreach ($pageData["types"] as $types => $type): ?>
-						<a href="/product/type/<?= $pageData["product"]["id"] ?>/<?= $type["id"] ?>">
-							<?= $type["name"] ?>
-						</a>
-						<?php endforeach; ?>
-
-						<input class="form-control" name="product" value="<?= $pageData["product"][
-      	"id"
-      ] ?>" type="hidden">
-
-						<input class="form-control" min="0" name="quantity" value="1" type="number">
-
-						<button type="submit" class="btn btn-block btn-primary my-3">
-							Add to cart
-						</button>
 				</div>
 			</div>
-		<?php else: ?>
-		<p>
-			No products were found!
-		</p>
-		<?php endif; ?>
+			<div class="row row-grid align-items-center justify-content-between">
+				<?php foreach ($pageData["types"] as $types => $type): ?>
+					<div class="col-xl-5 col-lg-6 order-lg-2">
+						<div class="pr-md-4">
+							<span class="badge badge-soft-info badge-pill">
+								<a href="/category/<?= $pageData["category"]["id"] ?>/<?= $pageData["category"][
+	"name"
+] ?>">
+									<?= $pageData["category"]["name"] ?>
+								</a>
+							</span>
+
+							<h3 class="mt-4">
+								<?= $type["name"] ?>
+							</h3>
+
+							<p class="lead my-4">
+								<?= $type["description"] ?>
+							</p>
+
+							<div class="row align-items-center">
+								<div class="col-sm-6 mb-4 mb-sm-0 mt-4">
+									<span class="d-block h3 mb-0">
+										<?= $type["price"] ?> Kr
+									</span>
+								</div>
+
+								<div class="col-sm-6 text-sm-right">
+									<a href="/product/type/<?= $pageData["product"]["id"] ?>/<?= $type[
+	"id"
+] ?>" class="btn btn-primary btn-icon rounded-pill mt-4">
+										<span class="btn-inner--icon">
+											<i class="fas fa-cart-plus"></i>
+										</span>
+
+										<span class="btn-inner--text">
+											Purchase
+										</span>
+									</a>
+								</div>
+							</div>
+
+							<?php $this->questionModel->tid = $type["id"]; ?>
+							<?php foreach ($this->questionModel->readAll() as $question): ?>
+
+								<?php if ($type["id"] == $question["type_id"]): ?>
+								<div class="d-flex align-items-center my-5">
+									<div class="icon text-primary">
+										<img alt="Image placeholder" src="<?= DOMAIN ?>assets/img/svg/icons/Coupon_2.svg" "class="svg-inject">
+									</div>
+
+									<div class="icon-text pl-4">
+										<h5>
+											<?= $question["name"] ?>
+										</h5>
+
+										<p class="mb-0">
+											<?= $question["description"] ?>
+										</p>
+									</div>
+								</div>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						</div>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</div>
 	</div>
-</div>
+</section>
+
+<?php else: ?>
+	<p>
+		No products were found!
+	</p>
+<?php endif; ?>
 
 <?php include VIEW_DIR . DS . "partials" . DS . "footer.php";
 ?>

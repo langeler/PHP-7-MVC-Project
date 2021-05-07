@@ -41,7 +41,7 @@ class typeController extends Controller
 				"csrf" => $this->session->getSessionValue("csrf"),
 				"product" => $product,
 				"images" => $image,
-				"types" => $type,
+				"type" => $type,
 				"questions" => $questions,
 				"options" => $options,
 				"category" => $category,

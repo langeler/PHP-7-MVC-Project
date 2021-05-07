@@ -31,16 +31,6 @@ class productController extends Controller
 			// Set variable for easy access
 			$category = $this->categoryModel->readOne();
 
-			foreach ($types as $type) {
-				$this->questionModel->tid = $type["id"];
-				$questions = $this->questionModel->readAll();
-			}
-
-			foreach ($questions as $question) {
-				$this->optionModel->qid = $question["id"];
-				$options = $this->optionModel->readAll();
-			}
-
 			$this->pageTitle = "Update Product";
 			$this->pageUrl = DOMAIN . "product/" . $this->productModel->id;
 
@@ -52,8 +42,6 @@ class productController extends Controller
 				"product" => $product,
 				"images" => $image,
 				"types" => $types,
-				"questions" => $questions,
-				"options" => $options,
 				"category" => $category,
 			];
 
