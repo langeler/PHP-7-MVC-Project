@@ -25,21 +25,7 @@ class typeController extends Controller
 			$product = $this->productModel->readOne();
 			$image = $this->imageModel->readAll();
 			$type = $this->typeModel->readOne();
-
-			$questions = [];
-			$options = [];
-
-			foreach ($this->questionModel->readAll() as $question) {
-				$questions[] = $question;
-				$this->optionModel->qid = (int) $question["id"];
-				foreach ($this->optionModel->readAll() as $row) {
-					$options[] = $row;
-				}
-			}
-			$productOptions = [
-				"questions" => $questions,
-				"options" => $options,
-			];
+			$questions = $this->questionModel->readAll();
 
 			// Read category one category based on category id from product
 			$this->categoryModel->id = $product["category_id"];
@@ -49,8 +35,6 @@ class typeController extends Controller
 
 			$this->pageTitle = "Update Product";
 			$this->pageUrl = DOMAIN . "product/" . $this->productModel->id;
-
-			// dd($_SESSION);
 
 			// Set page data with variables
 			$this->pageData = [

@@ -23,15 +23,19 @@
 						<input name="csrf" type="hidden" value="<?= $pageData["csrf"] ?>">
 
 
-						<?php foreach ($pageData["questions"] as $questions => $question): ?>
+						<?php foreach ($pageData["questions"] as $question): ?>
 							<label for="options">
 								<?= $question["name"] ?>
+							</label>
 							<select name="options" id="options" class="form-control my-3">
-							<?php foreach ($pageData["options"] as $options => $option): ?>
-
+							<?php
+       $this->optionModel->qid = $question["id"];
+       foreach ($this->optionModel->readAll() as $option): ?>
+							<?php if ($question["id"] == $option["question_id"]): ?>
 							<option value="<?= $option["id"] ?>"><?= $option["name"] ?></option>
-
-							<?php endforeach; ?>
+							<?php endif; ?>
+							<?php endforeach;
+       ?>
 							</select>
 						<?php endforeach; ?>
 
