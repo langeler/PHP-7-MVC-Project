@@ -24,8 +24,8 @@
 				<i class="fas fa-trash"></i> Delete
 			</button>
 
-			<a href="/admin/product/type/create/<?= $pageData[
-   	"pid"
+			<a href="/admin/type/image/create/<?= $pageData[
+   	"tid"
    ] ?>" class="btn btn-sm btn-outline-success">
 				<i class="fas fa-plus"></i> Create
 			</a>
@@ -33,62 +33,39 @@
 	</div>
 </div>
 
-<div class='container mt-3'>
-	<div class='row'>
-		<div class='col-md-12'>
-			<?php if ($pageData["types"]): ?>
+		<?php if ($pageData["images"]): ?>
 			<table class='table table-hover table-responsive'>
 				<tr>
 					<th>Name</th>
 					<th>Description</th>
-					<th>price</th>
-					<th>stock</th>
-					<th>pid</th>
+					<th>tid</th>
 					<th>Created</th>
 					<th>Actions</th>
 				</tr>
 
-				<?php foreach ($pageData["types"] as $type): ?>
+				<?php foreach ($pageData["images"] as $image): ?>
 				<tr>
 					<td>
-						<?= $type["name"] ?>
+						<?= $image["name"] ?>
 					</td>
 					<td>
-						<?= $type["description"] ?>
+						<?= $image["description"] ?>
 					</td>
 					<td>
-						<?= $type["price"] ?>
+						<?= $image["type_id"] ?>
 					</td>
 					<td>
-						<?= $type["stock"] ?>
+						<?= $image["created"] ?>
 					</td>
 					<td>
-						<?= $type["product_id"] ?>
-					</td>
-					<td>
-						<?= $type["created"] ?>
-					</td>
-					<td>
-						<a class="btn btn-sm btn-info" href="/admin/type/images/<?= strtolower(
-      	$type["id"]
-      ) ?>">
-								Images
-						</a>
-
-						<a class="btn btn-sm btn-secondary" href="/admin/product/questions/<?= strtolower(
-      	$type["id"]
-      ) ?>">
-														Options
-						</a>
-
-						<a class="btn btn-sm btn-primary" href="/admin/product/type/update/<?= strtolower(
-      	$type["id"]
-      ) ?>">
+				    	<a class="btn btn-sm btn-primary" href="/admin/type/image/update/<?= strtolower(
+         	$image["id"]
+         ) ?>">
 							Update
 						</a>
 
-						<a class="btn btn-sm btn-danger" href="/admin/product/type/delete/<?= strtolower(
-      	$type["id"]
+						<a class="btn btn-sm btn-danger" href="/admin/type/image/delete/<?= strtolower(
+      	$image["id"]
       ) ?>">
 							Delete
 						</a>
@@ -96,16 +73,14 @@
 				</tr>
 				<?php endforeach; ?>
 			</table>
-			<?php else: ?>
-			<p>
-				No types were found!
-			</p>
-			<?php endif; ?>
+		<?php else: ?>
+		<p>
+			No images were found!
+		</p>
 
-			<?php echo $pageData["pagination"]; ?>
-		</div>
-	</div>
-</div>
+		<?php endif; ?>
+
+		<?php echo $pageData["pagination"]; ?>
 
 <?php include VIEW_DIR . DS . "admin" . DS . "partials" . DS . "footer.php";
 ?>

@@ -6,7 +6,7 @@ use App\Core\Model as Model;
 
 class Questions extends Model
 {
-	private $question_table = "product_questions";
+	private $question_table = "questions";
 
 	public $id;
 	public $tid;

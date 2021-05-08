@@ -16,14 +16,14 @@ class typeController extends Controller
 	{
 		if ($vars["pid"] && $vars["tid"]) {
 			$this->productModel->id = $vars["pid"];
-			$this->imageModel->pid = $vars["pid"];
+			$this->tImageModel->tid = $vars["tid"];
 			$this->categoryModel->pid = $vars["pid"];
 			$this->typeModel->id = $vars["tid"];
 			$this->questionModel->tid = $vars["tid"];
 
 			// Set variables for easy access
 			$product = $this->productModel->readOne();
-			$image = $this->imageModel->readAll();
+			$image = $this->tImageModel->readAll();
 			$type = $this->typeModel->readOne();
 			$questions = $this->questionModel->readAll();
 

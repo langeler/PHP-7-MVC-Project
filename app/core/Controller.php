@@ -13,6 +13,7 @@ use App\Core\Session;
 use App\Models\Article;
 use App\Models\CartItem;
 use App\Models\Category;
+use App\Models\CategoryImage;
 use App\Models\Contact;
 use App\Models\Options;
 use App\Models\Order;
@@ -22,7 +23,9 @@ use App\Models\ProductImage;
 use App\Models\Questions;
 use App\Models\Subject;
 use App\Models\Types;
+use App\Models\TypeImage;
 use App\Models\User;
+use App\Models\UserImage;
 
 abstract class Controller
 {
@@ -32,6 +35,7 @@ abstract class Controller
 	protected $article;
 	protected $cartItemModel;
 	protected $categoryModel;
+	protected $cImageModel;
 	protected $contact;
 	protected $optionModel;
 	protected $order_item;
@@ -41,7 +45,9 @@ abstract class Controller
 	protected $questionModel;
 	protected $subject;
 	protected $typeModel;
+	protected $tImageModel;
 	protected $userModel;
+	protected $uImageModel;
 	protected $pageTitle;
 
 	/**
@@ -55,16 +61,19 @@ abstract class Controller
 		$this->article = new Article();
 		$this->cartItemModel = new CartItem();
 		$this->categoryModel = new Category();
+		$this->cImageModel = new CategoryImage();
 		$this->contact = new Contact();
 		$this->optionModel = new Options();
 		$this->order_item = new OrderItem();
 		$this->order = new Order();
 		$this->productModel = new Product();
-		$this->imageModel = new ProductImage();
+		$this->pImageModel = new ProductImage();
 		$this->questionModel = new Questions();
 		$this->subject = new Subject();
 		$this->typeModel = new Types();
+		$this->tImageModel = new TypeImage();
 		$this->userModel = new User();
+		$this->uImageModel = new UserImage();
 	}
 
 	/**
@@ -237,7 +246,7 @@ abstract class Controller
 	{
 		$file = strtolower($filename);
 
-		return PROTOCOL . $_SERVER["HTTP_HOST"] . "/assets/js/" . $file . ".js";
+		return DOMAIN . DS . "assets" . DS . "js" . DS . $file . ".js";
 	}
 
 	/**
@@ -248,11 +257,7 @@ abstract class Controller
 	{
 		$file = strtolower($filename);
 
-		return PROTOCOL .
-			$_SERVER["HTTP_HOST"] .
-			"/assets/libs/" .
-			$file .
-			".js";
+		return DOMAIN . DS . "assets" . DS . "libs" . DS . $file . ".js";
 	}
 
 	/**
@@ -263,11 +268,7 @@ abstract class Controller
 	{
 		$file = strtolower($filename);
 
-		return PROTOCOL .
-			$_SERVER["HTTP_HOST"] .
-			"/assets/libs/" .
-			$file .
-			".css";
+		return DOMAIN . DS . "assets" . DS . "libs" . DS . $file . ".css";
 	}
 
 	/**
@@ -278,11 +279,7 @@ abstract class Controller
 	{
 		$file = strtolower($filename);
 
-		return PROTOCOL .
-			$_SERVER["HTTP_HOST"] .
-			"/assets/css/" .
-			$file .
-			".css";
+		return DOMAIN . DS . "assets" . DS . "css" . DS . $file . ".css";
 	}
 
 	/**
@@ -293,6 +290,6 @@ abstract class Controller
 	{
 		$file = strtolower($filename);
 
-		return PROTOCOL . $_SERVER["HTTP_HOST"] . "/assets/img/" . $file;
+		return DOMAIN . DS . "assets" . DS . "img" . DS . $file;
 	}
 }

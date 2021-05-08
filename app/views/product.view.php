@@ -46,7 +46,9 @@
 								<div class="col-sm-6 text-sm-right">
 									<a href="/product/type/<?= $pageData["product"]["id"] ?>/<?= $type[
 	"id"
-] ?>" class="btn btn-primary btn-icon rounded-pill mt-4">
+] ?>/<?= $this->slugify($pageData["product"]["name"]) ?>/<?= $this->slugify(
+	$type["name"]
+) ?>" class="btn btn-primary btn-icon rounded-pill mt-4">
 										<span class="btn-inner--icon">
 											<i class="fas fa-cart-plus"></i>
 										</span>

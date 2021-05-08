@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Core\Model as Model;
 
-class ProductImage extends Model
+class TypeImage extends Model
 {
-	private $image_table = "product_images";
+	private $image_table = "type_images";
 
 	public $id;
-	public $pid;
+	public $tid;
 	public $name;
 	public $description;
 
@@ -85,8 +85,7 @@ class ProductImage extends Model
 				$extension = $allowedTypes[$filetype];
 
 				// The name of the directory that we need to create.
-				$targetDirectory =
-					UPLOAD_DIR . DS . "products" . DS . $this->pid;
+				$targetDirectory = UPLOAD_DIR . DS . "types" . DS . $this->tid;
 
 				// Check if the directory already exists.
 				if (!is_dir($targetDirectory)) {
@@ -123,7 +122,7 @@ class ProductImage extends Model
 	{
 		// The name of the directory that we need to create.
 		$filepath =
-			UPLOAD_DIR . DS . "products" . DS . $this->pid . DS . $this->name;
+			UPLOAD_DIR . DS . "types" . DS . $this->tid . DS . $this->name;
 
 		if (unlink($filepath)) {
 			return true;
@@ -146,7 +145,7 @@ class ProductImage extends Model
 				SET
 					name = :name,
 					description = :description,
-					product_id = :product_id,
+					type_id = :type_id,
 					created = :created";
 
 		// Prepare prepared statement
@@ -155,7 +154,7 @@ class ProductImage extends Model
 		// Bind values
 		$this->db->bind(":name", $this->name);
 		$this->db->bind(":description", $this->description);
-		$this->db->bind(":product_id", $this->pid);
+		$this->db->bind(":type_id", $this->tid);
 		$this->db->bind(":created", $this->timestamp);
 
 		$result = $this->db->execute();
@@ -174,14 +173,14 @@ class ProductImage extends Model
 			$this->image_table .
 			"
 			WHERE
-				product_id = :product_id
+				type_id = :type_id
 			ORDER BY
 				created DESC";
 
 		// prepare query statement
 		$this->db->prepare($query);
 
-		$this->db->bind(":product_id", $this->pid);
+		$this->db->bind(":type_id", $this->tid);
 
 		// execute query
 		$result = $this->db->fetchAll();
@@ -201,7 +200,7 @@ class ProductImage extends Model
 			$this->image_table .
 			"
 			WHERE
-				product_id = ?
+				type_id = ?
 			ORDER BY
 				created DESC
 			LIMIT
@@ -211,7 +210,7 @@ class ProductImage extends Model
 		$this->db->prepare($query);
 
 		// bind limit clause variables
-		$this->db->bind(1, $this->pid);
+		$this->db->bind(1, $this->tid);
 		$this->db->bind(2, (int) $records);
 		$this->db->bind(3, (int) $perPage);
 
@@ -232,11 +231,11 @@ class ProductImage extends Model
 			$this->image_table .
 			"
 			WHERE
-				product_id = ?";
+				type_id = ?";
 
 		$this->db->prepare($query);
 
-		$this->db->bind(1, $this->pid);
+		$this->db->bind(1, $this->tid);
 
 		// execute the query
 		$this->db->execute();
@@ -257,7 +256,7 @@ class ProductImage extends Model
 			$this->image_table .
 			"
 			WHERE
-				product_id = ?
+				type_id = ?
 			ORDER BY
 				name DESC
 			LIMIT
@@ -267,7 +266,7 @@ class ProductImage extends Model
 		$this->db->prepare($query);
 
 		// Bind values
-		$this->db->bind(1, $this->pid);
+		$this->db->bind(1, $this->tid);
 
 		// Execute and fetch row
 		$row = $this->db->fetch();
@@ -369,13 +368,13 @@ class ProductImage extends Model
 			$this->image_table .
 			"
 			WHERE
-				product_id = :product_id";
+				type_id = :type_id";
 
 		// Prepare prepared query statement
 		$this->db->prepare($query);
 
 		// Bind value
-		$this->db->bind(":product_id", $this->pid);
+		$this->db->bind(":type_id", $this->tid);
 
 		// Execute query
 		$result = $this->db->execute();

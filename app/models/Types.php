@@ -53,7 +53,7 @@ class Types extends Model
 		$this->validate
 			->name("name")
 			->value($this->name)
-			->pattern("words")
+			->pattern("text")
 			->required();
 		$this->validate
 			->name("price")
@@ -63,8 +63,7 @@ class Types extends Model
 		$this->validate
 			->name("stock")
 			->value($this->stock)
-			->pattern("int")
-			->required();
+			->pattern("int");
 
 		// Get user data from database
 		$this->type = $this->readOne();

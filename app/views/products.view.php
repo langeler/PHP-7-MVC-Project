@@ -50,41 +50,44 @@
    		? ($imgDesc = $product["image"]["description"])
    		: ($imgDesc = $placeholderDesc);
    	?>
-			<div class='col-sm-6 col-md-3'>
-				<div class="card">
-					<img class="card-img-top" src="<?= $imgUrl ?>" alt="<?= $imgDesc ?>">
+			<div class="col-xl-3 col-lg-4 col-sm-6">
+				<div class="card card-product">
 					<a href="/category/<?= $product["category"]["id"] ?>/<?= $product["category"][
 	"name"
 ] ?>">
 						<?= $product["category"]["name"] ?>
 					</a>
-					<h3 class="card-title">
-						<?= $product["name"] ?>
-					</h3>
 
-					<p class="card-text">
+					<div class="card-image">
+						<a href="/product/<?= strtolower($product["id"]) ?>/<?= strtolower(
+	$this->slugify($product["name"])
+) ?>">
+					 		<img class="img-center img-fluid" src="<?= $imgUrl ?>" alt="<?= $imgDesc ?>">
+						</a>
+					</div>
+
+					<div class="card-body text-center pt-0">
+						<h6>
+							<a href="/product/<?= strtolower($product["id"]) ?>/<?= strtolower(
+	$this->slugify($product["name"])
+) ?>">
+						  		<?= $product["name"] ?>
+							</a>
+						</h6>
+
+					<p class="text-sm">
 						<?= $product["description"] ?>
 					</p>
 
-					<select name="type" class="form-control">
-					<?php foreach ($product["types"] as $types => $type): ?>
-
-
-					<option value="<?= $type["name"] ?>"><?= $type["name"] .
-	" - " .
-	$type["price"] ?> kr</option>
-
-					<?php endforeach; ?>
-					</select>
-
-					<a class="btn btn-block btn-secondary mt-2" href="/product/<?= strtolower(
+					<a class="btn btn-block btn-pill btn-primary mt-2" href="/product/<?= strtolower(
      	$product["id"]
      ) ?>/<?= strtolower($this->slugify($product["name"])) ?>">
 						Details
 					</a>
 				</div>
 			</div>
-			<?php
+		</div>
+		<?php
    endforeach; ?>
 		<?php else: ?>
 		<p>

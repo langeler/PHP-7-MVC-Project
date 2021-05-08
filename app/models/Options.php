@@ -6,7 +6,7 @@ use App\Core\Model as Model;
 
 class Options extends Model
 {
-	private $option_table = "product_options";
+	private $option_table = "options";
 
 	public $id;
 	public $qid;

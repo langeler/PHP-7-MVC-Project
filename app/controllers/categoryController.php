@@ -64,8 +64,8 @@ class categoryController extends Controller
 
 			// Loop over the array of products
 			foreach ($products as $product) {
-				$this->imageModel->pid = $product["id"];
-				$image = $this->imageModel->readFirst();
+				$this->pImageModel->pid = $product["id"];
+				$image = $this->pImageModel->readFirst();
 
 				$this->typeModel->pid = $product["id"];
 				$types = $this->typeModel->readAll();

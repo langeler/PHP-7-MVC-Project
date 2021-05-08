@@ -16,8 +16,11 @@ $router->get("cart/empty", "cartController@deleteAll");
 $router->get("products", "productsController@index");
 $router->get("category/{id}", "categoryController@index");
 $router->get("category/{id}/{name}", "categoryController@index");
+$router->get("product/{id}", "productController@index");
 $router->get("product/{id}/{name}", "productController@index");
 $router->get("product/type/{pid}/{tid}", "typeController@index");
+$router->get("product/type/{pid}/{tid}/{name}", "typeController@index");
+$router->get("product/type/{pid}/{tid}/{name}/{tname}", "typeController@index");
 
 // Post product routes
 $router->post("cart", "cartController@update");
@@ -71,16 +74,38 @@ $router->post("admin/product/create", "adminProducts@createProduct");
 $router->post("admin/product/update/{id}", "adminProducts@updateProduct");
 $router->post("admin/product/delete/{id}", "adminProducts@deleteProduct");
 
-// Get admin product type routes
-$router->get("admin/product/images/{pid}", "adminImages@index");
-$router->get("admin/product/image/create/{pid}", "adminImages@create");
-$router->get("admin/product/image/update/{id}", "adminImages@update");
-$router->get("admin/product/image/delete/{id}", "adminImages@delete");
+// Get admin category image routes
+$router->get("admin/category/images/{cid}", "adminCimages@index");
+$router->get("admin/category/image/create/{cid}", "adminCimages@create");
+$router->get("admin/category/image/update/{id}", "adminCimages@update");
+$router->get("admin/category/image/delete/{id}", "adminCimages@delete");
 
-// Post admin product type routes
-$router->post("admin/product/image/create/{pid}", "adminImages@createImage");
-$router->post("admin/product/image/update/{id}", "adminImages@updateImage");
-$router->post("admin/product/image/delete/{id}", "adminImages@deleteImage");
+// Post admin category image routes
+$router->post("admin/category/image/create/{cid}", "adminCimages@createImage");
+$router->post("admin/category/image/update/{id}", "adminCimages@updateImage");
+$router->post("admin/category/image/delete/{id}", "adminCimages@deleteImage");
+
+// Get admin product image routes
+$router->get("admin/product/images/{pid}", "adminPimages@index");
+$router->get("admin/product/image/create/{pid}", "adminPimages@create");
+$router->get("admin/product/image/update/{id}", "adminPimages@update");
+$router->get("admin/product/image/delete/{id}", "adminPimages@delete");
+
+// Post admin product image routes
+$router->post("admin/product/image/create/{pid}", "adminPimages@createImage");
+$router->post("admin/product/image/update/{id}", "adminPimages@updateImage");
+$router->post("admin/product/image/delete/{id}", "adminPimages@deleteImage");
+
+// Get admin type image routes
+$router->get("admin/type/images/{tid}", "adminTimages@index");
+$router->get("admin/type/image/create/{tid}", "adminTimages@create");
+$router->get("admin/type/image/update/{id}", "adminTimages@update");
+$router->get("admin/type/image/delete/{id}", "adminTimages@delete");
+
+// Post admin type image routes
+$router->post("admin/type/image/create/{tid}", "adminTimages@createImage");
+$router->post("admin/type/image/update/{id}", "adminTimages@updateImage");
+$router->post("admin/type/image/delete/{id}", "adminTimages@deleteImage");
 
 // Get admin product option routes
 $router->get("admin/product/options/{qid}", "adminOptions@index");

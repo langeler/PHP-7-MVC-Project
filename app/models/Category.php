@@ -24,7 +24,7 @@ class Category extends Model
 		$this->validate
 			->name("name")
 			->value($this->name)
-			->pattern("words")
+			->pattern("text")
 			->required();
 
 		// Username already exists in the database
@@ -48,7 +48,7 @@ class Category extends Model
 		$this->validate
 			->name("search")
 			->value($this->search)
-			->pattern("words")
+			->pattern("text")
 			->required();
 		$this->errors = $this->validate->displayErrors();
 
@@ -66,7 +66,7 @@ class Category extends Model
 		$this->validate
 			->name("name")
 			->value($this->name)
-			->pattern("words")
+			->pattern("text")
 			->required();
 
 		// Get user data from database

@@ -55,8 +55,8 @@ class productsController extends Controller
 			$this->categoryModel->id = $product["category_id"];
 			$category = $this->categoryModel->readOne();
 
-			$this->imageModel->pid = $product["id"];
-			$image = $this->imageModel->readFirst();
+			$this->pImageModel->pid = $product["id"];
+			$image = $this->pImageModel->readFirst();
 
 			$this->typeModel->pid = $product["id"];
 			$types = $this->typeModel->readAll();

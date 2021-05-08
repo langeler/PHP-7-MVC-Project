@@ -50,6 +50,12 @@
 			</td>
 
 			<td>
+				<a class="btn btn-sm btn-info" href="/admin/category/images/<?= strtolower(
+    	$category["id"]
+    ) ?>">
+							Images
+				</a>
+
 				<a class="btn btn-sm btn-primary" href="/admin/category/update/<?= strtolower(
     	$category["id"]
     ) ?>">

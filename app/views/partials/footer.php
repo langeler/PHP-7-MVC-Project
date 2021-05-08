@@ -6,7 +6,9 @@
 			<div class="row pt-md">
 				<div class="col-lg-4 mb-5 mb-lg-0">
 					<a href="/">
-						<img src="assets/img/logo/text.png" alt="Footer logo" style="height: 70px;">
+						<img src="<?= $this->getImage(
+      	"logo/text.png"
+      ) ?>" alt="Footer logo" style="height: 70px;">
 					</a>
 
 					<p class="my-3"><?= SITE_NAME ?> is a unique and beautiful collection of UI elements that are all flexible and modular. A complete and customizable solution to building the website of your dreams.</p>

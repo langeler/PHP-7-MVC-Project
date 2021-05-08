@@ -2,7 +2,7 @@
     <nav class="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-gradient-dark">
         <div class="container">
 
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
                 <?= SITE_NAME ?>
             </a>
 

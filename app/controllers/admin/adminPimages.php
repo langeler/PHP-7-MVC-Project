@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 
-class adminImages extends Controller
+class adminPimages extends Controller
 {
 	protected $pageTitle;
 	protected $pageUrl;
@@ -36,7 +36,7 @@ class adminImages extends Controller
 
 		if ($vars["pid"]) {
 			$this->productModel->id = (int) $vars["pid"];
-			$this->imageModel->pid = (int) $vars["pid"];
+			$this->pImageModel->pid = (int) $vars["pid"];
 
 			$this->pageTitle = "Read All Product Images";
 			$this->pageUrl = DOMAIN . "admin/product/images/" . $vars["pid"];
@@ -50,8 +50,8 @@ class adminImages extends Controller
 			$fromRecords = $perPage * $page - $perPage;
 
 			$product = $this->productModel->readOne();
-			$records = $this->imageModel->countAll();
-			$images = $this->imageModel->readAllWithPaging(
+			$records = $this->pImageModel->countAll();
+			$images = $this->pImageModel->readAllWithPaging(
 				$fromRecords,
 				$perPage
 			);
@@ -66,7 +66,7 @@ class adminImages extends Controller
 			);
 
 			$this->pageData = [
-				"pid" => $this->imageModel->pid,
+				"pid" => $this->pImageModel->pid,
 				"images" => $images,
 				"pagination" => $pagination,
 			];
@@ -86,14 +86,14 @@ class adminImages extends Controller
 
 		if ($vars["pid"]) {
 			$this->productModel->id = (int) $vars["pid"];
-			$this->imageModel->pid = (int) $vars["pid"];
+			$this->pImageModel->pid = (int) $vars["pid"];
 
 			$this->pageTitle = "Create Image";
 			$this->pageUrl =
 				DOMAIN . "admin/product/image/create/" . $vars["pid"];
 
 			$this->pageData = [
-				"pid" => $this->imageModel->pid,
+				"pid" => $this->pImageModel->pid,
 				"csrf" => $this->session->getSessionValue("csrf"),
 			];
 
@@ -112,7 +112,7 @@ class adminImages extends Controller
 
 		if ($vars["pid"]) {
 			$this->productModel->id = (int) $vars["pid"];
-			$this->imageModel->pid = (int) $vars["pid"];
+			$this->pImageModel->pid = (int) $vars["pid"];
 
 			// Filter post fields
 			$post = $this->filter_post();
@@ -122,15 +122,15 @@ class adminImages extends Controller
 
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
-				$this->imageModel->description = $post["description"];
+				$this->pImageModel->description = $post["description"];
 
 				// Register new user
-				if ($this->imageModel->upload()) {
+				if ($this->pImageModel->upload()) {
 					// Redirect to profile
 					redirect("admin/products/");
 				} else {
 					// Set error message
-					$this->message = $this->imageModel->errors;
+					$this->message = $this->pImageModel->errors;
 
 					echo $this->message;
 					exit();
@@ -144,14 +144,14 @@ class adminImages extends Controller
 		$this->access();
 
 		if ($vars["id"]) {
-			$this->imageModel->id = $vars["id"];
+			$this->pImageModel->id = $vars["id"];
 
 			$this->pageTitle = "Update Product Image";
 			$this->pageUrl =
-				DOMAIN . "admin/product/image/update/" . $this->imageModel->id;
+				DOMAIN . "admin/product/image/update/" . $this->pImageModel->id;
 
 			$this->pageData = [
-				"image" => $this->imageModel->readOne(),
+				"image" => $this->pImageModel->readOne(),
 				"csrf" => $this->session->getSessionValue("csrf"),
 			];
 
@@ -175,18 +175,18 @@ class adminImages extends Controller
 
 			// Verify CSRF token
 			if ($this->session->validateCSRF()) {
-				$this->imageModel->id = $vars["id"];
-				$this->imageModel->description = $post["description"];
+				$this->pImageModel->id = $vars["id"];
+				$this->pImageModel->description = $post["description"];
 
-				if ($this->imageModel->validateUpdate()) {
+				if ($this->pImageModel->validateUpdate()) {
 					// Update settings
-					if ($this->imageModel->update()) {
+					if ($this->pImageModel->update()) {
 						// Redirect to profile
 						redirect("admin/products/");
 					}
 				} else {
 					// Set error message
-					$this->message = $this->imageModel->errors;
+					$this->message = $this->pImageModel->errors;
 
 					echo $this->message;
 					exit();
@@ -200,15 +200,15 @@ class adminImages extends Controller
 		$this->access();
 
 		if ($vars["id"]) {
-			$this->imageModel->id = $vars["id"];
-			$image = $this->imageModel->readOne();
+			$this->pImageModel->id = $vars["id"];
+			$image = $this->pImageModel->readOne();
 
 			$this->pageTitle = "Delete Product Image";
 			$this->pageUrl =
-				DOMAIN . "admin/product/image/delete/" . $this->imageModel->id;
+				DOMAIN . "admin/product/image/delete/" . $this->pImageModel->id;
 
 			$this->pageData = [
-				"id" => $this->imageModel->id,
+				"id" => $this->pImageModel->id,
 				"csrf" => $this->session->getSessionValue("csrf"),
 			];
 
@@ -228,15 +228,15 @@ class adminImages extends Controller
 		// If an id exist
 		if ($vars["id"]) {
 			// Set user id to be deleted
-			$this->imageModel->id = $vars["id"];
-			$image = $this->imageModel->readOne();
+			$this->pImageModel->id = $vars["id"];
+			$image = $this->pImageModel->readOne();
 
-			$this->imageModel->pid = $image["product_id"];
-			$this->imageModel->name = $image["name"];
+			$this->pImageModel->pid = $image["product_id"];
+			$this->pImageModel->name = $image["name"];
 
-			if ($this->imageModel->remove()) {
+			if ($this->pImageModel->remove()) {
 				// Delete user
-				$this->imageModel->delete();
+				$this->pImageModel->delete();
 
 				// Redirect to admin/users
 				redirect("admin/products/");

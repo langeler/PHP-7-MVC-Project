@@ -16,13 +16,13 @@ class productController extends Controller
 	{
 		if ($vars["id"]) {
 			$this->productModel->id = $vars["id"];
-			$this->imageModel->pid = $vars["id"];
+			$this->pImageModel->pid = $vars["id"];
 			$this->categoryModel->pid = $vars["id"];
 			$this->typeModel->pid = $vars["id"];
 
 			// Set variables for easy access
 			$product = $this->productModel->readOne();
-			$image = $this->imageModel->readAll();
+			$image = $this->pImageModel->readAll();
 			$types = $this->typeModel->readAll();
 
 			// Read category one category based on category id from product
