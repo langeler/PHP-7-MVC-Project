@@ -9,34 +9,40 @@ class resetController extends Controller
 	protected $pageTitle;
 	protected $pageUrl;
 	protected $pageData;
-	protected $message;
 
-	public function post()
+	public function post($vars = null)
 	{
-		$post = $this->filter_post();
+		if ($vars["username"] && $vars["access"]) {
 
-		$this->session->csrf = $post["csrf"];
-		if ($this->session->validateCSRF()) {
-			$this->userModel->username = $post["username"];
-			$this->userModel->access = $post["access"];
-			$this->userModel->npassword = $post["npassword"];
-			$this->userModel->cpassword = $post["cpassword"];
+			$post = $this->filter_post();
 
-			// Validate username, password, and email
-			if ($this->userModel->validateResetPassword()) {
-				if ($this->userModel->recover()) {
-					redirect("login");
-				} else {
-					$this->message = LOGIN_FAIL;
+			$this->session->csrf = $post["csrf"];
+			if ($this->session->validateCSRF()) {
+				$this->userModel->username = $post["username"];
+				$this->userModel->access = $post["access"];
+				$this->userModel->npassword = $post["npassword"];
+				$this->userModel->cpassword = $post["cpassword"];
 
-					echo $this->message;
-					exit();
+				// Validate username, password, and email
+				if ($this->userModel->validateResetPassword()) {
+					if ($this->userModel->recover()) {
+						$this->flash->success(
+							"A recovery email have successfully been  sent."
+						);
+						redirect("login");
+					}
+
+					else {
+						$this->flash->error("Unable to send recovery update.");
+						redirect("reset");
+					}
 				}
-			} else {
-				$this->message = USERNAME_NOT_EXISTS;
 
-				echo $this->message;
-				exit();
+				else {
+					$this->flash->error("Unable to send recovery email.");
+					redirect("reset");
+					}
+				}
 			}
 		}
 	}

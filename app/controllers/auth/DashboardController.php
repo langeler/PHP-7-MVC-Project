@@ -10,7 +10,6 @@ class DashboardController extends Controller
 	protected $pageTitle;
 	protected $pageUrl;
 	protected $pageData;
-	protected $message;
 
 	public function get()
 	{

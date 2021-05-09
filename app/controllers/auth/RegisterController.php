@@ -9,7 +9,6 @@ class RegisterController extends Controller
 	protected $pageTitle;
 	protected $pageUrl;
 	protected $pageData;
-	protected $message;
 
 	public function post()
 	{
@@ -33,16 +32,22 @@ class RegisterController extends Controller
 			// Validate username, password, and email
 			if ($this->userModel->validateCreate()) {
 				// Register new user
-				$this->userModel->create();
 
-				// Redirect to profile
-				redirect("login");
+				if ($this->userModel->create()) {
+					$this->flash->success(
+						"Your account is successfully registered."
+					);
+					redirect("login");
+				} else {
+					$this->flash->error("Unable to process update.");
+					redirect("register");
+				}
 			} else {
-				// Set error message
-				$this->message = $this->userModel->errors;
-
-				echo $this->message;
-				exit();
+				$errors = $this->userModel->getErrors();
+				foreach ($errors as $error) {
+					$this->flash->error($error);
+				}
+				redirect("register");
 			}
 		}
 	}

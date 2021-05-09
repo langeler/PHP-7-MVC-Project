@@ -9,7 +9,6 @@ class LoginController extends Controller
 	protected $pageTitle;
 	protected $pageUrl;
 	protected $pageData;
-	protected $message;
 
 	public function logout()
 	{
@@ -31,16 +30,15 @@ class LoginController extends Controller
 				if ($this->userModel->login()) {
 					redirect("dashboard");
 				} else {
-					$this->message = LOGIN_FAIL;
-
-					echo $this->message;
-					exit();
+					$this->flash->error("Username or password is invalid.");
+					redirect("login");
 				}
 			} else {
-				$this->message = USERNAME_NOT_EXISTS;
-
-				echo $this->message;
-				exit();
+				$errors = $this->userModel->getErrors();
+				foreach ($errors as $error) {
+					$this->flash->error($error);
+				}
+				redirect("login");
 			}
 		}
 	}

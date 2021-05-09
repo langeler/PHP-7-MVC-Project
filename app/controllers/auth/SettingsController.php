@@ -10,7 +10,6 @@ class SettingsController extends Controller
 	protected $pageTitle;
 	protected $pageUrl;
 	protected $pageData;
-	protected $message;
 
 	public function post()
 	{
@@ -38,15 +37,18 @@ class SettingsController extends Controller
 			if ($this->userModel->validateUpdate()) {
 				// Update settings
 				if ($this->userModel->update()) {
-					// Redirect to profile
-					redirect("profile");
+					$this->flash->success("Settings updated successfully.");
+					redirect("settings");
+				} else {
+					$this->flash->error("Unable to process update.");
+					redirect("settings");
 				}
 			} else {
-				// Set error message
-				$this->message = $this->userModel->getErrors($this->errors);
-
-				echo $this->message;
-				exit();
+				$errors = $this->userModel->getErrors();
+				foreach ($errors as $error) {
+					$this->flash->error($error);
+				}
+				redirect("settings");
 			}
 		}
 	}

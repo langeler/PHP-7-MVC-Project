@@ -14,20 +14,30 @@
       </div>
     </section>
 
-<div class='container mt-3'>
-	<div class="row">
-		<div class="col-md-6 px-0">
-			<form class="form-inline float-left "  action='<?= $pageUrl ?>' method="get">
-				<input class="form-control mr-sm-2" type="search" placeholder="Type a name..." name="search" id="search" <?php echo isset(
-    	$pageData["search"]
-    )
-    	? "value='{$pageData["search"]}'"
-    	: ""; ?> aria-label="Search">
-			    <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i> Search</button>
+<!-- Search Products (v2) -->
+	<section class="slice pt-1">
+		<div class="container">
+			<form class="row justify-content-center" action="" method="get">
+				<div class="col-lg-7">
+					<div class="form-group">
+						<div class="input-group input-group-lg input-group-merge rounded-pill shadow bg-neutral">
+							<input type="text" class="form-control form-control-flush" placeholder="Type a name..." name="search" id="search" <?php echo isset(
+       	$pageData["search"]
+       )
+       	? "value='{$pageData["search"]}'"
+       	: ""; ?> aria-label="Search">
+
+							<div class="input-group-append">
+								<button type="submit" class="btn btn-block btn-neutral border-0">
+									<i class="fas fa-search"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</form>
 		</div>
-	</div>
-</div>
+	</section>
 
 <div class='container mt-3'>
 	<div class='row'>

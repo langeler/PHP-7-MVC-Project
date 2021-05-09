@@ -10,7 +10,6 @@ class changeController extends Controller
 	protected $pageTitle;
 	protected $pageUrl;
 	protected $pageData;
-	protected $message;
 
 	public function post()
 	{
@@ -33,15 +32,20 @@ class changeController extends Controller
 			if ($this->userModel->validateChange()) {
 				// Update settings
 				if ($this->userModel->updatePassword()) {
-					// Redirect to profile
-					redirect("profile");
+					$this->flash->success(
+						"Password have successfully been changed."
+					);
+					redirect("change");
+				} else {
+					$this->flash->error("Unable to update password.");
+					redirect("change");
 				}
 			} else {
-				// Set error message
-				$this->message = $this->userModel->getErrors($this->errors);
-
-				echo $this->message;
-				exit();
+				$errors = $this->userModel->getErrors();
+				foreach ($errors as $error) {
+					$this->flash->error($error);
+				}
+				redirect("change");
 			}
 		}
 	}

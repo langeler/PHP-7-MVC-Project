@@ -9,7 +9,6 @@ class recoverController extends Controller
 	protected $pageTitle;
 	protected $pageUrl;
 	protected $pageData;
-	protected $message;
 
 	public function post()
 	{
@@ -42,25 +41,33 @@ class recoverController extends Controller
 				$from_email = "admin@example.com";
 
 				if ($this->userModel->updateAccess()) {
-					$this->sendEmailViaPhpMail(
-						$from_name,
-						$from_email,
-						$to_email,
-						$subject,
-						$body
-					);
-					redirect("login");
+					if (
+						$this->sendEmailViaPhpMail(
+							$from_name,
+							$from_email,
+							$to_email,
+							$subject,
+							$body
+						)
+					) {
+						$this->flash->success(
+							"A reocvery email have successfully been sent."
+						);
+						redirect("login");
+					} else {
+						$this->flash->error("Unable to send recovery email.");
+					}
 				} else {
-					$this->message = LOGIN_FAIL;
-
-					echo $this->message;
-					exit();
+					$this->flash->error(
+						"Unable to update access code, contact support."
+					);
 				}
 			} else {
-				$this->message = USERNAME_NOT_EXISTS;
-
-				echo $this->message;
-				exit();
+				$errors = $this->userModel->getErrors();
+				foreach ($errors as $error) {
+					$this->flash->error($error);
+				}
+				redirect("recover");
 			}
 		}
 	}

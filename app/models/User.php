@@ -142,12 +142,10 @@ class User extends Model
 			$this->validate->errors[] = USERNAME_NOT_APPROVED;
 		}
 
-		$this->errors = $this->validate->displayErrors();
-
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}
@@ -199,12 +197,10 @@ class User extends Model
 			}
 		}
 
-		$this->errors = $this->validate->displayErrors();
-
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}
@@ -219,7 +215,6 @@ class User extends Model
 		$this->validate
 			->name("password")
 			->value($this->password)
-			->customPattern("[A-Za-z0-9-.;_!#@]{5,15}")
 			->required();
 
 		// Username does matches with a disallowed username
@@ -227,12 +222,10 @@ class User extends Model
 			$this->validate->errors[] = USERNAME_NOT_APPROVED;
 		}
 
-		$this->errors = $this->validate->displayErrors();
-
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}
@@ -383,12 +376,10 @@ class User extends Model
 			}
 		}
 
-		$this->errors = $this->validate->displayErrors();
-
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}

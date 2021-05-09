@@ -167,7 +167,9 @@
 
 			<div class="col-lg-4">
 				<div class="position-relative" style="z-index: 10;">
-					<img alt="Image placeholder" src="assets/img/logo/bear.png" class="img-center img-fluid">
+					<img alt="Image placeholder" src="<?= $this->getImage(
+     	"logo/bear.png"
+     ) ?>" class="img-center img-fluid">
 				</div>
 			</div>
 

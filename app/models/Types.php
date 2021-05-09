@@ -41,8 +41,7 @@ class Types extends Model
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->errors = $this->validate->displayErrors();
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}
@@ -80,8 +79,7 @@ class Types extends Model
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->errors = $this->validate->displayErrors();
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}

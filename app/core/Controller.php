@@ -7,6 +7,7 @@
  */
 namespace App\Core;
 
+use App\Core\Flash;
 use App\Core\Pagination;
 use App\Core\Session;
 
@@ -37,6 +38,7 @@ abstract class Controller
 	protected $categoryModel;
 	protected $cImageModel;
 	protected $contact;
+	protected $flash;
 	protected $optionModel;
 	protected $order_item;
 	protected $order;
@@ -63,6 +65,7 @@ abstract class Controller
 		$this->categoryModel = new Category();
 		$this->cImageModel = new CategoryImage();
 		$this->contact = new Contact();
+		$this->flash = new Flash();
 		$this->optionModel = new Options();
 		$this->order_item = new OrderItem();
 		$this->order = new Order();

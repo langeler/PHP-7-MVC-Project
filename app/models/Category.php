@@ -36,8 +36,7 @@ class Category extends Model
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->errors = $this->validate->displayErrors();
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}
@@ -50,12 +49,11 @@ class Category extends Model
 			->value($this->search)
 			->pattern("text")
 			->required();
-		$this->errors = $this->validate->displayErrors();
 
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}
@@ -84,8 +82,7 @@ class Category extends Model
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->errors = $this->validate->displayErrors();
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}

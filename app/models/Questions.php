@@ -30,8 +30,7 @@ class Questions extends Model
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->errors = $this->validate->displayErrors();
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}
@@ -46,10 +45,10 @@ class Questions extends Model
 			->required();
 
 		// Get user data from database
-		$this->type = $this->readOne();
+		$this->question = $this->readOne();
 
 		// If email doesn't match the email on record
-		if ($this->name !== $this->type["name"]) {
+		if ($this->name !== $this->question["name"]) {
 			// If new name isn't avaliable
 			if ($this->questionExist()) {
 				$this->validate->errors[] =
@@ -60,8 +59,7 @@ class Questions extends Model
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->errors = $this->validate->displayErrors();
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}

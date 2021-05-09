@@ -30,8 +30,7 @@ class Options extends Model
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->errors = $this->validate->displayErrors();
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}
@@ -53,15 +52,14 @@ class Options extends Model
 			// If new name isn't avaliable
 			if ($this->optionExist()) {
 				$this->validate->errors[] =
-					"A question with that name already exist.";
+					"An option with that name already exist.";
 			}
 		}
 
 		if ($this->validate->isSuccess()) {
 			return true;
 		} else {
-			$this->errors = $this->validate->displayErrors();
-			$this->getErrors();
+			$this->errors = $this->validate->getErrors();
 			return false;
 		}
 	}

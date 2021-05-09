@@ -43,6 +43,20 @@ abstract class Model
 		$this->timestamp = date("Y-m-d H:i:s");
 	}
 
+	// add an error for an attribute if the validation fails
+	public function addError($attribute, $error)
+	{
+		$this->errors[$attribute] = $error;
+	}
+
+	// get the error for an attribute
+	public function getError($attribute)
+	{
+		return isset($this->errors[$attribute])
+			? $this->_errors[$attribute]
+			: "";
+	}
+
 	// get all errors for all attributes
 	public function getErrors()
 	{
