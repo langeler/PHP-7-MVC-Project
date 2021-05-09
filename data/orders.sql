@@ -10,7 +10,7 @@ CREATE TABLE `order_items` (
   `created` datetime NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=latin1 COMMENT='products under an order or transaction';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='products under an order or transaction';
 
 -- Create syntax for TABLE 'orders'
 CREATE TABLE `orders` (
@@ -23,16 +23,4 @@ CREATE TABLE `orders` (
   `created` datetime NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1 COMMENT='orders made by customers';
-
-CREATE TABLE `cart_items` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(512) NOT NULL COMMENT 'can be a temporary id',
-  `product_id` int(11) NOT NULL,
-  `type_id` int(11) NOT NULL,
-  `quantity` double NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `created` datetime NOT NULL,
-  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=196 DEFAULT CHARSET=utf8 COMMENT='products in shopping cart of users';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='orders made by customers';
