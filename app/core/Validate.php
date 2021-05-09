@@ -2,231 +2,170 @@
 
 namespace App\Core;
 
-/**
- * Validation
- *
- * Semplice classe PHP per la validazione.
- *
- * @author Davide Cesarano <davide.cesarano@unipegaso.it>
- * @copyright (c) 2016, Davide Cesarano
- * @license https://github.com/davidecesarano/Validation/blob/master/LICENSE MIT License
- * @link https://github.com/davidecesarano/Validation
- */
-
 class Validate
 {
-	/**
-	 * @var array $patterns
-	 */
 	public $patterns = [
-		"uri" => "[A-Za-z0-9-\/_?&=]+",
-		"url" => "[A-Za-z0-9-:.\/_?&=#]+",
+		"text" => '[\p{L}0-9\s\-.,;:!"%&()?+\'°#\/@]+',
+		"email" => "[\-0-9a-zA-Z.+_]+@[\-0-9a-zA-Z.+_]+.[a-zA-Z]{2,4}",
+		"fullurl" =>
+			"/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i",
+		"name" => "/^[a-zA-Z-' ]*$/",
 		"alpha" => "[\p{L}]+",
 		"words" => "[\p{L}\s]+",
 		"alphanum" => "[\p{L}0-9]+",
 		"int" => "[0-9]+",
 		"float" => "[0-9\.,]+",
-		"tel" => "[0-9+\s()-]+",
-		"text" => '[\p{L}0-9\s-.,;:!"%&()?+\'°#\/@]+',
-		"file" => "[\p{L}\s0-9-_!%&()=\[\]#@,.;+]+\.[A-Za-z0-9]{2,4}",
-		"folder" => "[\p{L}\s0-9-_!%&()=\[\]#@,.;+]+",
-		"address" => "[\p{L}0-9\s.,()°-]+",
+		"tel" => "[0-9+\s()\-]+",
+		"file" => "[\p{L}\s0-9\-_!%&()=\[\]#@,.;+]+\.[A-Za-z0-9]{2,4}",
+		"folder" => "[\p{L}\s0-9\-_!%&()=\[\]#@,.;+]+",
+		"address" => "[\p{L}0-9\s.,()°\-]+",
 		"date_dmy" => "[0-9]{1,2}\-[0-9]{1,2}\-[0-9]{4}",
+		"uri" => "[A-Za-z0-9-\/_?&=]+",
+		"url" => "[A-Za-z0-9\-:.\/_?&=#]+",
 		"date_ymd" => "[0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2}",
-		"email" => "[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+[.]+[a-z-A-Z]",
 	];
 
-	/**
-	 * @var array $errors
-	 */
 	public $errors = [];
 
-	/**
-	 * Nome del campo
-	 *
-	 * @param string $name
-	 * @return this
-	 */
 	public function name($name)
 	{
 		$this->name = $name;
 		return $this;
 	}
 
-	/**
-	 * Valore del campo
-	 *
-	 * @param mixed $value
-	 * @return this
-	 */
 	public function value($value)
 	{
 		$this->value = $value;
 		return $this;
 	}
 
-	/**
-	 * File
-	 *
-	 * @param mixed $value
-	 * @return this
-	 */
 	public function file($value)
 	{
 		$this->file = $value;
 		return $this;
 	}
 
-	/**
-	 * Pattern da applicare al riconoscimento
-	 * dell'espressione regolare
-	 *
-	 * @param string $name nome del pattern
-	 * @return this
-	 */
 	public function pattern($name)
 	{
 		if ($name == "array") {
 			if (!is_array($this->value)) {
-				$this->errors[] =
-					"Formato campo " . $this->name . " non valido.";
+				$this->errors[] = "Invalid " . $this->name . " format.";
 			}
 		} else {
 			$regex = "/^(" . $this->patterns[$name] . ')$/u';
 			if ($this->value != "" && !preg_match($regex, $this->value)) {
-				$this->errors[] =
-					"Formato campo " . $this->name . " non valido.";
+				$this->errors[] = "Invalid " . $this->name . " format.";
 			}
 		}
 		return $this;
 	}
 
-	/**
-	 * Pattern personalizzata
-	 *
-	 * @param string $pattern
-	 * @return this
-	 */
 	public function customPattern($pattern)
 	{
 		$regex = "/^(" . $pattern . ')$/u';
 		if ($this->value != "" && !preg_match($regex, $this->value)) {
-			$this->errors[] = "Formato campo " . $this->name . " non valido.";
+			$this->errors[] = "Invalid " . $this->name . " format.";
 		}
 		return $this;
 	}
 
-	/**
-	 * Campo obbligatorio
-	 *
-	 * @return this
-	 */
 	public function required()
 	{
 		if (
 			(isset($this->file) && $this->file["error"] == 4) ||
 			($this->value == "" || $this->value == null)
 		) {
-			$this->errors[] = "Campo " . $this->name . " obbligatorio.";
+			$this->errors[] = "" . $this->name . " is required.";
 		}
 		return $this;
 	}
 
-	/**
-	 * Lunghezza minima
-	 * del valore del campo
-	 *
-	 * @param int $min
-	 * @return this
-	 */
 	public function min($length)
 	{
-		if (is_string($this->value)) {
-			if (strlen($this->value) < $length) {
-				$this->errors[] =
-					"Valore campo " .
-					$this->name .
-					" inferiore al valore minimo";
-			}
-		} else {
+		if (is_numeric($this->value)) {
 			if ($this->value < $length) {
 				$this->errors[] =
-					"Valore campo " .
-					$this->name .
-					" inferiore al valore minimo";
-			}
-		}
-		return $this;
-	}
-
-	/**
-	 * Lunghezza massima
-	 * del valore del campo
-	 *
-	 * @param int $max
-	 * @return this
-	 */
-	public function max($length)
-	{
-		if (is_string($this->value)) {
-			if (strlen($this->value) > $length) {
-				$this->errors[] =
-					"Valore campo " .
-					$this->name .
-					" superiore al valore massimo";
+					"" . $this->name . '  can\'t be less than ' . $length . "";
 			}
 		} else {
-			if ($this->value > $length) {
+			if (strlen($this->value) < $length) {
 				$this->errors[] =
-					"Valore campo " .
+					"" .
 					$this->name .
-					" superiore al valore massimo";
+					' can\'t be less than ' .
+					$length .
+					" chars";
 			}
 		}
 		return $this;
 	}
 
-	/**
-	 * Confronta con il valore di
-	 * un altro campo
-	 *
-	 * @param mixed $value
-	 * @return this
-	 */
+	public function minNum($number)
+	{
+		if (is_int($this->value) || is_float($this->value)) {
+			if ($this->value < $number) {
+				$this->errors[] =
+					"" . $this->name . " cant't be less than " . $number . "";
+			}
+		} else {
+			if (strlen($this->value) < $number) {
+				$this->errors[] =
+					"" . $this->name . " is below limit (" . $number . ")";
+			}
+		}
+		return $this;
+	}
+
+	public function max($length)
+	{
+		if (is_int($this->value) || is_float($this->value)) {
+			if ($this->value > $length) {
+				$this->errors[] =
+					"" .
+					$this->name .
+					'  can\'t be greater than ' .
+					$length .
+					"";
+			}
+		} else {
+			if (strlen($this->value) > $length) {
+				$this->errors[] =
+					"" . $this->name . " exceeds limit (" . $length . " chars)";
+			}
+		}
+		return $this;
+	}
+
 	public function equal($value)
 	{
 		if ($this->value != $value) {
 			$this->errors[] =
-				"Valore campo " . $this->name . " non corrispondente.";
+				"" . $this->name . " must be equal to " . $value . ".";
 		}
 		return $this;
 	}
 
-	/**
-	 * Dimensione massima del file
-	 *
-	 * @param int $size
-	 * @return this
-	 */
+	public function confirmPass($value2)
+	{
+		if ($this->value !== $value2) {
+			$this->errors[] = "Passwords do not match";
+		}
+		return $this;
+	}
+
 	public function maxSize($size)
 	{
 		if ($this->file["error"] != 4 && $this->file["size"] > $size) {
 			$this->errors[] =
-				"Il file " .
+				"File " .
 				$this->name .
-				" supera la dimensione massima di " .
+				" must not exceed " .
 				number_format($size / 1048576, 2) .
 				" MB.";
 		}
 		return $this;
 	}
 
-	/**
-	 * Estensione (formato) del file
-	 *
-	 * @param string $extension
-	 * @return this
-	 */
 	public function ext($extension)
 	{
 		if (
@@ -236,39 +175,31 @@ class Validate
 				$extension
 		) {
 			$this->errors[] =
-				"Il file " . $this->name . " non è un " . $extension . ".";
+				"Unaccepted " .
+				$this->name .
+				" file extension (" .
+				$extension .
+				").";
 		}
 		return $this;
 	}
 
-	/**
-	 * Purifica per prevenire attacchi XSS
-	 *
-	 * @param string $string
-	 * @return $string
-	 */
 	public function purify($string)
 	{
-		return htmlspecialchars($string, ENT_QUOTES, "UTF-8");
+		return htmlspecialchars(
+			stripslashes(strip_tags(trim($string))),
+			ENT_QUOTES,
+			"UTF-8"
+		);
 	}
 
-	/**
-	 * Campi validati
-	 *
-	 * @return boolean
-	 */
-	public function isSuccess()
+	public function isSuccess($ext_err = true)
 	{
 		if (empty($this->errors)) {
 			return true;
 		}
 	}
 
-	/**
-	 * Errori della validazione
-	 *
-	 * @return array $this->errors
-	 */
 	public function getErrors()
 	{
 		if (!$this->isSuccess()) {
@@ -276,27 +207,18 @@ class Validate
 		}
 	}
 
-	/**
-	 * Visualizza errori in formato Html
-	 *
-	 * @return string $html
-	 */
 	public function displayErrors()
 	{
-		$html = "<ul>";
+		$html =
+			'<ul class="errors" style="list-style: none; margin:0; padding:0px;">';
 		foreach ($this->getErrors() as $error) {
-			$html .= "<li>" . $error . "</li>";
+			$html .= "<li>* " . $error . "</li>";
 		}
 		$html .= "</ul>";
 
 		return $html;
 	}
 
-	/**
-	 * Visualizza risultato della validazione
-	 *
-	 * @return booelan|string
-	 */
 	public function result()
 	{
 		if (!$this->isSuccess()) {
@@ -309,41 +231,13 @@ class Validate
 		}
 	}
 
-	/**
-	 * Verifica se il valore è
-	 * un numero intero
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 */
-	public static function is_int($value)
+	public static function is_email($value)
 	{
-		if (filter_var($value, FILTER_VALIDATE_INT)) {
+		if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
 			return true;
 		}
 	}
 
-	/**
-	 * Verifica se il valore è
-	 * un numero float
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 */
-	public static function is_float($value)
-	{
-		if (filter_var($value, FILTER_VALIDATE_FLOAT)) {
-			return true;
-		}
-	}
-
-	/**
-	 * Verifica se il valore è
-	 * una lettera dell'alfabeto
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 */
 	public static function is_alpha($value)
 	{
 		if (
@@ -355,13 +249,20 @@ class Validate
 		}
 	}
 
-	/**
-	 * Verifica se il valore è
-	 * una lettera o un numero
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 */
+	public static function is_int($value)
+	{
+		if (filter_var($value, FILTER_VALIDATE_INT)) {
+			return true;
+		}
+	}
+
+	public static function is_float($value)
+	{
+		if (filter_var($value, FILTER_VALIDATE_FLOAT)) {
+			return true;
+		}
+	}
+
 	public static function is_alphanum($value)
 	{
 		if (
@@ -373,13 +274,6 @@ class Validate
 		}
 	}
 
-	/**
-	 * Verifica se il valore è
-	 * un url
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 */
 	public static function is_url($value)
 	{
 		if (filter_var($value, FILTER_VALIDATE_URL)) {
@@ -387,13 +281,6 @@ class Validate
 		}
 	}
 
-	/**
-	 * Verifica se il valore è
-	 * un uri
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 */
 	public static function is_uri($value)
 	{
 		if (
@@ -405,13 +292,6 @@ class Validate
 		}
 	}
 
-	/**
-	 * Verifica se il valore è
-	 * true o false
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 */
 	public static function is_bool($value)
 	{
 		if (
@@ -423,20 +303,6 @@ class Validate
 				)
 			)
 		) {
-			return true;
-		}
-	}
-
-	/**
-	 * Verifica se il valore è
-	 * un'e-mail
-	 *
-	 * @param mixed $value
-	 * @return boolean
-	 */
-	public static function is_email($value)
-	{
-		if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
 			return true;
 		}
 	}

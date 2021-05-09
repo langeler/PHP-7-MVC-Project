@@ -24,6 +24,11 @@
   	"animate.css/animate.min"
   ) ?>">
 
+<!-- Swiper CSS -->
+  <link rel="stylesheet" href="<?= $this->getLibStyle(
+  	"swiper/dist/css/swiper.min"
+  ) ?>">
+
   <!-- Purpose CSS -->
   <link href="<?= $this->getStylesheet("web") ?>?<?= date(
 	"d-m-Y"
@@ -38,7 +43,7 @@
 
 <header class="header header-transparent" id="header-main">
 	<!-- Top navigation -->
-	<?php include VIEW_DIR . DS . "admin" . DS . "partials" . DS . "navbar.php"; ?>
+	<?php include VIEW_DIR . DS . "partials" . DS . "navbar.php"; ?>
 </header>
 
 <!-- Main (content) -->

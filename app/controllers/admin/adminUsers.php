@@ -42,7 +42,7 @@ class adminUsers extends Controller
 		$search = isset($get["search"]) ? $get["search"] : "";
 
 		// Pagination settings
-		$perPage = 3;
+		$perPage = 10;
 		$displayArrows = true;
 		$fromRecords = $perPage * $page - $perPage;
 

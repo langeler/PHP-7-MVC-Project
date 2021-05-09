@@ -45,7 +45,7 @@ class adminPimages extends Controller
 			$page = isset($get["page"]) ? $get["page"] : 1;
 
 			// Pagination settings
-			$perPage = 3;
+			$perPage = 5;
 			$displayArrows = true;
 			$fromRecords = $perPage * $page - $perPage;
 

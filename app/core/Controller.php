@@ -185,12 +185,9 @@ abstract class Controller
 		return $string;
 	}
 
-	// Function to read all categories
-	protected function getCategories()
+	public function getCategories()
 	{
-		$categories = $this->categoryModel->readAll();
-
-		return $categories;
+		return $this->categoryModel->readAll();
 	}
 
 	protected function isUserLoggedIn()

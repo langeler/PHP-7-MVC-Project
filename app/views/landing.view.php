@@ -65,14 +65,37 @@
 				<div class="swiper-container" data-swiper-items="2" data-swiper-space-between="20" data-swiper-sm-items="4" data-swiper-sm-space-between="20" data-swiper-lg-items="6" data-swiper-lg-space-between="20">
 					<div class="swiper-wrapper">
 
-						<?php foreach ($this->getCategories() as $category): ?>
+						<?php if ($pageData["categories"]): ?>
+						<?php foreach ($pageData["categories"] as $categories => $category):
+
+      	// Set image placeholder variable
+      	$placeholder = $this->getImage("placeholder.jpg");
+      	$placeholderDesc = "This product doesn't have any images.";
+
+      	// Check if product have any images else return placeholder
+      	$category["image"] != false
+      		? ($imgUrl = $this->getImage(
+      			"upload" .
+      				DS .
+      				$category["id"] .
+      				DS .
+      				$category["image"]["name"]
+      		))
+      		: ($imgUrl = $placeholder);
+
+      	// Check if product have any images else return placeholder
+      	$category["image"] != false
+      		? ($imgDesc = $category["image"]["description"])
+      		: ($imgDesc = $placeholderDesc);
+      	?>
+
 							<div class="swiper-slide p-3">
 								<div class="hover-scale-110">
 									<a href="/category/
 										<?= $category["id"] ?>/
 										<?= $this->slugify($category["name"]) ?>
 									">
-										<img alt="Image placeholder" src="assets/img/placeholder.jpg" class="img-fluid img-center">
+										<img class="img-fluid img-center" src="<?= $imgUrl ?>" alt="<?= $imgDesc ?>">
 									</a>
 								</div>
 
@@ -85,7 +108,9 @@
 									</a>
 								</div>
 							</div>
-						<?php endforeach; ?>
+						<?php
+      endforeach; ?>
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>

@@ -6,15 +6,30 @@
 		<div class="row row-grid">
 			<div class="col-lg-6">
 				<div data-toggle="sticky" data-sticky-offset="30" class="" style="">
-					<a href="../../assets/img/theme/light/shop-product-lg-2.jpg" data-fancybox="">
-						<img alt="Image placeholder" src="<?= DOMAIN ?>assets/img/theme/light/shop-product-lg-2.jpg" class="img-fluid">
-					</a>
+				<?php if ($pageData["images"]): ?>
+					<?php foreach ($pageData["images"] as $images => $image): ?>
+						<?php
+      // Set image placeholder variable
+      $placeholder = $this->getImage("placeholder.jpg");
+      $placeholderDesc = "This product doesn't have any images.";
 
-					<div class="mt-4 text-center">
-						<a href="../../assets/img/theme/light/shop-product-lg-2.jpg" data-fancybox="">
-							View gallery
-						</a>
-					</div>
+      // Check if product have any images else return placeholder
+      $image["type_id"] != false
+      	? ($imgUrl = $this->getImage(
+      		"upload" . DS . $image["type_id"] . DS . $image["name"]
+      	))
+      	: ($imgUrl = $placeholder);
+
+      // Check if product have any images else return placeholder
+      $image["description"] != false
+      	? ($imgDesc = $image["description"])
+      	: ($imgDesc = $placeholderDesc);
+      ?>
+					<a href="<?php $imgUrl; ?>" data-fancybox="">
+						<img class="img-fluid" src="<?= $imgUrl ?>" alt="<?= $imgDesc ?>">
+					</a>
+					<?php endforeach; ?>
+				<?php endif; ?>
 				</div>
 			</div>
 

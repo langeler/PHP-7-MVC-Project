@@ -42,7 +42,7 @@ class adminCategories extends Controller
 		$search = isset($get["search"]) ? $get["search"] : "";
 
 		// Pagination settings
-		$perPage = 3;
+		$perPage = 5;
 		$displayArrows = true;
 		$fromRecords = $perPage * $page - $perPage;
 
